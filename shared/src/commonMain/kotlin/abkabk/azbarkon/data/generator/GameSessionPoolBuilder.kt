@@ -108,14 +108,12 @@ internal object GameSessionPoolBuilder {
         vorder: Long,
     ): List<String>? {
         if (isSecondHemistich(versesByVorder, vorder)) return null
-        val first = versesByVorder[vorder]?.find { it.position == 0L }?.text ?: return null
-        val second = versesByVorder[vorder + 1]?.find { it.position == 1L }?.text ?: return null
-        if (first.length > GameConstants.MAX_HEMISTICH_LENGTH ||
-            second.length > GameConstants.MAX_HEMISTICH_LENGTH
-        ) {
-            return null
-        }
-        return listOf(first, second)
+        val first = versesByVorder[vorder]?.find { it.position == 0L }?.text
+        val second = versesByVorder[vorder + 1]?.find { it.position == 1L }?.text
+        val isValid = first != null && second != null &&
+            first.length <= GameConstants.MAX_HEMISTICH_LENGTH &&
+            second.length <= GameConstants.MAX_HEMISTICH_LENGTH
+        return if (isValid) listOf(first!!, second!!) else null
     }
 
     /**
