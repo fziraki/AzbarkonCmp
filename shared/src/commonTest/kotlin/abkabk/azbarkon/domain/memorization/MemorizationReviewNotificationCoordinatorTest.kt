@@ -111,25 +111,11 @@ class MemorizationReviewNotificationCoordinatorTest {
 
         override suspend fun updateCard(card: SrsCard) = Unit
 
-        override suspend fun updateCardsByPoemId(
-            poemId: Int,
-            interval: Int,
-            dueDateMillis: Long,
-            consecutiveCorrect: Int,
-            score: Double,
-        ) = Unit
-
         override suspend fun countCardsByPoemId(poemId: Int): Int = 0
 
         override suspend fun countReviewedCardsByPoemId(poemId: Int): Int = 0
 
-        override suspend fun getAverageInterval(poemId: Int): Int = 0
-
-        override suspend fun getMaxConsecutiveCorrect(poemId: Int): Int = 0
-
         override suspend fun getMaxIntervalByPoemId(poemId: Int): Int = 0
-
-        override suspend fun getMinScoreByPoemId(poemId: Int): Double = 0.0
 
         override suspend fun getReviewCountByPoemId(poemId: Int): Int = 0
 

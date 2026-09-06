@@ -32,8 +32,8 @@ internal object GameQuestionGenerator {
     }
 
     fun buildFindPoetQuestion(
-        line1: String,
-        line2: String,
+        rightHemistich: String,
+        leftHemistich: String,
         correctPoet: Poet,
         allPoets: List<Poet>,
         seed: Long,
@@ -55,21 +55,21 @@ internal object GameQuestionGenerator {
                     )
                 }.shuffled(Random(seed + 1))
         return GameQuestion.FindPoet(
-            line1 = line1,
-            line2 = line2,
+            rightHemistich = rightHemistich,
+            leftHemistich = leftHemistich,
             options = options,
             correctPoetId = correctId,
         )
     }
 
     fun buildCompletePoemQuestion(
-        line1: String,
-        line2: String,
+        rightHemistich: String,
+        leftHemistich: String,
         poetName: String,
         poemWords: List<String>,
         seed: Long,
     ): GameQuestion.CompletePoem? {
-        val line2Words = line2.splitWords()
+        val line2Words = leftHemistich.splitWords()
         val candidateIndices =
             line2Words.indices.filter { line2Words[it].length >= GameConstants.MIN_WORD_LENGTH }
         if (line2Words.size < 2 || candidateIndices.size < 2) return null
@@ -102,8 +102,8 @@ internal object GameQuestionGenerator {
         if (options.toSet().size < COMPLETE_POEM_OPTION_COUNT) return null
 
         return GameQuestion.CompletePoem(
-            line1 = line1,
-            blankedLine2 = blankedLine2,
+            rightHemistich = rightHemistich,
+            blankedLeftHemistich = blankedLine2,
             poetName = poetName,
             options = options,
             correctWords = word1 to word2,

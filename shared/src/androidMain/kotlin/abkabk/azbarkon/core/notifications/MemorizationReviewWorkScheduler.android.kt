@@ -14,11 +14,11 @@ internal object MemorizationReviewWorkScheduler {
     ) {
         val request =
             PeriodicWorkRequestBuilder<MemorizationReviewWorker>(
-                DailyBeytScheduleCalculator.PERIODIC_INTERVAL_HOURS,
+                DailyDistichScheduleCalculator.PERIODIC_INTERVAL_HOURS,
                 TimeUnit.HOURS,
             )
                 .setInitialDelay(
-                    DailyBeytScheduleCalculator.initialDelayMillis(
+                    DailyDistichScheduleCalculator.initialDelayMillis(
                         deliveryHour = deliveryHour,
                         deliveryMinute = deliveryMinute,
                     ),

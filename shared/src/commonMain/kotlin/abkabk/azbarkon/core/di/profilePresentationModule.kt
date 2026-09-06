@@ -10,7 +10,7 @@ val profilePresentationModule =
             ProfileViewModel(
                 memorizationRepository = get(),
                 userPreferencesRepository = get(),
-                dailyBeytNotificationScheduler = get(),
+                dailyDistichNotificationScheduler = get(),
                 notificationPermissionGateway = get(),
                 memorizationReviewNotificationCoordinator = get(),
                 buildProfileStats = get(),

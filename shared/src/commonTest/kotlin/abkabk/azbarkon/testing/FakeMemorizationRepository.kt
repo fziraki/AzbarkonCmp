@@ -47,8 +47,6 @@ class FakeMemorizationRepository : MemorizationRepository {
 
     override suspend fun getCompletedPoems(): Result<List<ActiveMemorizationPoem>, MemorizationError> = activePoems
 
-    override suspend fun markPoemCompleted(poemId: Int): EmptyResult<MemorizationError> = Result.Success(Unit)
-
     override suspend fun resetPoemToActive(poemId: Int): EmptyResult<MemorizationError> = Result.Success(Unit)
 
     override suspend fun addPoem(poemId: Int): EmptyResult<MemorizationError> {

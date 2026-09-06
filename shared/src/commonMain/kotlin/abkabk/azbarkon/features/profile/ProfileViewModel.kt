@@ -12,7 +12,7 @@ import abkabk.azbarkon.domain.model.profile.GameLevelCatalog
 import abkabk.azbarkon.domain.model.profile.LevelListItemUi
 import abkabk.azbarkon.domain.model.profile.MemorizationProfileStats
 import abkabk.azbarkon.domain.model.profile.ProfileSheet
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
 import abkabk.azbarkon.domain.platform.NotificationPermissionGateway
 import abkabk.azbarkon.domain.repository.MemorizationRepository
 import abkabk.azbarkon.domain.repository.UserPreferencesRepository
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val memorizationRepository: MemorizationRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val dailyBeytNotificationScheduler: DailyBeytNotificationScheduler,
+    private val dailyDistichNotificationScheduler: DailyDistichNotificationScheduler,
     private val notificationPermissionGateway: NotificationPermissionGateway,
     private val memorizationReviewNotificationCoordinator: MemorizationReviewNotificationCoordinator,
     private val buildProfileStats: BuildProfileStatsUseCase,
@@ -41,8 +41,8 @@ class ProfileViewModel(
 ) : BaseViewModel<ProfileAction, ProfileState, ProfileEvent>(
         initialState =
             ProfileState(
-                isDailyBeytNotificationEnabled =
-                    userPreferencesRepository.isDailyBeytNotificationEnabled(),
+                isDailyDistichNotificationEnabled =
+                    userPreferencesRepository.isDailyDistichNotificationEnabled(),
                 isMemorizationReminderEnabled =
                     userPreferencesRepository.isMemorizationReminderEnabled(),
                 isRemoteNotificationGranted =
@@ -83,11 +83,11 @@ class ProfileViewModel(
                 setState { copy(activeSheet = ProfileSheet.Levels) }
             }
 
-            is ProfileAction.OnDailyBeytNotificationToggle -> {
+            is ProfileAction.OnDailyDistichNotificationToggle -> {
                 if (action.enabled) {
-                    enableDailyBeytNotifications()
+                    enableDailyDistichNotifications()
                 } else {
-                    disableDailyBeytNotifications()
+                    disableDailyDistichNotifications()
                 }
             }
 
@@ -155,7 +155,7 @@ class ProfileViewModel(
                     val prefs = userPreferencesRepository
                     setState {
                         copy(
-                            isDailyBeytNotificationEnabled = prefs.isDailyBeytNotificationEnabled(),
+                            isDailyDistichNotificationEnabled = prefs.isDailyDistichNotificationEnabled(),
                             isMemorizationReminderEnabled = prefs.isMemorizationReminderEnabled(),
                             themeMode = prefs.getThemeMode(),
                             fontSizeScale = prefs.getFontSizeScale(),
@@ -200,8 +200,8 @@ class ProfileViewModel(
             copy(
                 screenState = UiScreenState.Success,
                 themeMode = snapshot.themeMode,
-                isDailyBeytNotificationEnabled =
-                    userPreferencesRepository.isDailyBeytNotificationEnabled(),
+                isDailyDistichNotificationEnabled =
+                    userPreferencesRepository.isDailyDistichNotificationEnabled(),
                 isMemorizationReminderEnabled =
                     userPreferencesRepository.isMemorizationReminderEnabled(),
                 levelProgress = statsResult.levelProgress,
@@ -224,19 +224,19 @@ class ProfileViewModel(
         }
     }
 
-    private fun enableDailyBeytNotifications() {
+    private fun enableDailyDistichNotifications() {
         setState {
-            copy(isDailyBeytNotificationEnabled = true)
+            copy(isDailyDistichNotificationEnabled = true)
         }
 
         if (notificationPermissionGateway.areNotificationsEnabled()) {
-            userPreferencesRepository.setDailyBeytNotificationEnabled(true)
-            dailyBeytNotificationScheduler.enable(showImmediately = true)
+            userPreferencesRepository.setDailyDistichNotificationEnabled(true)
+            dailyDistichNotificationScheduler.enable(showImmediately = true)
         } else {
             viewModelScope.launch {
                 sendEvent(
                     ProfileEvent.RequestNotificationPermission(
-                        NotificationPermissionTarget.DailyBeyt,
+                        NotificationPermissionTarget.DailyDistich,
                     ),
                 )
             }
@@ -248,18 +248,18 @@ class ProfileViewModel(
         target: NotificationPermissionTarget,
     ) {
         when (target) {
-            NotificationPermissionTarget.DailyBeyt ->
+            NotificationPermissionTarget.DailyDistich ->
                 if (granted) {
-                    userPreferencesRepository.setDailyBeytNotificationEnabled(true)
-                    dailyBeytNotificationScheduler.enable(showImmediately = true)
+                    userPreferencesRepository.setDailyDistichNotificationEnabled(true)
+                    dailyDistichNotificationScheduler.enable(showImmediately = true)
                     setState {
-                        copy(isDailyBeytNotificationEnabled = true)
+                        copy(isDailyDistichNotificationEnabled = true)
                     }
                 } else {
-                    userPreferencesRepository.setDailyBeytNotificationEnabled(false)
-                    dailyBeytNotificationScheduler.disable()
+                    userPreferencesRepository.setDailyDistichNotificationEnabled(false)
+                    dailyDistichNotificationScheduler.disable()
                     setState {
-                        copy(isDailyBeytNotificationEnabled = false)
+                        copy(isDailyDistichNotificationEnabled = false)
                     }
                 }
 
@@ -293,11 +293,11 @@ class ProfileViewModel(
         }
     }
 
-    private fun disableDailyBeytNotifications() {
-        userPreferencesRepository.setDailyBeytNotificationEnabled(false)
-        dailyBeytNotificationScheduler.disable()
+    private fun disableDailyDistichNotifications() {
+        userPreferencesRepository.setDailyDistichNotificationEnabled(false)
+        dailyDistichNotificationScheduler.disable()
         setState {
-            copy(isDailyBeytNotificationEnabled = false)
+            copy(isDailyDistichNotificationEnabled = false)
         }
     }
 

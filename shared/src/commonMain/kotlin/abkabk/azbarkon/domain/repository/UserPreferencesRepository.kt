@@ -5,9 +5,9 @@ import abkabk.azbarkon.domain.model.profile.GameProfileStats
 import kotlinx.coroutines.flow.Flow
 
 interface UserPreferencesRepository {
-    fun isDailyBeytNotificationEnabled(): Boolean
+    fun isDailyDistichNotificationEnabled(): Boolean
 
-    fun setDailyBeytNotificationEnabled(enabled: Boolean)
+    fun setDailyDistichNotificationEnabled(enabled: Boolean)
 
     fun isMemorizationReminderEnabled(): Boolean
 

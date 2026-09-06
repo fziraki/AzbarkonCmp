@@ -21,8 +21,6 @@ interface MemorizationRepository {
 
     suspend fun getCompletedPoems(): Result<List<ActiveMemorizationPoem>, MemorizationError>
 
-    suspend fun markPoemCompleted(poemId: Int): EmptyResult<MemorizationError>
-
     suspend fun resetPoemToActive(poemId: Int): EmptyResult<MemorizationError>
 
     suspend fun addPoem(poemId: Int): EmptyResult<MemorizationError>

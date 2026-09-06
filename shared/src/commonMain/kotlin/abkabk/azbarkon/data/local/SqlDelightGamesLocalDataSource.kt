@@ -87,7 +87,7 @@ class SqlDelightGamesLocalDataSource(
                         gameType = gameType,
                         distichCount = extraction.distichs.size,
                         organizeCount = extraction.organizeWindows.size,
-                        totalVerseGroups = verses.groupBy { it.vorder }.size,
+                        totalVerses = verses.groupBy { it.vorder }.size,
                     )
                 ) {
                     return@repeat
@@ -165,8 +165,8 @@ class SqlDelightGamesLocalDataSource(
         val correctPoet = allPoets.firstOrNull { it.id?.toLong() == distich.poetId } ?: return null
 
         return GameQuestionGenerator.buildFindPoetQuestion(
-            line1 = distich.firstHemistich,
-            line2 = distich.secondHemistich,
+            rightHemistich = distich.firstHemistich,
+            leftHemistich = distich.secondHemistich,
             correctPoet = correctPoet,
             allPoets = allPoets,
             seed = seed,
@@ -184,8 +184,8 @@ class SqlDelightGamesLocalDataSource(
         val distich = bundle.distichs[bundleIndex(seed, bundle.distichs.size)]
 
         return GameQuestionGenerator.buildCompletePoemQuestion(
-            line1 = distich.firstHemistich,
-            line2 = distich.secondHemistich,
+            rightHemistich = distich.firstHemistich,
+            leftHemistich = distich.secondHemistich,
             poetName = bundle.poetName,
             poemWords = bundle.poemWords,
             seed = seed,

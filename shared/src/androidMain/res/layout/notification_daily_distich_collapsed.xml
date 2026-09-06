@@ -13,7 +13,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/daily_beyt_notification_app_name"
+            android:text="@string/daily_distich_notification_app_name"
             android:gravity="center_vertical|end"
             android:textColor="@color/notification_accent"
             android:textSize="12sp"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|start"
-            android:text="@string/daily_beyt_notification_title"
+            android:text="@string/daily_distich_notification_title"
             android:textColor="@color/notification_title"
             android:textSize="13sp"
             android:textStyle="bold" />

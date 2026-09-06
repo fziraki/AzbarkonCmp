@@ -42,14 +42,6 @@ interface MemorizationLocalDataSource {
 
     suspend fun updateCard(card: SrsCard)
 
-    suspend fun updateCardsByPoemId(
-        poemId: Int,
-        interval: Int,
-        dueDateMillis: Long,
-        consecutiveCorrect: Int,
-        score: Double,
-    )
-
     suspend fun updateCardsByPoemIdSchedule(
         poemId: Int,
         interval: Int,
@@ -61,13 +53,7 @@ interface MemorizationLocalDataSource {
 
     suspend fun countReviewedCardsByPoemId(poemId: Int): Int
 
-    suspend fun getAverageInterval(poemId: Int): Int
-
-    suspend fun getMaxConsecutiveCorrect(poemId: Int): Int
-
     suspend fun getMaxIntervalByPoemId(poemId: Int): Int
-
-    suspend fun getMinScoreByPoemId(poemId: Int): Double
 
     suspend fun getReviewCountByPoemId(poemId: Int): Int
 

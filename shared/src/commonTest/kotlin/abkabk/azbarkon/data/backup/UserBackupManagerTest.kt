@@ -27,7 +27,7 @@ class UserBackupManagerTest {
                         gamePerfectSessions = 3,
                         likedPoemIds = setOf(1, 2),
                         bookmarkedPoemIds = setOf(3),
-                        dailyBeytNotificationsEnabled = true,
+                        dailyDistichNotificationsEnabled = true,
                         memorizationReminderEnabled = false,
                     ),
                 memorization =

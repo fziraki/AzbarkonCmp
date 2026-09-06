@@ -30,8 +30,8 @@ class GameQuestionGeneratorTest {
     fun `complete poem builds four unique options including both correct words`() {
         val question =
             GameQuestionGenerator.buildCompletePoemQuestion(
-                line1 = "ز خاک کوی تو",
-                line2 = "نسیم سحر است و عطر جانان",
+                rightHemistich = "ز خاک کوی تو",
+                leftHemistich = "نسیم سحر است و عطر جانان",
                 poetName = "حافظ",
                 poemWords = listOf("نسیم", "سحر", "است", "و", "عطر", "جانان", "ز", "خاک"),
                 seed = 7L,
@@ -72,8 +72,8 @@ class GameQuestionGeneratorTest {
 
         val question =
             GameQuestionGenerator.buildFindPoetQuestion(
-                line1 = "بیت اول",
-                line2 = "بیت دوم",
+                rightHemistich = "بیت اول",
+                leftHemistich = "بیت دوم",
                 correctPoet = hafez,
                 allPoets = listOf(hafez) + others,
                 seed = 11L,

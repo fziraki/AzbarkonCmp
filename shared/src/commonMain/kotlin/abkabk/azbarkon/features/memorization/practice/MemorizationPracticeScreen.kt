@@ -844,9 +844,9 @@ private fun MemorizationPracticeScreenPreview() {
                     currentCard =
                         PracticeCardUi(
                             id = 1,
-                            front = "که عشق آسان نمود اول\n...",
-                            back = "که عشق آسان نمود اول\nولی افتاد مشکل‌ها",
-                            expectedContinuation = "ولی افتاد مشکل‌ها",
+                            front = "که عشق آسان نمود ...",
+                            back = "که عشق آسان نمود اول",
+                            expectedContinuation = "اول",
                         ),
                     cardIndex = 1,
                     totalCards = 5,
@@ -867,9 +867,9 @@ private fun MemorizationPracticeScreenRevealedPreview() {
                     currentCard =
                         PracticeCardUi(
                             id = 1,
-                            front = "که عشق آسان نمود اول\n...",
-                            back = "که عشق آسان نمود اول\nولی افتاد مشکل‌ها",
-                            expectedContinuation = "ولی افتاد مشکل‌ها",
+                            front = "که عشق آسان نمود ...",
+                            back = "که عشق آسان نمود اول",
+                            expectedContinuation = "اول",
                         ),
                     cardIndex = 1,
                     totalCards = 5,

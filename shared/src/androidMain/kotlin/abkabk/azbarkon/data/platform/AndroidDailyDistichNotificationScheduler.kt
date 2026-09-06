@@ -1,10 +1,10 @@
 package abkabk.azbarkon.data.platform
 
 import abkabk.azbarkon.core.domain.result.onSuccess
-import abkabk.azbarkon.core.notifications.DailyBeytNotificationPresenter
-import abkabk.azbarkon.core.notifications.DailyBeytWorkScheduler
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
-import abkabk.azbarkon.domain.repository.DailyBeytRepository
+import abkabk.azbarkon.core.notifications.DailyDistichNotificationPresenter
+import abkabk.azbarkon.core.notifications.DailyDistichWorkScheduler
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
+import abkabk.azbarkon.domain.repository.DailyDistichRepository
 import abkabk.azbarkon.domain.repository.UserPreferencesRepository
 import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,13 +14,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AndroidDailyBeytNotificationScheduler(
+class AndroidDailyDistichNotificationScheduler(
     private val context: Context,
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val dailyBeytRepository: DailyBeytRepository,
-    private val notificationPresenter: DailyBeytNotificationPresenter,
+    private val dailyDistichRepository: DailyDistichRepository,
+    private val notificationPresenter: DailyDistichNotificationPresenter,
     private val ioDispatcher: CoroutineDispatcher,
-) : DailyBeytNotificationScheduler {
+) : DailyDistichNotificationScheduler {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var deliveryHour: Int = DEFAULT_HOUR
     private var deliveryMinute: Int = DEFAULT_MINUTE
@@ -32,7 +32,7 @@ class AndroidDailyBeytNotificationScheduler(
     ) {
         this.deliveryHour = deliveryHour
         this.deliveryMinute = deliveryMinute
-        DailyBeytWorkScheduler.schedule(
+        DailyDistichWorkScheduler.schedule(
             context = context,
             deliveryHour = deliveryHour,
             deliveryMinute = deliveryMinute,
@@ -41,7 +41,7 @@ class AndroidDailyBeytNotificationScheduler(
         if (showImmediately) {
             scope.launch {
                 withContext(ioDispatcher) {
-                    dailyBeytRepository.getTodayDistich()
+                    dailyDistichRepository.getTodayDistich()
                 }.onSuccess { distich ->
                     notificationPresenter.show(distich)
                 }
@@ -50,11 +50,11 @@ class AndroidDailyBeytNotificationScheduler(
     }
 
     override fun disable() {
-        DailyBeytWorkScheduler.cancel(context)
+        DailyDistichWorkScheduler.cancel(context)
     }
 
     override fun rescheduleIfEnabled() {
-        if (userPreferencesRepository.isDailyBeytNotificationEnabled()) {
+        if (userPreferencesRepository.isDailyDistichNotificationEnabled()) {
             enable(deliveryHour, deliveryMinute)
         }
     }

@@ -8,7 +8,7 @@ val sharedModules: List<Module> =
         databaseModule,
         poetsDataModule,
         poemDataModule,
-        dailyBeytDataModule,
+        dailyDistichDataModule,
         searchDataModule,
         savedPoemDataModule,
         chatDataModule,

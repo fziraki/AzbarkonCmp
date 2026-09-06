@@ -130,22 +130,6 @@ class SqlDelightMemorizationLocalDataSource(
         )
     }
 
-    override suspend fun updateCardsByPoemId(
-        poemId: Int,
-        interval: Int,
-        dueDateMillis: Long,
-        consecutiveCorrect: Int,
-        score: Double,
-    ) {
-        cardQueries.updateCardsByPoemId(
-            interval = interval.toLong(),
-            due_date = dueDateMillis,
-            consecutive_correct = consecutiveCorrect.toLong(),
-            score = score,
-            poem_id = poemId.toLong(),
-        )
-    }
-
     override suspend fun updateCardsByPoemIdSchedule(
         poemId: Int,
         interval: Int,
@@ -169,30 +153,9 @@ class SqlDelightMemorizationLocalDataSource(
             .executeAsOne()
             .toInt()
 
-    override suspend fun getAverageInterval(poemId: Int): Int {
-        val cards =
-            cardQueries
-                .selectCardsByPoemId(poem_id = poemId.toLong())
-                .executeAsList()
-        if (cards.isEmpty()) return 0
-        return cards.map { it.interval.toInt() }.average().toInt()
-    }
-
-    override suspend fun getMaxConsecutiveCorrect(poemId: Int): Int =
-        cardQueries
-            .selectCardsByPoemId(poem_id = poemId.toLong())
-            .executeAsList()
-            .maxOfOrNull { it.consecutive_correct.toInt() }
-            ?: 0
-
     override suspend fun getMaxIntervalByPoemId(poemId: Int): Int =
         cardQueries
             .getMaxIntervalByPoemId(poem_id = poemId.toLong()) { max -> max?.toInt() ?: 0 }
-            .executeAsOne()
-
-    override suspend fun getMinScoreByPoemId(poemId: Int): Double =
-        cardQueries
-            .getMinScoreByPoemId(poem_id = poemId.toLong()) { min -> min ?: 0.0 }
             .executeAsOne()
 
     override suspend fun getReviewCountByPoemId(poemId: Int): Int =

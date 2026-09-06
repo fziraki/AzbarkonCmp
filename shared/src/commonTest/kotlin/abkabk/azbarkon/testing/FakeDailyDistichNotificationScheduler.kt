@@ -1,8 +1,8 @@
 package abkabk.azbarkon.testing
 
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
 
-class FakeDailyBeytNotificationScheduler : DailyBeytNotificationScheduler {
+class FakeDailyDistichNotificationScheduler : DailyDistichNotificationScheduler {
     var isEnabled: Boolean = false
     var enableCallCount: Int = 0
     var disableCallCount: Int = 0

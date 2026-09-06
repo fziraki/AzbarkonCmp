@@ -4,7 +4,7 @@ import abkabk.azbarkon.core.uidata.UiScreenState
 import abkabk.azbarkon.domain.model.CatNode
 import abkabk.azbarkon.domain.model.Poet
 import abkabk.azbarkon.domain.model.PoetWithRootCategories
-import abkabk.azbarkon.testing.FakeDailyBeytRepository
+import abkabk.azbarkon.testing.FakeDailyDistichRepository
 import abkabk.azbarkon.testing.FakeMemorizationRepository
 import abkabk.azbarkon.testing.FakePoetRepository
 import app.cash.turbine.test
@@ -46,7 +46,7 @@ class HomeViewModelTest {
                             ),
                         )
                 }
-            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyBeytRepository())
+            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository())
 
             val state = viewModel.state.value
             assertThat(state.screenState).isInstanceOf(UiScreenState.Success::class)
@@ -94,7 +94,7 @@ class HomeViewModelTest {
                             ),
                         )
                 }
-            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyBeytRepository())
+            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository())
 
             val state = viewModel.state.value
             assertThat(state.poets.size).isEqualTo(1)
@@ -108,21 +108,21 @@ class HomeViewModelTest {
                 FakePoetRepository().apply {
                     shouldFail = true
                 }
-            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyBeytRepository())
+            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository())
 
             assertThat(viewModel.state.value.screenState).isInstanceOf(UiScreenState.Error::class)
         }
 
     @Test
-    fun `beyt of day click emits poem detail navigation with today distich poem id`() =
+    fun `distich of day click emits poem detail navigation with today distich poem id`() =
         runViewModelTest {
-            val dailyBeytRepository =
-                FakeDailyBeytRepository().apply {
+            val dailyDistichRepository =
+                FakeDailyDistichRepository().apply {
                     todayDistich = todayDistich.copy(poemId = 42)
                 }
-            val viewModel = HomeViewModel(FakePoetRepository(), FakeMemorizationRepository(), dailyBeytRepository)
+            val viewModel = HomeViewModel(FakePoetRepository(), FakeMemorizationRepository(), dailyDistichRepository)
 
-            viewModel.onAction(HomeAction.OnBeytOfDayClick)
+            viewModel.onAction(HomeAction.OnDistichOfDayClick)
 
             viewModel.events.test {
                 val event = awaitItem()

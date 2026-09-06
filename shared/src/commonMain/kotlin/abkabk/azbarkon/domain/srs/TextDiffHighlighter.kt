@@ -133,32 +133,6 @@ object TextDiffHighlighter {
         return 0
     }
 
-    fun diff(expected: String, actual: String): List<DiffToken> {
-        val expectedWords = tokenize(expected)
-        val actualWords = tokenize(actual)
-        if (expectedWords.isEmpty() && actualWords.isEmpty()) return emptyList()
-
-        val alignment = alignWords(expectedWords, actualWords)
-        return alignment
-    }
-
-    fun score(expected: String, actual: String): Double {
-        val diffTokens = diff(expected, actual)
-        if (diffTokens.isEmpty()) return 1.0
-        val correctCount = diffTokens.count { it.type == DiffTokenType.CORRECT }
-        return correctCount.toDouble() / diffTokens.size.coerceAtLeast(1)
-    }
-
-    fun suggestGrade(expected: String, actual: String): abkabk.azbarkon.domain.model.memorization.SrsGrade {
-        val ratio = score(expected, actual)
-        return when {
-            ratio >= EASY_THRESHOLD -> abkabk.azbarkon.domain.model.memorization.SrsGrade.EASY
-            ratio >= GOOD_THRESHOLD -> abkabk.azbarkon.domain.model.memorization.SrsGrade.GOOD
-            ratio >= HARD_THRESHOLD -> abkabk.azbarkon.domain.model.memorization.SrsGrade.HARD
-            else -> abkabk.azbarkon.domain.model.memorization.SrsGrade.AGAIN
-        }
-    }
-
     private fun splitDisplayWords(text: String): List<String> =
         text
             .replace('\u0640', ' ')
@@ -167,59 +141,4 @@ object TextDiffHighlighter {
             .split(Regex("\\s+"))
             .filter { it.isNotBlank() }
 
-    private fun tokenize(text: String): List<String> =
-        normalizeForComparison(text)
-            .trim()
-            .split(Regex("\\s+"))
-            .filter { it.isNotBlank() }
-
-    private fun alignWords(
-        expected: List<String>,
-        actual: List<String>,
-    ): List<DiffToken> {
-        val expectedCount = expected.size
-        val actualCount = actual.size
-        val dp = Array(expectedCount + 1) { IntArray(actualCount + 1) }
-
-        for (i in 1..expectedCount) {
-            for (j in 1..actualCount) {
-                dp[i][j] =
-                    if (wordsMatch(expected[i - 1], actual[j - 1])) {
-                        dp[i - 1][j - 1] + 1
-                    } else {
-                        maxOf(dp[i - 1][j], dp[i][j - 1])
-                    }
-            }
-        }
-
-        val tokens = mutableListOf<DiffToken>()
-        var expectedIndex = expectedCount
-        var actualIndex = actualCount
-        while (expectedIndex > 0 || actualIndex > 0) {
-            when {
-                expectedIndex > 0 &&
-                    actualIndex > 0 &&
-                    wordsMatch(expected[expectedIndex - 1], actual[actualIndex - 1])
-                -> {
-                    tokens.add(DiffToken(expected[expectedIndex - 1], DiffTokenType.CORRECT))
-                    expectedIndex--
-                    actualIndex--
-                }
-                actualIndex > 0 &&
-                    (expectedIndex == 0 || dp[expectedIndex][actualIndex - 1] >= dp[expectedIndex - 1][actualIndex])
-                -> {
-                    tokens.add(DiffToken(actual[actualIndex - 1], DiffTokenType.WRONG))
-                    actualIndex--
-                }
-                expectedIndex > 0 -> {
-                    tokens.add(DiffToken(expected[expectedIndex - 1], DiffTokenType.MISSING))
-                    expectedIndex--
-                }
-            }
-        }
-        return tokens.asReversed()
-    }
-
-    private fun wordsMatch(expected: String, actual: String): Boolean =
-        expected.equals(actual, ignoreCase = true)
 }

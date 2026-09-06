@@ -20,11 +20,11 @@ class LocalUserPreferencesRepository(
     private val themeModeRefresh = MutableSharedFlow<Unit>(replay = 1).apply { tryEmit(Unit) }
     private val fontSizeScaleRefresh = MutableSharedFlow<Unit>(replay = 1).apply { tryEmit(Unit) }
 
-    override fun isDailyBeytNotificationEnabled(): Boolean =
-        keyValueStore.getBoolean(KEY_DAILY_BEYT_NOTIFICATIONS_ENABLED)
+    override fun isDailyDistichNotificationEnabled(): Boolean =
+        keyValueStore.getBoolean(KEY_DAILY_DISTICH_NOTIFICATIONS_ENABLED)
 
-    override fun setDailyBeytNotificationEnabled(enabled: Boolean) {
-        keyValueStore.putBoolean(KEY_DAILY_BEYT_NOTIFICATIONS_ENABLED, enabled)
+    override fun setDailyDistichNotificationEnabled(enabled: Boolean) {
+        keyValueStore.putBoolean(KEY_DAILY_DISTICH_NOTIFICATIONS_ENABLED, enabled)
     }
 
     override fun isMemorizationReminderEnabled(): Boolean =
@@ -146,7 +146,7 @@ class LocalUserPreferencesRepository(
     internal companion object {
         val FONT_SIZE_SCALES = floatArrayOf(1f, 1.1f, 1.2f)
         const val KEY_FONT_SIZE_SCALE = "font_size_scale"
-        const val KEY_DAILY_BEYT_NOTIFICATIONS_ENABLED = "daily_beyt_notifications_enabled"
+        const val KEY_DAILY_DISTICH_NOTIFICATIONS_ENABLED = "daily_distich_notifications_enabled"
         const val KEY_MEMORIZATION_REMINDER_ENABLED = "memorization_reminder_enabled"
         const val KEY_NOTIFICATION_PERMISSION_DECLINE_COUNT = "notification_permission_decline_count"
         const val KEY_THEME_MODE = "theme_mode"

@@ -54,8 +54,8 @@ import sarv.shared.generated.resources.notifications_outlined
 import sarv.shared.generated.resources.profile_add_widget
 import sarv.shared.generated.resources.profile_add_widget_subtitle
 import sarv.shared.generated.resources.profile_badges_title
-import sarv.shared.generated.resources.profile_daily_beyt_subtitle
-import sarv.shared.generated.resources.profile_daily_beyt_title
+import sarv.shared.generated.resources.profile_daily_distich_subtitle
+import sarv.shared.generated.resources.profile_daily_distich_title
 import sarv.shared.generated.resources.profile_export_data
 import sarv.shared.generated.resources.profile_export_data_subtitle
 import sarv.shared.generated.resources.profile_font_size_big
@@ -105,12 +105,12 @@ fun ProfileSheets(
         when (sheet) {
             ProfileSheet.Settings ->
                 ProfileSettingsSheetContent(
-                    isDailyBeytEnabled = state.isDailyBeytNotificationEnabled,
+                    isDailyDistichEnabled = state.isDailyDistichNotificationEnabled,
                     isMemorizationReminderEnabled = state.isMemorizationReminderEnabled,
                     isRemoteNotificationGranted = state.isRemoteNotificationGranted,
                     themeMode = state.themeMode,
                     fontSizeScale = state.fontSizeScale,
-                    onDailyBeytToggle = { onAction(ProfileAction.OnDailyBeytNotificationToggle(it)) },
+                    onDailyDistichToggle = { onAction(ProfileAction.OnDailyDistichNotificationToggle(it)) },
                     onMemorizationReminderToggle = { onAction(ProfileAction.OnMemorizationReminderToggle(it)) },
                     onRemoteNotificationClick = { onAction(ProfileAction.OnRemoteNotificationClick) },
                     onThemeModeSelect = { onAction(ProfileAction.OnThemeModeSelected(it)) },
@@ -132,12 +132,12 @@ fun ProfileSheets(
 @Suppress("LongParameterList")
 @Composable
 private fun ProfileSettingsSheetContent(
-    isDailyBeytEnabled: Boolean,
+    isDailyDistichEnabled: Boolean,
     isMemorizationReminderEnabled: Boolean,
     isRemoteNotificationGranted: Boolean,
     themeMode: ThemeMode,
     fontSizeScale: Float,
-    onDailyBeytToggle: (Boolean) -> Unit,
+    onDailyDistichToggle: (Boolean) -> Unit,
     onMemorizationReminderToggle: (Boolean) -> Unit,
     onRemoteNotificationClick: () -> Unit,
     onThemeModeSelect: (ThemeMode) -> Unit,
@@ -166,10 +166,10 @@ private fun ProfileSettingsSheetContent(
         )
 
         ProfileSettingToggleRow(
-            title = stringResource(Res.string.profile_daily_beyt_title),
-            subtitle = stringResource(Res.string.profile_daily_beyt_subtitle),
-            checked = isDailyBeytEnabled,
-            onCheckedChange = onDailyBeytToggle,
+            title = stringResource(Res.string.profile_daily_distich_title),
+            subtitle = stringResource(Res.string.profile_daily_distich_subtitle),
+            checked = isDailyDistichEnabled,
+            onCheckedChange = onDailyDistichToggle,
         )
 
 

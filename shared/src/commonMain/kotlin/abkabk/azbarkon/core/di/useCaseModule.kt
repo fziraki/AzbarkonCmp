@@ -28,7 +28,7 @@ val useCaseModule =
             ImportUserDataUseCase(
                 userBackupManager = get(),
                 userPreferencesRepository = get(),
-                dailyBeytNotificationScheduler = get(),
+                dailyDistichNotificationScheduler = get(),
                 memorizationReviewNotificationCoordinator = get(),
             )
         }

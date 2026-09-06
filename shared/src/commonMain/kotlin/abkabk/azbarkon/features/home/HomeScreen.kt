@@ -94,9 +94,9 @@ import sarv.shared.generated.resources.poetry_memorization
 import sarv.shared.generated.resources.popular_poets
 import sarv.shared.generated.resources.review
 import sarv.shared.generated.resources.search
-import sarv.shared.generated.resources.slider_beyt_of_day_poet
-import sarv.shared.generated.resources.slider_beyt_of_day_text
-import sarv.shared.generated.resources.slider_beyt_of_day_title
+import sarv.shared.generated.resources.slider_distich_of_day_poet
+import sarv.shared.generated.resources.slider_distich_of_day_text
+import sarv.shared.generated.resources.slider_distich_of_day_title
 import sarv.shared.generated.resources.slider_challenge_button
 import sarv.shared.generated.resources.slider_challenge_text
 import sarv.shared.generated.resources.slider_challenge_title
@@ -218,7 +218,7 @@ fun HomeScreen(
                 TopSlider(
                     items =
                         listOf(
-                            SliderPage.BeytOfDay,
+                            SliderPage.DistichOfDay,
                             SliderPage.Challenge,
                             SliderPage.TasvirNegar,
                         ),
@@ -227,7 +227,7 @@ fun HomeScreen(
                     isExpandedScreen = isExpandedScreen,
                     onTasvirNegarClick = { onAction(HomeAction.OnTasvirNegarClick) },
                     onChallengeClick = { onAction(HomeAction.OnChallengeClick) },
-                onBeytOfDayClick = { onAction(HomeAction.OnBeytOfDayClick) },
+                onDistichOfDayClick = { onAction(HomeAction.OnDistichOfDayClick) },
             )
         }
         item {
@@ -614,7 +614,7 @@ fun TopSlider(
     todayDistich: RandomDistich? = null,
     onTasvirNegarClick: () -> Unit = {},
     onChallengeClick: () -> Unit = {},
-    onBeytOfDayClick: () -> Unit = {}
+    onDistichOfDayClick: () -> Unit = {}
 ) {
     if (items.isEmpty()) return
 
@@ -656,10 +656,10 @@ fun TopSlider(
             val item = getItem(page)
 
             when (item) {
-                is SliderPage.BeytOfDay -> BeytOfDaySlide(
+                is SliderPage.DistichOfDay -> DistichOfDaySlide(
                     distich = todayDistich,
                     isExpandedScreen = isExpandedScreen,
-                    onClick = onBeytOfDayClick,
+                    onClick = onDistichOfDayClick,
                 )
 
                 is SliderPage.Challenge -> ChallengeSlide(isExpandedScreen = isExpandedScreen, onClick = onChallengeClick)
@@ -848,18 +848,18 @@ fun ChallengeSlide(
 }
 
 @Composable
-fun BeytOfDaySlide(
+fun DistichOfDaySlide(
     isExpandedScreen: Boolean,
     modifier: Modifier = Modifier,
     distich: RandomDistich? = null,
     onClick: () -> Unit = {}
 ) {
-    val beytText = buildString {
+    val distichText = buildString {
         distich?.rightText?.let { append(it) }
         if (distich != null) append("\n")
         distich?.leftText?.let { append(it) }
-    }.ifEmpty { stringResource(Res.string.slider_beyt_of_day_text) }
-    val poetText = distich?.poetName ?: stringResource(Res.string.slider_beyt_of_day_poet)
+    }.ifEmpty { stringResource(Res.string.slider_distich_of_day_text) }
+    val poetText = distich?.poetName ?: stringResource(Res.string.slider_distich_of_day_poet)
 
     Box(modifier = modifier
         .shadow(
@@ -892,7 +892,7 @@ fun BeytOfDaySlide(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(Res.string.slider_beyt_of_day_title),
+                    text = stringResource(Res.string.slider_distich_of_day_title),
                     color = LightColorScheme.tertiary,
                     style = MaterialTheme.typography.titleSmall,
                     textAlign = TextAlign.Start,
@@ -904,7 +904,7 @@ fun BeytOfDaySlide(
                         verticalAlignment = Alignment.Bottom) {
                         Text(
                             modifier = Modifier.weight(1f),
-                            text = beytText.replace("\n","      "),
+                            text = distichText.replace("\n","      "),
                             color = LightColorScheme.onSurface,
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Start,
@@ -922,7 +922,7 @@ fun BeytOfDaySlide(
                 }else{
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = beytText,
+                        text = distichText,
                         color = LightColorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,

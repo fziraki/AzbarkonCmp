@@ -1,9 +1,9 @@
 package abkabk.azbarkon.core.widget
 
 import abkabk.azbarkon.core.domain.result.Result
-import abkabk.azbarkon.core.notifications.DailyBeytNotificationPayload
+import abkabk.azbarkon.core.notifications.DailyDistichNotificationPayload
 import abkabk.azbarkon.domain.model.RandomDistich
-import abkabk.azbarkon.domain.repository.DailyBeytRepository
+import abkabk.azbarkon.domain.repository.DailyDistichRepository
 import abkabk.azbarkon.shared.R
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -16,7 +16,7 @@ import org.koin.core.component.inject
 
 class RandomDistichWidgetUpdater :
     KoinComponent {
-    private val dailyBeytRepository: DailyBeytRepository by inject()
+    private val dailyDistichRepository: DailyDistichRepository by inject()
     private val preferences: RandomDistichWidgetPreferences by inject()
 
     suspend fun update(
@@ -34,7 +34,7 @@ class RandomDistichWidgetUpdater :
         val views = buildRemoteViews(context, appWidgetId, distich = null)
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
-        when (val result = dailyBeytRepository.getRandomDistich(seed = seed, poetId = poetId)) {
+        when (val result = dailyDistichRepository.getRandomDistich(seed = seed, poetId = poetId)) {
             is Result.Success -> {
                 val successViews =
                     buildRemoteViews(
@@ -117,7 +117,7 @@ class RandomDistichWidgetUpdater :
         val intent =
             Intent().apply {
                 setClassName(context.packageName, RandomDistichWidgetConstants.MAIN_ACTIVITY_CLASS)
-                putExtra(DailyBeytNotificationPayload.KEY_POEM_ID, poemId)
+                putExtra(DailyDistichNotificationPayload.KEY_POEM_ID, poemId)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
         return PendingIntent.getActivity(

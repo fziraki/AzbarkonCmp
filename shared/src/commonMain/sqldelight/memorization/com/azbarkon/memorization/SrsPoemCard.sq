@@ -95,15 +95,6 @@ SET interval = ?,
     score = ?
 WHERE id = ?;
 
--- Update all cards of a poem (poem-level review).
-updateCardsByPoemId:
-UPDATE srs_poem_card
-SET interval = ?,
-    due_date = ?,
-    consecutive_correct = ?,
-    score = ?
-WHERE poem_id = ?;
-
 -- Update interval, due_date and score without resetting consecutive_correct.
 updateCardsByPoemIdSchedule:
 UPDATE srs_poem_card
@@ -133,12 +124,6 @@ WHERE poem_id = ?
 -- Get maximum interval for a poem (used for next review calculation).
 getMaxIntervalByPoemId:
 SELECT MAX(interval)
-FROM srs_poem_card
-WHERE poem_id = ?;
-
--- Get minimum score for a poem (used for completion detection).
-getMinScoreByPoemId:
-SELECT MIN(score)
 FROM srs_poem_card
 WHERE poem_id = ?;
 

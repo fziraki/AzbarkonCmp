@@ -3,13 +3,13 @@ package abkabk.azbarkon.data.repository
 import abkabk.azbarkon.core.domain.result.DataError
 import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.core.util.currentLocalDateSeed
-import abkabk.azbarkon.domain.datasource.DailyBeytLocalDataSource
+import abkabk.azbarkon.domain.datasource.DailyDistichLocalDataSource
 import abkabk.azbarkon.domain.model.RandomDistich
-import abkabk.azbarkon.domain.repository.DailyBeytRepository
+import abkabk.azbarkon.domain.repository.DailyDistichRepository
 
-class OfflineFirstDailyBeytRepository(
-    private val localDataSource: DailyBeytLocalDataSource,
-) : DailyBeytRepository {
+class OfflineFirstDailyDistichRepository(
+    private val localDataSource: DailyDistichLocalDataSource,
+) : DailyDistichRepository {
     private var cachedSeed: Long? = null
     private var cachedResult: Result<RandomDistich, DataError.Local>? = null
 

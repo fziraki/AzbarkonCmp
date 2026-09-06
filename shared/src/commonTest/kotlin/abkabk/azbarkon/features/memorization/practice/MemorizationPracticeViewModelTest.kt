@@ -87,8 +87,8 @@ class MemorizationPracticeViewModelTest {
             val card =
                 sampleCard(
                     id = 7,
-                    front = "مصرع اول\n...",
-                    back = "مصرع اول\nمصرع دوم",
+                    front = "مصرع دوم ...",
+                    back = "مصرع دوم",
                 )
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
             repository.reviewResult =
@@ -120,8 +120,8 @@ class MemorizationPracticeViewModelTest {
             val card =
                 sampleCard(
                     id = 8,
-                    front = "مصرع اول\n...",
-                    back = "مصرع اول\nمصرع دوم",
+                    front = "مصرع دوم ...",
+                    back = "مصرع دوم",
                 )
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
 
@@ -155,8 +155,8 @@ class MemorizationPracticeViewModelTest {
             val card =
                 sampleCard(
                     id = 10,
-                    front = "مصرع اول\n...",
-                    back = "مصرع اول\nمصرع دوم",
+                    front = "مصرع دوم ...",
+                    back = "مصرع دوم",
                 )
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
 

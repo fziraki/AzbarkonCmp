@@ -20,15 +20,15 @@ sealed interface GameQuestion {
     ) : GameQuestion
 
     data class FindPoet(
-        val line1: String,
-        val line2: String,
+        val rightHemistich: String,
+        val leftHemistich: String,
         val options: List<PoetOption>,
         val correctPoetId: Int,
     ) : GameQuestion
 
     data class CompletePoem(
-        val line1: String,
-        val blankedLine2: String,
+        val rightHemistich: String,
+        val blankedLeftHemistich: String,
         val poetName: String,
         val options: List<String>,
         val correctWords: Pair<String, String>,

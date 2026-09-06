@@ -1,9 +1,9 @@
 package abkabk.azbarkon.data.platform
 
 import abkabk.azbarkon.core.domain.result.onSuccess
-import abkabk.azbarkon.core.notifications.DailyBeytNotificationPayload
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
-import abkabk.azbarkon.domain.repository.DailyBeytRepository
+import abkabk.azbarkon.core.notifications.DailyDistichNotificationPayload
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
+import abkabk.azbarkon.domain.repository.DailyDistichRepository
 import abkabk.azbarkon.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,10 +17,10 @@ import platform.UserNotifications.UNNotificationCategory
 import platform.UserNotifications.UNNotificationRequest
 import platform.UserNotifications.UNUserNotificationCenter
 
-class IosDailyBeytNotificationScheduler(
-    private val dailyBeytRepository: DailyBeytRepository,
+class IosDailyDistichNotificationScheduler(
+    private val dailyDistichRepository: DailyDistichRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
-) : DailyBeytNotificationScheduler {
+) : DailyDistichNotificationScheduler {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var deliveryHour: Int = DEFAULT_HOUR
     private var deliveryMinute: Int = DEFAULT_MINUTE
@@ -41,20 +41,20 @@ class IosDailyBeytNotificationScheduler(
         val center = UNUserNotificationCenter.currentNotificationCenter()
         center.removePendingNotificationRequestsWithIdentifiers(
             listOf(
-                DailyBeytNotificationPayload.REQUEST_ID,
-                DailyBeytNotificationPayload.IMMEDIATE_REQUEST_ID,
+                DailyDistichNotificationPayload.REQUEST_ID,
+                DailyDistichNotificationPayload.IMMEDIATE_REQUEST_ID,
             ),
         )
         center.removeDeliveredNotificationsWithIdentifiers(
             listOf(
-                DailyBeytNotificationPayload.REQUEST_ID,
-                DailyBeytNotificationPayload.IMMEDIATE_REQUEST_ID,
+                DailyDistichNotificationPayload.REQUEST_ID,
+                DailyDistichNotificationPayload.IMMEDIATE_REQUEST_ID,
             ),
         )
     }
 
     override fun rescheduleIfEnabled() {
-        if (userPreferencesRepository.isDailyBeytNotificationEnabled()) {
+        if (userPreferencesRepository.isDailyDistichNotificationEnabled()) {
             enable(deliveryHour, deliveryMinute)
         }
     }
@@ -63,11 +63,11 @@ class IosDailyBeytNotificationScheduler(
         registerCategory()
         val center = UNUserNotificationCenter.currentNotificationCenter()
 
-        dailyBeytRepository.getTodayDistich().onSuccess { distich ->
+        dailyDistichRepository.getTodayDistich().onSuccess { distich ->
             if (showImmediately) {
                 val immediateRequest =
                     UNNotificationRequest.requestWithIdentifier(
-                        identifier = DailyBeytNotificationPayload.IMMEDIATE_REQUEST_ID,
+                        identifier = DailyDistichNotificationPayload.IMMEDIATE_REQUEST_ID,
                         content = buildPreviewContent(distich),
                         trigger = null,
                     )
@@ -90,13 +90,13 @@ class IosDailyBeytNotificationScheduler(
 
             val request =
                 UNNotificationRequest.requestWithIdentifier(
-                    identifier = DailyBeytNotificationPayload.REQUEST_ID,
+                    identifier = DailyDistichNotificationPayload.REQUEST_ID,
                     content = content,
                     trigger = trigger,
                 )
 
             center.removePendingNotificationRequestsWithIdentifiers(
-                listOf(DailyBeytNotificationPayload.REQUEST_ID),
+                listOf(DailyDistichNotificationPayload.REQUEST_ID),
             )
             center.addNotificationRequest(request, withCompletionHandler = null)
         }
@@ -114,14 +114,14 @@ class IosDailyBeytNotificationScheduler(
             setTitle("بیت امروز")
             setSubtitle(distich.poetName)
             setBody("${distich.rightText}\n${distich.leftText}")
-            setCategoryIdentifier(DAILY_BEYT_CATEGORY)
+            setCategoryIdentifier(DAILY_DISTICH_CATEGORY)
             setUserInfo(
                 mapOf<Any?, Any?>(
-                    DailyBeytNotificationPayload.KEY_POET_NAME to distich.poetName,
-                    DailyBeytNotificationPayload.KEY_RIGHT_TEXT to distich.rightText,
-                    DailyBeytNotificationPayload.KEY_LEFT_TEXT to distich.leftText,
-                    DailyBeytNotificationPayload.KEY_POEM_ID to distich.poemId.toString(),
-                    DailyBeytNotificationPayload.KEY_VORDER to distich.vorder.toString(),
+                    DailyDistichNotificationPayload.KEY_POET_NAME to distich.poetName,
+                    DailyDistichNotificationPayload.KEY_RIGHT_TEXT to distich.rightText,
+                    DailyDistichNotificationPayload.KEY_LEFT_TEXT to distich.leftText,
+                    DailyDistichNotificationPayload.KEY_POEM_ID to distich.poemId.toString(),
+                    DailyDistichNotificationPayload.KEY_VORDER to distich.vorder.toString(),
                 ),
             )
         }
@@ -129,7 +129,7 @@ class IosDailyBeytNotificationScheduler(
     private fun registerCategory() {
         val category =
             UNNotificationCategory.categoryWithIdentifier(
-                identifier = DAILY_BEYT_CATEGORY,
+                identifier = DAILY_DISTICH_CATEGORY,
                 actions = emptyList<UNNotificationAction>(),
                 intentIdentifiers = emptyList<String>(),
                 options = 0uL,
@@ -140,6 +140,6 @@ class IosDailyBeytNotificationScheduler(
     private companion object {
         const val DEFAULT_HOUR = 8
         const val DEFAULT_MINUTE = 0
-        const val DAILY_BEYT_CATEGORY = "DAILY_BEYT"
+        const val DAILY_DISTICH_CATEGORY = "DAILY_DISTICH"
     }
 }

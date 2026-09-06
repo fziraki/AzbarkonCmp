@@ -58,7 +58,7 @@ fun ProfileRoot(
             viewModel.onAction(
                 ProfileAction.OnNotificationPermissionResult(
                     granted,
-                    NotificationPermissionTarget.DailyBeyt,
+                    NotificationPermissionTarget.DailyDistich,
                 ),
             )
         }
@@ -86,7 +86,7 @@ fun ProfileRoot(
 
             is ProfileEvent.RequestNotificationPermission -> {
                 when (event.target) {
-                    NotificationPermissionTarget.DailyBeyt -> requestNotificationPermission()
+                    NotificationPermissionTarget.DailyDistich -> requestNotificationPermission()
                     NotificationPermissionTarget.Remote -> showRemotePermissionSheet = true
                 }
             }

@@ -5,7 +5,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>Daily Beyt</string>
+    <string>Daily Distich</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -34,7 +34,7 @@
         <key>NSExtensionPointIdentifier</key>
         <string>com.apple.usernotifications.content-extension</string>
         <key>NSExtensionPrincipalClass</key>
-        <string>$(PRODUCT_MODULE_NAME).DailyBeytNotificationViewController</string>
+        <string>$(PRODUCT_MODULE_NAME).DailyDistichNotificationViewController</string>
     </dict>
 </dict>
 </plist>

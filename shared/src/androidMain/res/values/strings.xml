@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="daily_beyt_notification_title">بیت امروز</string>
-    <string name="daily_beyt_notification_channel_name">بیت روزانه</string>
-    <string name="daily_beyt_notification_channel_description">اعلان بیت تصادفی هر روز ساعت ۸ صبح</string>
-    <string name="daily_beyt_notification_app_name">سرو</string>
+    <string name="daily_distich_notification_title">بیت امروز</string>
+    <string name="daily_distich_notification_channel_name">بیت روزانه</string>
+    <string name="daily_distich_notification_channel_description">اعلان بیت تصادفی هر روز ساعت ۸ صبح</string>
+    <string name="daily_distich_notification_app_name">سرو</string>
     <string name="memorization_review_notification_title">مرور امروز</string>
     <string name="memorization_review_notification_body">%1$d بیت</string>
     <string name="memorization_review_notification_action">شروع مرور</string>

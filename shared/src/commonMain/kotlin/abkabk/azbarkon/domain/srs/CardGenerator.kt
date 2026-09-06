@@ -42,23 +42,13 @@ object CardGenerator {
 
         return grouped.entries
             .sortedBy { it.key }
-            .mapIndexed { index, (_, coupletVerses) ->
-                val sortedCouplet = coupletVerses.sortedBy { it.position }
-                val firstLine = sortedCouplet.firstOrNull()?.text.orEmpty()
-                val fullBack =
-                    sortedCouplet.joinToString("\n") { it.text }.trim()
-
-                val front =
-                    if (sortedCouplet.size > 1) {
-                        "$firstLine\n..."
-                    } else {
-                        maskWords(firstLine)
-                    }
+            .mapIndexed { index, (_, groupVerses) ->
+                val line = groupVerses.first().text
 
                 GeneratedCard(
                     cardIndex = index,
-                    front = front,
-                    back = fullBack,
+                    front = maskWords(line),
+                    back = line,
                 )
             }
     }
@@ -71,11 +61,6 @@ object CardGenerator {
     }
 
     fun expectedContinuation(front: String, back: String): String {
-        if (front.contains("\n...")) {
-            val backLines = back.lines().map { it.trim() }.filter { it.isNotEmpty() }
-            if (backLines.size <= 1) return back.trim()
-            return backLines.drop(1).joinToString("\n")
-        }
         if (front.trimEnd().endsWith("...")) {
             val visiblePart = front.replace(Regex("\\s*\\.\\.\\.\\s*$"), "").trim()
             val visibleWords = visiblePart.split(Regex("\\s+")).filter { it.isNotBlank() }
@@ -92,10 +77,6 @@ object CardGenerator {
     )
 
     fun revealedFrontParts(front: String, continuation: String): RevealedFrontParts {
-        if (front.contains("\n...")) {
-            val prefix = front.substringBefore("\n...")
-            return RevealedFrontParts(prefix = "$prefix\n ", continuation = continuation)
-        }
         if (front.trimEnd().endsWith("...")) {
             val prefix = front.replace(Regex("\\s*\\.\\.\\.\\s*$"), "").trimEnd()
             val separator = if (prefix.isEmpty()) "" else " "

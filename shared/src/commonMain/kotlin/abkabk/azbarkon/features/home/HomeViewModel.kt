@@ -5,7 +5,7 @@ import abkabk.azbarkon.core.domain.result.onSuccess
 import abkabk.azbarkon.core.uidata.BaseViewModel
 import abkabk.azbarkon.core.uidata.UiScreenState
 import abkabk.azbarkon.core.uidata.toUiText
-import abkabk.azbarkon.domain.repository.DailyBeytRepository
+import abkabk.azbarkon.domain.repository.DailyDistichRepository
 import abkabk.azbarkon.domain.repository.MemorizationRepository
 import abkabk.azbarkon.domain.repository.PoetRepository
 import androidx.lifecycle.viewModelScope
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val poetRepository: PoetRepository,
     private val memorizationRepository: MemorizationRepository,
-    private val dailyBeytRepository: DailyBeytRepository,
+    private val dailyDistichRepository: DailyDistichRepository,
 ) : BaseViewModel<HomeAction, HomeState, HomeEvent>(
         initialState = HomeState(),
     ) {
@@ -88,7 +88,7 @@ class HomeViewModel(
                 }
             }
 
-            HomeAction.OnBeytOfDayClick -> {
+            HomeAction.OnDistichOfDayClick -> {
                 viewModelScope.launch {
                     state.value.todayDistich?.poemId?.let { poemId ->
                         sendEvent(HomeEvent.NavigateToPoemDetail(poemId))
@@ -117,7 +117,7 @@ class HomeViewModel(
 
     private fun loadTodayDistich() {
         viewModelScope.launch {
-            dailyBeytRepository.getTodayDistich()
+            dailyDistichRepository.getTodayDistich()
                 .onSuccess { distich ->
                     setState { copy(todayDistich = distich) }
                 }

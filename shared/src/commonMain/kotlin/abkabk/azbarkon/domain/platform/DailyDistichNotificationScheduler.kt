@@ -1,6 +1,6 @@
 package abkabk.azbarkon.domain.platform
 
-interface DailyBeytNotificationScheduler {
+interface DailyDistichNotificationScheduler {
     fun enable(
         deliveryHour: Int = 8,
         deliveryMinute: Int = 0,

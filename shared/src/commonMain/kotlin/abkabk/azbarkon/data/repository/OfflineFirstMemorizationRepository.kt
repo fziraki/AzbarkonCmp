@@ -78,17 +78,6 @@ class OfflineFirstMemorizationRepository(
             Result.Error(MemorizationError.Unknown)
         }
 
-    override suspend fun markPoemCompleted(poemId: Int): EmptyResult<MemorizationError> =
-        try {
-            localDataSource.updatePoemStatus(poemId, ActiveMemorizationStatus.COMPLETED.name)
-            notifySummaryChanged()
-            syncReviewNotifications()
-            Result.Success(Unit)
-        } catch (e: IllegalStateException) {
-            Napier.e("markPoemCompleted failed for poemId=$poemId", e)
-            Result.Error(MemorizationError.Unknown)
-        }
-
     override suspend fun resetPoemToActive(poemId: Int): EmptyResult<MemorizationError> =
         try {
             localDataSource.updatePoemStatus(poemId, ActiveMemorizationStatus.ACTIVE.name)
@@ -114,7 +103,7 @@ class OfflineFirstMemorizationRepository(
             is Result.Error -> Result.Error(MemorizationError.PoemNotFound)
             is Result.Success -> {
                 val now = currentTimeMillis()
-                val cards = CardGenerator.generateCards(poemId, detailResult.data.verses, now)
+                val cards = CardGenerator.generateCards(poemId, detailResult.data.verses.filter { it.position >= 0 }, now)
                 if (cards.isEmpty()) {
                     Result.Error(MemorizationError.PoemNotFound)
                 } else {
@@ -295,8 +284,6 @@ class OfflineFirstMemorizationRepository(
         val totalCards = localDataSource.countCardsByPoemId(poemId)
         val reviewedCards = localDataSource.countReviewedCardsByPoemId(poemId)
         val dueCards = localDataSource.countDueCards(nowMillis, poemId)
-        val avgInterval = localDataSource.getAverageInterval(poemId)
-        val maxLevel = localDataSource.getMaxConsecutiveCorrect(poemId)
         val addedAt = localDataSource.getActivePoemAddedAt(poemId) ?: nowMillis
         val maxInterval = localDataSource.getMaxIntervalByPoemId(poemId)
         val reviewCount = localDataSource.getReviewCountByPoemId(poemId)
@@ -319,8 +306,6 @@ class OfflineFirstMemorizationRepository(
             totalCards = totalCards,
             reviewedCards = reviewedCards,
             dueCards = dueCards,
-            boxLevel = SrsScheduler.boxFromInterval(avgInterval),
-            level = maxLevel.coerceAtLeast(1),
             reviewCount = reviewCount,
             nextReviewDays = maxInterval,
         )

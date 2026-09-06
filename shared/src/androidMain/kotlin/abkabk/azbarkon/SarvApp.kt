@@ -1,7 +1,7 @@
 package abkabk.azbarkon
 
 import abkabk.azbarkon.core.di.initKoin
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
 import abkabk.azbarkon.domain.platform.MemorizationReviewNotificationScheduler
 import android.app.Application
 import android.content.pm.ApplicationInfo
@@ -14,7 +14,7 @@ import org.koin.androidx.workmanager.factory.KoinWorkerFactory
 class SarvApp :
     Application(),
     Configuration.Provider {
-    private val dailyBeytNotificationScheduler: DailyBeytNotificationScheduler by inject()
+    private val dailyDistichNotificationScheduler: DailyDistichNotificationScheduler by inject()
     private val memorizationReviewNotificationScheduler: MemorizationReviewNotificationScheduler by inject()
 
     override fun onCreate() {
@@ -24,7 +24,7 @@ class SarvApp :
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
             Napier.base(DebugAntilog())
         }
-        dailyBeytNotificationScheduler.rescheduleIfEnabled()
+        dailyDistichNotificationScheduler.rescheduleIfEnabled()
         memorizationReviewNotificationScheduler.rescheduleIfActive()
     }
 

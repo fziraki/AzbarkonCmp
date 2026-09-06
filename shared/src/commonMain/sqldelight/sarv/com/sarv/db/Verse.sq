@@ -1,5 +1,5 @@
 -- Stores the text of each verse line within a poem.
--- vorder = verse couplet order, position = line within couplet (0=right, 1=left).
+-- vorder = verse distich order, position = line within distich (0=right, 1=left).
 CREATE TABLE verse (
     poem_id INTEGER NOT NULL,
     vorder INTEGER NOT NULL,
@@ -41,8 +41,8 @@ WHERE poem_id = :poem_id
   AND position = :position
 LIMIT 1;
 
--- Count total eligible distichs (couplets) for a poet, used to calculate
--- a random offset for paginated distich browsing (daily-beyt feature).
+-- Count total eligible distichs (distichs) for a poet, used to calculate
+-- a random offset for paginated distich browsing (daily-distich feature).
 -- Excludes rubaiyat and filters by poet when filter_poet is set.
 selectRandomDistichCountByPoet:
 SELECT COUNT(*)

@@ -4,13 +4,13 @@ import abkabk.azbarkon.core.domain.result.DataError
 import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.core.domain.result.dbQuery
 import abkabk.azbarkon.data.mapper.toRandomDistich
-import abkabk.azbarkon.domain.datasource.DailyBeytLocalDataSource
+import abkabk.azbarkon.domain.datasource.DailyDistichLocalDataSource
 import abkabk.azbarkon.domain.model.RandomDistich
 import com.sarv.db.VerseQueries
 
-class SqlDelightDailyBeytLocalDataSource(
+class SqlDelightDailyDistichLocalDataSource(
     private val verseQueries: VerseQueries,
-) : DailyBeytLocalDataSource {
+) : DailyDistichLocalDataSource {
     override suspend fun getRandomDistich(
         seed: Long,
         poetId: Int,

@@ -330,8 +330,8 @@ class PoemDetailViewModel(
                     val detail = result.data
                     val isMemorizing = memorizationRepository.isPoemActive(poemId)
                     val verseGroups = detail.verses.groupBy { it.vorder }
-                    val coupletCount = verseGroups.count { (_, v) -> v.any { it.position == 1 } }
-                    val isProse = verseGroups.size > 0 && coupletCount * 2 < verseGroups.size
+                    val distichCount = verseGroups.count { (_, v) -> v.any { it.position == 1 } }
+                    val isProse = verseGroups.size > 0 && distichCount * 2 < verseGroups.size
                     setState {
                         copy(
                             screenState = UiScreenState.Success,

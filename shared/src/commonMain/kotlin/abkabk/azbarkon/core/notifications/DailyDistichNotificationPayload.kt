@@ -2,7 +2,7 @@ package abkabk.azbarkon.core.notifications
 
 import abkabk.azbarkon.domain.model.RandomDistich
 
-object DailyBeytNotificationPayload {
+object DailyDistichNotificationPayload {
     const val KEY_POET_NAME = "poet_name"
     const val KEY_RIGHT_TEXT = "right_text"
     const val KEY_LEFT_TEXT = "left_text"
@@ -10,10 +10,10 @@ object DailyBeytNotificationPayload {
     const val KEY_VORDER = "vorder"
     const val NOTIFICATION_ID = 1001
     const val PREVIEW_NOTIFICATION_ID = 1002
-    const val CHANNEL_ID = "daily_beyt"
-    const val WORK_NAME = "daily_beyt_notification"
-    const val REQUEST_ID = "daily_beyt"
-    const val IMMEDIATE_REQUEST_ID = "daily_beyt_immediate"
+    const val CHANNEL_ID = "daily_distich"
+    const val WORK_NAME = "daily_distich_notification"
+    const val REQUEST_ID = "daily_distich"
+    const val IMMEDIATE_REQUEST_ID = "daily_distich_immediate"
 
     fun RandomDistich.toPayloadMap(): Map<String, String> =
         mapOf(

@@ -613,8 +613,8 @@ class GameSessionViewModelTest {
 
         private fun createQuestion() =
             GameQuestion.CompletePoem(
-                line1 = "بیت اول",
-                blankedLine2 = "شروع ____ وسط ____ پایان",
+                rightHemistich = "بیت اول",
+                blankedLeftHemistich = "شروع ____ وسط ____ پایان",
                 poetName = "حافظ",
                 options = listOf("word1", "word2", "wrong1", "wrong2"),
                 correctWords = "word1" to "word2",

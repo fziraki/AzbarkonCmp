@@ -90,12 +90,12 @@ private fun CompletePoemPoemCard(
         Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = question.line1,
+                text = question.rightHemistich,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
             )
             CompletePoemBlankedLine(
-                blankedLine = question.blankedLine2,
+                blankedLine = question.blankedLeftHemistich,
                 filledWords = filledWords,
                 answerPhase = answerPhase,
                 correctWords = question.correctWords,

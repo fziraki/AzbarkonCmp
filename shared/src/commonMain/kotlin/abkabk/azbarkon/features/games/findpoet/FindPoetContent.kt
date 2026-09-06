@@ -109,13 +109,13 @@ private fun FindPoetPoemCard(
         Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = question.line1,
+                text = question.rightHemistich,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = question.line2,
+                text = question.leftHemistich,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
             )

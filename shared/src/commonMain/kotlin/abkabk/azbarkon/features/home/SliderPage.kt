@@ -1,7 +1,7 @@
 package abkabk.azbarkon.features.home
 
 sealed class SliderPage {
-    data object BeytOfDay : SliderPage()
+    data object DistichOfDay : SliderPage()
 
     data object Challenge : SliderPage()
 

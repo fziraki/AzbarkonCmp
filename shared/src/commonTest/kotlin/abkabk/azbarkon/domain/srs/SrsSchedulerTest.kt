@@ -60,10 +60,4 @@ class SrsSchedulerTest {
         assertThat(result.consecutiveEasy).isEqualTo(3)
     }
 
-    @Test
-    fun `box level derives from interval`() {
-        assertThat(SrsScheduler.boxFromInterval(1)).isEqualTo(1)
-        assertThat(SrsScheduler.boxFromInterval(3)).isEqualTo(2)
-        assertThat(SrsScheduler.boxFromInterval(10)).isEqualTo(4)
-    }
 }

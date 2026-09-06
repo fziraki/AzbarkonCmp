@@ -60,8 +60,6 @@ data class ActiveMemorizationPoem(
     val totalCards: Int,
     val reviewedCards: Int,
     val dueCards: Int,
-    val boxLevel: Int,
-    val level: Int,
     val reviewCount: Int,
     val nextReviewDays: Int,
 )

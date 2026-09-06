@@ -1,7 +1,7 @@
 import UserNotifications
 import SwiftUI
 
-final class DailyBeytNotificationViewController: UIViewController, UNNotificationContentExtension {
+final class DailyDistichNotificationViewController: UIViewController, UNNotificationContentExtension {
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical

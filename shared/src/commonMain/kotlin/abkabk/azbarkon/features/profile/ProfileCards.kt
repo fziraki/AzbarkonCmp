@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.cd_levels
 import sarv.shared.generated.resources.ic_help
-import sarv.shared.generated.resources.beyt100_badge
+import sarv.shared.generated.resources.distich100_badge
 import sarv.shared.generated.resources.first_badge
 import sarv.shared.generated.resources.hafez_star_badge
 import sarv.shared.generated.resources.level1
@@ -408,7 +408,7 @@ private fun BadgeIcon(
     val drawable =
         when (badgeId) {
             1 -> Res.drawable.first_badge
-            2 -> Res.drawable.beyt100_badge
+            2 -> Res.drawable.distich100_badge
             WEEKLY_STREAK_BADGE_ID -> Res.drawable.night_badge
             POETRY_LOVER_BADGE_ID -> Res.drawable.poetry_lover_badge
             PERFECT_GAMES_BADGE_ID -> Res.drawable.hafez_star_badge
