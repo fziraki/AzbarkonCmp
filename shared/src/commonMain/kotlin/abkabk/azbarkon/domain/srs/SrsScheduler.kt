@@ -62,12 +62,12 @@ object SrsScheduler {
         return ReviewResult(
             interval = interval,
             score = verseScores.average(),
-            dueDateMillis = nextDeliveryMillis() + interval * MILLIS_PER_DAY,
+            dueDateMillis = nextDeliveryMillis(interval),
             consecutiveEasy = newConsecutiveEasy,
         )
     }
 
-    private fun nextDeliveryMillis(): Long {
+    private fun nextDeliveryMillis(interval: Int): Long {
         val now = currentTimeMillis()
         val offset = localTimezoneOffsetMillis()
         val localNow = now + offset
@@ -78,6 +78,6 @@ object SrsScheduler {
         } else {
             deliveryUtc
         }
-        return nextDeliveryUtc - offset
+        return nextDeliveryUtc - offset + interval * MILLIS_PER_DAY
     }
 }
