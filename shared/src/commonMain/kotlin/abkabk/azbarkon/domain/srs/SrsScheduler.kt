@@ -6,6 +6,8 @@ import abkabk.azbarkon.domain.model.memorization.SrsGrade
 
 object SrsScheduler {
     const val MILLIS_PER_DAY = 86_400_000L
+    private const val MILLIS_PER_HOUR = 3_600_000L
+    private const val MILLIS_PER_MINUTE = 60_000L
     private const val DELIVERY_HOUR = 10
     private const val DELIVERY_MINUTE = 0
 
@@ -70,7 +72,7 @@ object SrsScheduler {
         val offset = localTimezoneOffsetMillis()
         val localNow = now + offset
         val midnightUtc = localNow - (localNow % MILLIS_PER_DAY)
-        val deliveryUtc = midnightUtc + DELIVERY_HOUR * 3_600_000L + DELIVERY_MINUTE * 60_000L
+        val deliveryUtc = midnightUtc + DELIVERY_HOUR * MILLIS_PER_HOUR + DELIVERY_MINUTE * MILLIS_PER_MINUTE
         val nextDeliveryUtc = if (deliveryUtc <= localNow) {
             deliveryUtc + MILLIS_PER_DAY
         } else {
