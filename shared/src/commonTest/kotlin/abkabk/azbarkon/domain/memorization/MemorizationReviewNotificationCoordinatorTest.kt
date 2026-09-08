@@ -111,6 +111,13 @@ class MemorizationReviewNotificationCoordinatorTest {
 
         override suspend fun updateCard(card: SrsCard) = Unit
 
+        override suspend fun updateCardsByPoemIdSchedule(
+            poemId: Int,
+            interval: Int,
+            dueDateMillis: Long,
+            score: Double,
+        ) = Unit
+
         override suspend fun countCardsByPoemId(poemId: Int): Int = 0
 
         override suspend fun countReviewedCardsByPoemId(poemId: Int): Int = 0

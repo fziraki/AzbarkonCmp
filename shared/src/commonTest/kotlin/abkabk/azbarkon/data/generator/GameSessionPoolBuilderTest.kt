@@ -14,12 +14,12 @@ class GameSessionPoolBuilderTest {
     fun `extracts distichs from paired verses`() {
         val verses =
             listOf(
-                VerseRow(vorder = 0, position = 0, text = "a0"),
-                VerseRow(vorder = 0, position = 1, text = "a1"),
-                VerseRow(vorder = 1, position = 0, text = "b0"),
-                VerseRow(vorder = 1, position = 1, text = "b1"),
-                VerseRow(vorder = 2, position = 0, text = "c0"),
-                VerseRow(vorder = 2, position = 1, text = "c1"),
+                VerseRow(vorder = 1, position = 0, text = "a0"),
+                VerseRow(vorder = 2, position = 1, text = "a1"),
+                VerseRow(vorder = 3, position = 0, text = "b0"),
+                VerseRow(vorder = 4, position = 1, text = "b1"),
+                VerseRow(vorder = 5, position = 0, text = "c0"),
+                VerseRow(vorder = 6, position = 1, text = "c1"),
             )
 
         val extraction =
@@ -39,8 +39,8 @@ class GameSessionPoolBuilderTest {
     fun `rejects poems below minimum distich count`() {
         val verses =
             listOf(
-                VerseRow(vorder = 0, position = 0, text = "a0"),
-                VerseRow(vorder = 0, position = 1, text = "a1"),
+                VerseRow(vorder = 1, position = 0, text = "a0"),
+                VerseRow(vorder = 2, position = 1, text = "a1"),
             )
 
         val extraction =
@@ -77,12 +77,12 @@ class GameSessionPoolBuilderTest {
     fun `extracts organize windows from two consecutive distichs`() {
         val verses =
             listOf(
-                VerseRow(vorder = 0, position = 0, text = "a0"),
-                VerseRow(vorder = 0, position = 1, text = "a1"),
-                VerseRow(vorder = 1, position = 0, text = "b0"),
-                VerseRow(vorder = 1, position = 1, text = "b1"),
-                VerseRow(vorder = 2, position = 0, text = "c0"),
-                VerseRow(vorder = 2, position = 1, text = "c1"),
+                VerseRow(vorder = 1, position = 0, text = "a0"),
+                VerseRow(vorder = 2, position = 1, text = "a1"),
+                VerseRow(vorder = 3, position = 0, text = "b0"),
+                VerseRow(vorder = 4, position = 1, text = "b1"),
+                VerseRow(vorder = 5, position = 0, text = "c0"),
+                VerseRow(vorder = 6, position = 1, text = "c1"),
             )
 
         val extraction =
@@ -101,10 +101,9 @@ class GameSessionPoolBuilderTest {
     }
 
     @Test
-    fun `extracts ganjoor alternating distichs`() {
+    fun `skips left hemistich that has no right partner`() {
         val verses =
             listOf(
-                VerseRow(vorder = 1, position = 0, text = "a0"),
                 VerseRow(vorder = 2, position = 1, text = "a1"),
                 VerseRow(vorder = 3, position = 0, text = "b0"),
                 VerseRow(vorder = 4, position = 1, text = "b1"),
@@ -118,32 +117,9 @@ class GameSessionPoolBuilderTest {
                 verses = verses,
             )
 
-        assertThat(extraction.distichs).hasSize(2)
-        assertThat(extraction.distichs.first().firstHemistich).isEqualTo("a0")
-        assertThat(extraction.distichs.first().secondHemistich).isEqualTo("a1")
-        assertThat(extraction.organizeWindows).hasSize(1)
-        assertThat(extraction.organizeWindows.first().lines)
-            .isEqualTo(listOf("a0", "a1", "b0", "b1"))
-    }
-
-    @Test
-    fun `skips vorder missing position 1 for same vorder distich`() {
-        val verses =
-            listOf(
-                VerseRow(vorder = 0, position = 0, text = "a0"),
-                VerseRow(vorder = 1, position = 0, text = "b0"),
-                VerseRow(vorder = 1, position = 1, text = "b1"),
-            )
-
-        val extraction =
-            GameSessionPoolBuilder.extractFromVerses(
-                poemId = 12,
-                poetId = 2,
-                poetName = "حافظ",
-                verses = verses,
-            )
-
-        assertThat(extraction.distichs).hasSize(2)
+        assertThat(extraction.distichs).hasSize(1)
+        assertThat(extraction.distichs.first().firstHemistich).isEqualTo("b0")
+        assertThat(extraction.distichs.first().secondHemistich).isEqualTo("b1")
         assertThat(extraction.organizeWindows).isEmpty()
     }
 
@@ -151,9 +127,9 @@ class GameSessionPoolBuilderTest {
     fun `organize requires two complete distichs`() {
         val verses =
             listOf(
-                VerseRow(vorder = 0, position = 0, text = "a0"),
-                VerseRow(vorder = 0, position = 1, text = "a1"),
-                VerseRow(vorder = 1, position = 0, text = "b0"),
+                VerseRow(vorder = 1, position = 0, text = "a0"),
+                VerseRow(vorder = 2, position = 1, text = "a1"),
+                VerseRow(vorder = 3, position = 0, text = "b0"),
             )
 
         val extraction =

@@ -19,15 +19,21 @@ class SrsSchedulerTest {
     }
 
     @Test
-    fun `good keeps score unchanged`() {
+    fun `good increases score by 1`() {
         val score = SrsScheduler.updateVerseScore(0.0, SrsGrade.GOOD)
-        assertThat(score).isEqualTo(0.0)
+        assertThat(score).isEqualTo(1.0)
     }
 
     @Test
     fun `easy increases score by 1_15`() {
         val score = SrsScheduler.updateVerseScore(0.0, SrsGrade.EASY)
         assertThat(score).isEqualTo(1.15)
+    }
+
+    @Test
+    fun `unspecified keeps score unchanged`() {
+        val score = SrsScheduler.updateVerseScore(0.0, SrsGrade.UNSPECIFIED)
+        assertThat(score).isEqualTo(0.0)
     }
 
     @Test

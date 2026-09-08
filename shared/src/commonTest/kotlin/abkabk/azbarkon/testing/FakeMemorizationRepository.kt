@@ -22,6 +22,8 @@ class FakeMemorizationRepository : MemorizationRepository {
     var lastAddedPoemId: Int? = null
     var lastReviewedCardId: Long? = null
     var lastReviewGrade: SrsGrade? = null
+    var lastPoemReviewPoemId: Int? = null
+    var lastPoemReviewGrades: List<SrsGrade>? = null
 
     private val summaryFlow = MutableStateFlow(summary)
     private val streakFlow = MutableStateFlow(0)
@@ -73,7 +75,11 @@ class FakeMemorizationRepository : MemorizationRepository {
         poemId: Int,
         verseGrades: List<SrsGrade>,
         consecutiveEasy: Int,
-    ): Result<Int, MemorizationError> = Result.Success(1)
+    ): Result<Int, MemorizationError> {
+        lastPoemReviewPoemId = poemId
+        lastPoemReviewGrades = verseGrades
+        return Result.Success(1)
+    }
 
     override suspend fun isPoemActive(poemId: Int): Boolean = isActive
 

@@ -9,8 +9,9 @@ object SrsScheduler {
     // Grade score deltas
     private const val AGAIN_DELTA = -1.20
     private const val HARD_DELTA = -1.15
-    private const val GOOD_DELTA = 0.0
+    private const val GOOD_DELTA = 1.0
     private const val EASY_DELTA = 1.15
+    private const val UNSPECIFIED_DELTA = 0.0
 
     data class ReviewResult(
         val interval: Int,
@@ -25,6 +26,7 @@ object SrsScheduler {
             SrsGrade.HARD -> currentScore + HARD_DELTA
             SrsGrade.GOOD -> currentScore + GOOD_DELTA
             SrsGrade.EASY -> currentScore + EASY_DELTA
+            SrsGrade.UNSPECIFIED -> currentScore + UNSPECIFIED_DELTA
         }
 
     fun calculatePoemInterval(

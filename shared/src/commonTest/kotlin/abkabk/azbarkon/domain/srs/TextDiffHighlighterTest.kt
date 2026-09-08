@@ -151,7 +151,7 @@ class TextDiffHighlighterTest {
     }
 
     @Test
-    fun `diffUserWords colors longer and shorter words red, rest green`() {
+    fun `diffUserWords colors longer and shorter words red and rest green`() {
         val tokens =
             TextDiffHighlighter.diffUserWords(
                 "ادر کاسا و ناولها",

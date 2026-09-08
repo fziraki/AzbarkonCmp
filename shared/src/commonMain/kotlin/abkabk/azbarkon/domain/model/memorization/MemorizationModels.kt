@@ -7,6 +7,7 @@ enum class SrsGrade {
     HARD,
     GOOD,
     EASY,
+    UNSPECIFIED,
 }
 
 enum class ActiveMemorizationStatus {

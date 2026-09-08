@@ -47,14 +47,12 @@ class MemorizationPracticeViewModelTest {
             viewModel.onAction(MemorizationPracticeAction.OnRevealClick)
             viewModel.onAction(MemorizationPracticeAction.OnGradeClick(SrsGrade.GOOD))
 
-            assertThat(repository.lastReviewedCardId).isNull()
             assertThat(viewModel.state.value.phase).isEqualTo(PracticePhase.REVEALED)
             assertThat(viewModel.state.value.selectedGrade).isEqualTo(SrsGrade.GOOD)
 
             viewModel.onAction(MemorizationPracticeAction.OnNextCard)
 
-            assertThat(repository.lastReviewedCardId).isEqualTo(5)
-            assertThat(repository.lastReviewGrade).isEqualTo(SrsGrade.GOOD)
+            assertThat(repository.lastPoemReviewGrades).isEqualTo(listOf(SrsGrade.GOOD))
             assertThat(viewModel.state.value.phase).isEqualTo(PracticePhase.COMPLETE)
             assertThat(viewModel.state.value.sessionReviewed).isEqualTo(1)
             assertThat(viewModel.state.value.sessionLearned).isEqualTo(1)
@@ -110,8 +108,7 @@ class MemorizationPracticeViewModelTest {
 
             viewModel.onAction(MemorizationPracticeAction.OnNextCard)
 
-            assertThat(repository.lastReviewedCardId).isEqualTo(7)
-            assertThat(repository.lastReviewGrade).isEqualTo(SrsGrade.EASY)
+            assertThat(repository.lastPoemReviewGrades).isEqualTo(listOf(SrsGrade.EASY))
         }
 
     @Test
@@ -120,7 +117,7 @@ class MemorizationPracticeViewModelTest {
             val card =
                 sampleCard(
                     id = 8,
-                    front = "مصرع دوم ...",
+                    front = "مصرع ...",
                     back = "مصرع دوم",
                 )
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))

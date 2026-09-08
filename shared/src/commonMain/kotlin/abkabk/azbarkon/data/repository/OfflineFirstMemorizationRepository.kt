@@ -194,7 +194,7 @@ class OfflineFirstMemorizationRepository(
 
         val now = currentTimeMillis()
         val verseScores = cards.mapIndexed { index, card ->
-            val grade = verseGrades.getOrNull(index) ?: SrsGrade.GOOD
+            val grade = verseGrades.getOrNull(index) ?: SrsGrade.UNSPECIFIED
             SrsScheduler.updateVerseScore(card.score, grade)
         }
 
