@@ -193,23 +193,32 @@ class OfflineFirstMemorizationRepository(
         if (cards.isEmpty()) return Result.Error(MemorizationError.CardNotFound)
 
         val now = currentTimeMillis()
-        val verseScores = cards.mapIndexed { index, card ->
-            val grade = verseGrades.getOrNull(index) ?: SrsGrade.UNSPECIFIED
+        val reviewedCards = cards.mapIndexedNotNull { index, card ->
+            val grade = verseGrades.getOrNull(index)
+            if (grade != null && grade != SrsGrade.UNSPECIFIED) card to grade else null
+        }
+
+        if (reviewedCards.isEmpty()) {
+            return Result.Success(0)
+        }
+
+        val verseScores = reviewedCards.map { (card, grade) ->
             SrsScheduler.updateVerseScore(card.score, grade)
         }
 
         val result = SrsScheduler.calculatePoemInterval(verseScores, consecutiveEasy)
 
         return try {
-            localDataSource.updateCardsByPoemIdSchedule(
-                poemId = poemId,
-                interval = result.interval,
-                dueDateMillis = result.dueDateMillis,
-                score = result.score,
-                consecutiveEasy = result.consecutiveEasy,
-            )
-            cards.forEachIndexed { index, card ->
-                val grade = verseGrades.getOrNull(index) ?: return@forEachIndexed
+            reviewedCards.forEach { (card, grade) ->
+                val newScore = SrsScheduler.updateVerseScore(card.score, grade)
+                localDataSource.updateCard(
+                    card.copy(
+                        interval = result.interval,
+                        dueDateMillis = result.dueDateMillis,
+                        score = newScore,
+                        consecutiveCorrect = result.consecutiveEasy,
+                    ),
+                )
                 localDataSource.insertReviewLog(
                     cardId = card.id,
                     grade = grade,
@@ -218,6 +227,13 @@ class OfflineFirstMemorizationRepository(
                     reviewTimeMillis = now,
                 )
             }
+            val reviewedIds = reviewedCards.map { it.first.id }.toSet()
+            cards.filter { it.id !in reviewedIds }
+                .forEach { card ->
+                    localDataSource.updateCard(
+                        card.copy(consecutiveCorrect = result.consecutiveEasy),
+                    )
+                }
             notifySummaryChanged()
             syncReviewNotifications()
             Result.Success(result.interval)

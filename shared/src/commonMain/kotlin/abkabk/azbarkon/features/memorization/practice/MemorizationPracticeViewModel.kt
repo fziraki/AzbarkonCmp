@@ -257,27 +257,24 @@ class MemorizationPracticeViewModel(
     private fun advanceToNextCard() {
         currentQueueIndex += 1
         if (currentQueueIndex >= verseCards.size) {
-            submitPoemReview(showComplete = true)
+            submitPoemReview()
         } else {
             showCardAt(currentQueueIndex)
-            submitPoemReview(showComplete = false)
         }
     }
 
-    private fun submitPoemReview(showComplete: Boolean = true) {
+    private fun submitPoemReview() {
         if (poemId == null || verseGrades.isEmpty()) {
-            if (showComplete) {
-                viewModelScope.launch {
-                    val (hasOther, nextId) = findOtherDuePoem()
-                    setState {
-                        copy(
-                            screenState = UiScreenState.Success,
-                            phase = PracticePhase.COMPLETE,
-                            currentCard = null,
-                            hasOtherDuePoems = hasOther,
-                            nextPoemId = nextId,
-                        )
-                    }
+            viewModelScope.launch {
+                val (hasOther, nextId) = findOtherDuePoem()
+                setState {
+                    copy(
+                        screenState = UiScreenState.Success,
+                        phase = PracticePhase.COMPLETE,
+                        currentCard = null,
+                        hasOtherDuePoems = hasOther,
+                        nextPoemId = nextId,
+                    )
                 }
             }
             return
@@ -290,31 +287,27 @@ class MemorizationPracticeViewModel(
                     verseGrades = verseGrades.toList(),
                     consecutiveEasy = consecutiveEasy,
                 )
-                .onSuccess { newInterval ->
-                    if (showComplete) {
-                        val (hasOther, nextId) = findOtherDuePoem()
-                        setState {
-                            copy(
-                                screenState = UiScreenState.Success,
-                                phase = PracticePhase.COMPLETE,
-                                currentCard = null,
-                                hasOtherDuePoems = hasOther,
-                                nextPoemId = nextId,
-                            )
-                        }
+                .onSuccess {
+                    val (hasOther, nextId) = findOtherDuePoem()
+                    setState {
+                        copy(
+                            screenState = UiScreenState.Success,
+                            phase = PracticePhase.COMPLETE,
+                            currentCard = null,
+                            hasOtherDuePoems = hasOther,
+                            nextPoemId = nextId,
+                        )
                     }
-                }.onFailure { error ->
-                    if (showComplete) {
-                        val (hasOther, nextId) = findOtherDuePoem()
-                        setState {
-                            copy(
-                                screenState = UiScreenState.Success,
-                                phase = PracticePhase.COMPLETE,
-                                currentCard = null,
-                                hasOtherDuePoems = hasOther,
-                                nextPoemId = nextId,
-                            )
-                        }
+                }.onFailure {
+                    val (hasOther, nextId) = findOtherDuePoem()
+                    setState {
+                        copy(
+                            screenState = UiScreenState.Success,
+                            phase = PracticePhase.COMPLETE,
+                            currentCard = null,
+                            hasOtherDuePoems = hasOther,
+                            nextPoemId = nextId,
+                        )
                     }
                 }
         }
