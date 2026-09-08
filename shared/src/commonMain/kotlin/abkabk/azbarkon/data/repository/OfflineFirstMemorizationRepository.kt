@@ -206,6 +206,7 @@ class OfflineFirstMemorizationRepository(
                 interval = result.interval,
                 dueDateMillis = result.dueDateMillis,
                 score = result.score,
+                consecutiveEasy = result.consecutiveEasy,
             )
             cards.forEachIndexed { index, card ->
                 val grade = verseGrades.getOrNull(index) ?: return@forEachIndexed

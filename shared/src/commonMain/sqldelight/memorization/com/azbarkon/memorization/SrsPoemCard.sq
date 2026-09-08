@@ -95,12 +95,13 @@ SET interval = ?,
     score = ?
 WHERE id = ?;
 
--- Update interval, due_date and score without resetting consecutive_correct.
+-- Update interval, due_date, score and consecutive_correct for all cards in a poem.
 updateCardsByPoemIdSchedule:
 UPDATE srs_poem_card
 SET interval = ?,
     due_date = ?,
-    score = ?
+    score = ?,
+    consecutive_correct = ?
 WHERE poem_id = ?;
 
 -- Delete all cards belonging to a poem.

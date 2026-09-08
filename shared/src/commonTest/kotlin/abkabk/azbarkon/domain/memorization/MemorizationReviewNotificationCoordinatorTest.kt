@@ -116,6 +116,7 @@ class MemorizationReviewNotificationCoordinatorTest {
             interval: Int,
             dueDateMillis: Long,
             score: Double,
+            consecutiveEasy: Int,
         ) = Unit
 
         override suspend fun countCardsByPoemId(poemId: Int): Int = 0

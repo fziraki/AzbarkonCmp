@@ -135,11 +135,13 @@ class SqlDelightMemorizationLocalDataSource(
         interval: Int,
         dueDateMillis: Long,
         score: Double,
+        consecutiveEasy: Int,
     ) {
         cardQueries.updateCardsByPoemIdSchedule(
             interval = interval.toLong(),
             due_date = dueDateMillis,
             score = score,
+            consecutive_correct = consecutiveEasy.toLong(),
             poem_id = poemId.toLong(),
         )
     }

@@ -44,19 +44,12 @@ object SrsScheduler {
         val interval: Int
         val newConsecutiveEasy: Int
 
-        when {
-            total < minTotal -> {
-                interval = 1
-                newConsecutiveEasy = 0
-            }
-            total == minTotal -> {
-                interval = 2
-                newConsecutiveEasy = 0
-            }
-            else -> {
-                newConsecutiveEasy = consecutiveEasy + 1
-                interval = newConsecutiveEasy
-            }
+        if (total > minTotal) {
+            newConsecutiveEasy = consecutiveEasy + 1
+            interval = newConsecutiveEasy
+        } else {
+            newConsecutiveEasy = 0
+            interval = 1
         }
 
         return ReviewResult(

@@ -47,6 +47,7 @@ interface MemorizationLocalDataSource {
         interval: Int,
         dueDateMillis: Long,
         score: Double,
+        consecutiveEasy: Int,
     )
 
     suspend fun countCardsByPoemId(poemId: Int): Int

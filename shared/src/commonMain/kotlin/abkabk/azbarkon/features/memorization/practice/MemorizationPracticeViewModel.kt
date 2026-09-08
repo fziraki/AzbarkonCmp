@@ -88,6 +88,7 @@ class MemorizationPracticeViewModel(
             .getDueCards(poemId)
             .onSuccess { cards ->
                 verseCards = cards
+                consecutiveEasy = cards.firstOrNull()?.consecutiveCorrect ?: 0
                 verseGrades.clear()
                 currentQueueIndex = 0
 
@@ -290,14 +291,6 @@ class MemorizationPracticeViewModel(
                     consecutiveEasy = consecutiveEasy,
                 )
                 .onSuccess { newInterval ->
-                    consecutiveEasy =
-                        if (verseGrades.all { it == SrsGrade.EASY }) {
-                            consecutiveEasy + 1
-                        } else if (verseGrades.any { it == SrsGrade.HARD || it == SrsGrade.AGAIN }) {
-                            0
-                        } else {
-                            consecutiveEasy
-                        }
                     if (showComplete) {
                         val (hasOther, nextId) = findOtherDuePoem()
                         setState {
