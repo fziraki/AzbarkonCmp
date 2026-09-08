@@ -72,12 +72,7 @@ object SrsScheduler {
         val offset = localTimezoneOffsetMillis()
         val localNow = now + offset
         val midnightUtc = localNow - (localNow % MILLIS_PER_DAY)
-        val deliveryUtc = midnightUtc + DELIVERY_HOUR * MILLIS_PER_HOUR + DELIVERY_MINUTE * MILLIS_PER_MINUTE
-        val nextDeliveryUtc = if (deliveryUtc <= localNow) {
-            deliveryUtc + MILLIS_PER_DAY
-        } else {
-            deliveryUtc
-        }
-        return nextDeliveryUtc - offset + interval * MILLIS_PER_DAY
+        val todayDeliveryUtc = midnightUtc + DELIVERY_HOUR * MILLIS_PER_HOUR + DELIVERY_MINUTE * MILLIS_PER_MINUTE
+        return todayDeliveryUtc - offset + interval * MILLIS_PER_DAY
     }
 }
