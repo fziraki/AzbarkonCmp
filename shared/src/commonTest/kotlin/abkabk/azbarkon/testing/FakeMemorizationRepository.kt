@@ -9,6 +9,7 @@ import abkabk.azbarkon.domain.model.memorization.MemorizationSummary
 import abkabk.azbarkon.domain.model.memorization.QuickStartTarget
 import abkabk.azbarkon.domain.model.memorization.SrsCard
 import abkabk.azbarkon.domain.model.memorization.SrsGrade
+import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import abkabk.azbarkon.domain.repository.MemorizationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,11 @@ class FakeMemorizationRepository : MemorizationRepository {
     var lastReviewedCardId: Long? = null
     var lastReviewGrade: SrsGrade? = null
     var lastPoemReviewPoemId: Int? = null
-    var lastPoemReviewGrades: List<SrsGrade>? = null
+    var lastReviewLog: StoredReviewLog = StoredReviewLog(
+        id = -1, poemId = 0, reviewRound = 0, minTotalScore = 0.0,
+        userTotalScore = 0.0, cardIndex = 0, sessionReviewed = 0,
+        sessionMistakes = 0, sessionLearned = 0,
+    )
 
     private val summaryFlow = MutableStateFlow(summary)
     private val streakFlow = MutableStateFlow(0)
@@ -60,24 +65,24 @@ class FakeMemorizationRepository : MemorizationRepository {
 
     override suspend fun getCardsByPoemId(poemId: Int): Result<List<SrsCard>, MemorizationError> = dueCards
 
-    override suspend fun submitCardReview(
+    override suspend fun insertReviewLog(
         poemId: Int,
         cardId: Long,
         grade: SrsGrade,
-        totalCards: Int,
-    ): Result<Int, MemorizationError> {
+        minTotalScore: Double,
+        cardIndex: Int,
+        sessionReviewed: Int,
+        sessionMistakes: Int,
+        sessionLearned: Int
+    ): Result<Unit, MemorizationError> {
         lastReviewedCardId = cardId
         lastReviewGrade = grade
         lastPoemReviewPoemId = poemId
-        return Result.Success(1)
+        return Result.Success(Unit)
     }
 
-    override suspend fun submitPoemReview(
-        poemId: Int,
-        verseGrades: List<SrsGrade>,
-    ): Result<Int, MemorizationError> {
+    override suspend fun submitPoemReview(poemId: Int): Result<Int, MemorizationError> {
         lastPoemReviewPoemId = poemId
-        lastPoemReviewGrades = verseGrades
         return Result.Success(1)
     }
 
@@ -87,4 +92,6 @@ class FakeMemorizationRepository : MemorizationRepository {
         poetNameFragment: String,
         categoryTextFragment: String?,
     ): QuickStartTarget = QuickStartTarget()
+
+    override suspend fun getLastReviewLog(poemId: Int): StoredReviewLog = lastReviewLog
 }

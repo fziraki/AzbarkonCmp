@@ -185,7 +185,6 @@ class MemorizationPracticeViewModelTest {
     ) = SrsCard(
         id = id,
         poemId = 10,
-        cardIndex = 0,
         front = front,
         back = back,
     )
@@ -202,8 +201,8 @@ class MemorizationPracticeViewModelTest {
         status = abkabk.azbarkon.domain.model.memorization.MemorizationStatus.ACTIVE,
         totalCards = dueCards,
         reviewedCards = 0,
-        dueCards = dueCards,
         reviewSessionsCount = 0,
         nextReviewDays = 0,
+        dueDate = 0L,
     )
 }

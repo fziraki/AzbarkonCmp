@@ -39,7 +39,8 @@ class SrsSchedulerTest {
     @Test
     fun `poem interval is 1 when total below minTotal`() {
         val result = SrsScheduler.calculatePoemInterval(
-            verseScores = listOf(-0.5, 0.0),
+            minTotalScore = 2.0,
+            userTotalScore = -0.5,
             consecutiveEasy = 0,
         )
         assertThat(result.interval).isEqualTo(1)
@@ -47,19 +48,21 @@ class SrsSchedulerTest {
     }
 
     @Test
-    fun `poem interval is 1 when total equals minTotal`() {
+    fun `poem interval is 2 when total equals minTotal`() {
         val result = SrsScheduler.calculatePoemInterval(
-            verseScores = listOf(1.0, 1.0),
+            minTotalScore = 2.0,
+            userTotalScore = 2.0,
             consecutiveEasy = 0,
         )
-        assertThat(result.interval).isEqualTo(1)
+        assertThat(result.interval).isEqualTo(2)
         assertThat(result.consecutiveEasy).isEqualTo(0)
     }
 
     @Test
     fun `poem interval increments consecutiveEasy when total above minTotal`() {
         val result = SrsScheduler.calculatePoemInterval(
-            verseScores = listOf(2.0, 2.0),
+            minTotalScore = 2.0,
+            userTotalScore = 4.0,
             consecutiveEasy = 2,
         )
         assertThat(result.interval).isEqualTo(3)

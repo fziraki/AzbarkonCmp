@@ -255,6 +255,7 @@ class ProfileViewModelTest {
             interval: Int,
             dueDateMillis: Long,
             consecutiveCorrect: Int,
+            totalCard: Int,
         ) = Unit
 
         override suspend fun deletePoem(poemId: Int) = Unit
@@ -269,25 +270,15 @@ class ProfileViewModelTest {
 
         override suspend fun getCardById(cardId: Long): SrsCard? = null
 
-        override suspend fun getDueCards(
-            nowMillis: Long,
-            poemId: Int,
-        ): List<SrsCard> = emptyList()
+        override suspend fun getDueCards(poemId: Int): List<SrsCard> = emptyList()
 
         override suspend fun getCardsByPoemId(poemId: Int): List<SrsCard> = emptyList()
 
-        override suspend fun countDueCards(
-            nowMillis: Long,
-            poemId: Int,
-        ): Int = 0
-
-        override suspend fun updateCardScore(
-            cardId: Long,
-            score: Double?,
-        ) = Unit
+        override suspend fun countDueCards(poemId: Int): Int = 0
 
         override suspend fun updatePoemSchedule(
             poemId: Int,
+            status: String,
             interval: Int,
             dueDateMillis: Long,
             consecutiveCorrect: Int,
@@ -295,23 +286,22 @@ class ProfileViewModelTest {
 
         override suspend fun countCardsByPoemId(poemId: Int): Int = 0
 
-        override suspend fun countReviewedCardsByPoemId(poemId: Int): Int = 0
-
-        override suspend fun getReviewSessionsCountByPoemId(poemId: Int): Int = 0
-
-        override suspend fun getPoemIdsByStatus(status: String): List<Int> = emptyList()
-
-        override suspend fun updatePoemStatus(
-            poemId: Int,
-            status: String,
-        ) = Unit
+        override suspend fun getLastReviewLogByPoemId(poemId: Int): StoredReviewLog =
+            StoredReviewLog(
+                id = -1, poemId = poemId, reviewRound = 0, minTotalScore = 0.0,
+                userTotalScore = 0.0, cardIndex = 0, sessionReviewed = 0,
+                sessionMistakes = 0, sessionLearned = 0,
+            )
 
         override suspend fun insertReviewLog(
-            cardId: Long,
-            grade: SrsGrade,
-            previousInterval: Int,
-            newInterval: Int,
-            reviewTimeMillis: Long,
+            poemId: Int,
+            reviewRound: Int,
+            minTotalScore: Double,
+            userTotalScore: Double,
+            cardIndex: Int,
+            sessionReviewed: Int,
+            sessionMistakes: Int,
+            sessionLearned: Int,
         ) = Unit
 
         override suspend fun getReviewDayKeys(): List<Int> = emptyList()
