@@ -64,8 +64,6 @@ interface MemorizationLocalDataSource {
         sessionLearned: Int
     )
 
-    suspend fun getReviewDayKeys(): List<Int>
-
     suspend fun countReviewedVerses(): Int
 
     suspend fun dumpActivePoems(): List<StoredPoem>

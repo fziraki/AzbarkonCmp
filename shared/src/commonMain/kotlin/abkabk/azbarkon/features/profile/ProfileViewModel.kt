@@ -1,16 +1,11 @@
 package abkabk.azbarkon.features.profile
 
-import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.core.notifications.MAX_NOTIFICATION_PERMISSION_DECLINES
 import abkabk.azbarkon.core.uidata.BaseViewModel
 import abkabk.azbarkon.core.uidata.UiScreenState
 import abkabk.azbarkon.core.uidata.UiText
 import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordinator
 import abkabk.azbarkon.domain.model.ThemeMode
-import abkabk.azbarkon.domain.model.profile.BadgeCatalog
-import abkabk.azbarkon.domain.model.profile.GameLevelCatalog
-import abkabk.azbarkon.domain.model.profile.LevelListItemUi
-import abkabk.azbarkon.domain.model.profile.MemorizationProfileStats
 import abkabk.azbarkon.domain.model.profile.ProfileSheet
 import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
 import abkabk.azbarkon.domain.platform.NotificationPermissionGateway
@@ -19,7 +14,6 @@ import abkabk.azbarkon.domain.repository.UserPreferencesRepository
 import abkabk.azbarkon.domain.usecase.BuildProfileStatsUseCase
 import abkabk.azbarkon.domain.usecase.ExportUserDataUseCase
 import abkabk.azbarkon.domain.usecase.ImportUserDataUseCase
-import abkabk.azbarkon.features.poets.GHAZAL_CATEGORY
 import androidx.lifecycle.viewModelScope
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.profile_export_failed
@@ -178,13 +172,11 @@ class ProfileViewModel(
         viewModelScope.launch {
             combine(
                 memorizationRepository.observeActiveSummary(),
-                memorizationRepository.observePracticeStreak(),
                 userPreferencesRepository.observeGameStats(),
                 userPreferencesRepository.observeThemeMode(),
-            ) { summary, practiceStreak, gameStats, themeMode ->
+            ) { summary, gameStats, themeMode ->
                 ProfileSnapshot(
                     summary = summary,
-                    practiceStreak = practiceStreak,
                     gameStats = gameStats,
                     themeMode = themeMode,
                 )
@@ -195,7 +187,10 @@ class ProfileViewModel(
     }
 
     private suspend fun refreshFromSnapshot(snapshot: ProfileSnapshot) {
-        val statsResult = buildProfileStats(snapshot.gameStats)
+        val statsResult = buildProfileStats(
+            gameStats = snapshot.gameStats,
+            activePoemCount = snapshot.summary.activePoemCount,
+        )
         setState {
             copy(
                 screenState = UiScreenState.Success,
@@ -303,7 +298,6 @@ class ProfileViewModel(
 
     private data class ProfileSnapshot(
         val summary: abkabk.azbarkon.domain.model.memorization.MemorizationSummary,
-        val practiceStreak: Int,
         val gameStats: abkabk.azbarkon.domain.model.profile.GameProfileStats,
         val themeMode: ThemeMode,
     )

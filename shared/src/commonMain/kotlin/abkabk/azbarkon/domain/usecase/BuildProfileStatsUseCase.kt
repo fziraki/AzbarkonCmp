@@ -2,7 +2,6 @@ package abkabk.azbarkon.domain.usecase
 
 import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.domain.model.memorization.MemorizationStatus
-import abkabk.azbarkon.domain.model.memorization.MemorizationSummary
 import abkabk.azbarkon.domain.model.profile.BadgeCatalog
 import abkabk.azbarkon.domain.model.profile.BadgeUi
 import abkabk.azbarkon.domain.model.profile.GameLevelCatalog
@@ -28,17 +27,17 @@ class BuildProfileStatsUseCase(
 
     suspend operator fun invoke(
         gameStats: GameProfileStats,
+        activePoemCount: Int = 0,
     ): ProfileStatsResult {
+
         val levelProgress = GameLevelCatalog.progressFromCoinBalance(gameStats.coinBalance)
         val reviewedVerses = memorizationRepository.countReviewedVerses()
-        val activePoems = when (val result = memorizationRepository.getPoemsByStatus(MemorizationStatus.ACTIVE)) {
+
+        val completedPoems = when (val result = memorizationRepository.getPoemsByStatus(MemorizationStatus.COMPLETED)) {
             is Result.Success -> result.data
             is Result.Error -> emptyList()
         }
-        val completedPoems = activePoems.filter { poem ->
-            poem.totalCards > 0 && poem.reviewedCards >= poem.totalCards
-        }
-        val completedPoemCount = completedPoems.size
+
         val hasCompletedGhazal = completedPoems.any { it.categoryName == GHAZAL_CATEGORY }
 
         val badges = BadgeCatalog.badges.map { badge ->
@@ -47,7 +46,7 @@ class BuildProfileStatsUseCase(
                 hasCompletedGhazal = hasCompletedGhazal,
                 reviewedVersesCount = reviewedVerses,
                 gameVisitStreak = gameStats.visitStreak,
-                completedPoemCount = completedPoemCount,
+                completedPoemCount = completedPoems.size,
                 perfectGameSessions = gameStats.perfectGameSessions,
             )
         }
@@ -65,8 +64,8 @@ class BuildProfileStatsUseCase(
         return ProfileStatsResult(
             levelProgress = levelProgress,
             memorizationStats = MemorizationProfileStats(
-                practiceStreak = gameStats.visitStreak,
-                completedPoemCount = completedPoemCount,
+                activePoemCount = activePoemCount,
+                completedPoemCount = completedPoems.size,
             ),
             reviewedVersesCount = reviewedVerses,
             hasCompletedGhazal = hasCompletedGhazal,

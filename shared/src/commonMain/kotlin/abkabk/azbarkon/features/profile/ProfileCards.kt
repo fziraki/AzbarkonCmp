@@ -12,13 +12,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -38,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -60,14 +56,13 @@ import sarv.shared.generated.resources.level6
 import sarv.shared.generated.resources.level7
 import sarv.shared.generated.resources.level8
 import sarv.shared.generated.resources.night_badge
-import sarv.shared.generated.resources.palette
 import sarv.shared.generated.resources.poetry_lover_badge
 import sarv.shared.generated.resources.profile_game_status_title
 import sarv.shared.generated.resources.profile_game_streak
 import sarv.shared.generated.resources.profile_game_total_points
 import sarv.shared.generated.resources.profile_level_format
-import sarv.shared.generated.resources.profile_mem_completed_poems
-import sarv.shared.generated.resources.profile_mem_streak
+import sarv.shared.generated.resources.memorization_active_poems
+import sarv.shared.generated.resources.memorization_completed_poems
 import sarv.shared.generated.resources.profile_memorization_status_title
 import sarv.shared.generated.resources.profile_view_all_badges
 import sarv.shared.generated.resources.profile_xp_format
@@ -199,8 +194,8 @@ fun MemorizationStatusCard(
         title = stringResource(Res.string.profile_memorization_status_title),
         items =
             listOf(
-                stats.practiceStreak to stringResource(Res.string.profile_mem_streak),
-                stats.completedPoemCount to stringResource(Res.string.profile_mem_completed_poems),
+                stats.activePoemCount to stringResource(Res.string.memorization_active_poems),
+                stats.completedPoemCount to stringResource(Res.string.memorization_completed_poems),
             ),
     )
 }

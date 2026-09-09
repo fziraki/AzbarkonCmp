@@ -31,17 +31,9 @@ class FakeMemorizationRepository : MemorizationRepository {
     )
 
     private val summaryFlow = MutableStateFlow(summary)
-    private val streakFlow = MutableStateFlow(0)
-    var practiceStreak: Int = 0
-        set(value) {
-            field = value
-            streakFlow.value = value
-        }
     var reviewedVersesCount: Int = 0
 
     override fun observeActiveSummary(): Flow<MemorizationSummary> = summaryFlow
-
-    override fun observePracticeStreak(): Flow<Int> = streakFlow
 
     override suspend fun countReviewedVerses(): Int = reviewedVersesCount
 

@@ -4,7 +4,6 @@ import abkabk.azbarkon.core.domain.result.DataError
 import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.core.domain.result.dbQuery
 import abkabk.azbarkon.core.util.currentTimeMillis
-import abkabk.azbarkon.core.util.dayKeyFromMillis
 import abkabk.azbarkon.data.mapper.toSrsCard
 import abkabk.azbarkon.data.mapper.toStoredReviewLog
 import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
@@ -188,12 +187,6 @@ class SqlDelightMemorizationLocalDataSource(
                     sessionLearned = 0
                 )
             }
-
-    override suspend fun getReviewDayKeys(): List<Int> =
-        reviewLogQueries
-            .selectReviewDayKeys()
-            .executeAsList()
-            .map { dayKeyFromMillis(it) }
 
     override suspend fun countReviewedVerses(): Int =
         reviewLogQueries.countReviewedVerses().executeAsOne().toInt()

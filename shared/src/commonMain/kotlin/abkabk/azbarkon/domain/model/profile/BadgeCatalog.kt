@@ -14,7 +14,7 @@ object BadgeCatalog {
     private const val GAMES_STAR_BADGE_ID = 5
 
 
-    private const val HUNDRED_VERSES_THRESHOLD = 100
+    private const val TWO_HUNDRED_VERSES_THRESHOLD = 200
     private const val WEEKLY_STREAK_THRESHOLD = 7
     private const val POETRY_LOVER_THRESHOLD = 5
     private const val GAMES_STAR_THRESHOLD = 5
@@ -58,7 +58,7 @@ object BadgeCatalog {
     ): Boolean =
         when (badgeId) {
             FIRST_GHAZAL_BADGE_ID -> hasCompletedGhazal
-            HUNDRED_VERSES_BADGE_ID -> reviewedVersesCount >= HUNDRED_VERSES_THRESHOLD
+            HUNDRED_VERSES_BADGE_ID -> reviewedVersesCount >= TWO_HUNDRED_VERSES_THRESHOLD
             WEEKLY_STREAK_BADGE_ID -> gameVisitStreak >= WEEKLY_STREAK_THRESHOLD
             POETRY_LOVER_BADGE_ID -> completedPoemCount >= POETRY_LOVER_THRESHOLD
             GAMES_STAR_BADGE_ID -> perfectGameSessions >= GAMES_STAR_THRESHOLD

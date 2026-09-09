@@ -209,8 +209,6 @@
     <string name="profile_font_size_bigger">بزرگ‌تر</string>
     <string name="profile_memorization_status_title">وضعیت حفظ شما</string>
     <string name="profile_game_status_title">وضعیت بازی شما</string>
-    <string name="profile_mem_streak">روز پیاپی حفظ</string>
-    <string name="profile_mem_completed_poems">غزل کامل حفظ شده</string>
     <string name="profile_game_streak">روز پیاپی بازی</string>
     <string name="profile_game_total_points">کل امتیاز</string>
     <string name="profile_view_all_badges">مشاهده همه</string>

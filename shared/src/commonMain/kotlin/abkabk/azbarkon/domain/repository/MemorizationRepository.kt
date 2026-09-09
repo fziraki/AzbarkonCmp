@@ -15,8 +15,6 @@ import kotlinx.coroutines.flow.Flow
 interface MemorizationRepository {
     fun observeActiveSummary(): Flow<MemorizationSummary>
 
-    fun observePracticeStreak(): Flow<Int>
-
     suspend fun countReviewedVerses(): Int
 
     suspend fun getPoemsByStatus(status: MemorizationStatus): Result<List<MemorizationPoem>, MemorizationError>

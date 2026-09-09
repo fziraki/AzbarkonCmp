@@ -9,19 +9,6 @@ import kotlin.test.Test
 
 class StreakDayUtilsTest {
     @Test
-    fun `consecutiveDayStreak counts trailing consecutive days from today`() {
-        val today = 100
-
-        val streak =
-            consecutiveDayStreak(
-                reviewDayKeys = listOf(100, 99, 98, 95),
-                todayDayKey = today,
-            )
-
-        assertThat(streak).isEqualTo(3)
-    }
-
-    @Test
     fun `nextVisitStreak increments on consecutive day`() {
         val streak = nextVisitStreak(currentStreak = 2, lastPlayDayKey = 10, playDayKey = 11)
 

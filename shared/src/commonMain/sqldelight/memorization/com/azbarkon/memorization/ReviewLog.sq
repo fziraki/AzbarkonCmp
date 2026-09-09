@@ -41,14 +41,9 @@ deleteReviewLogsByPoemId:
 DELETE FROM review_log
 WHERE poem_id = ?;
 
--- ToDO()
--- Get all review timestamps in descending order (used to derive unique review days for streaks).
-selectReviewDayKeys:
-SELECT review_round FROM review_log ORDER BY review_round DESC;
-
--- Total number of reviews ever performed (lifetime stat).
+-- Total number of unique cards reviewed across all poems (lifetime stat).
 countReviewedVerses:
-SELECT COUNT(*) FROM review_log;
+SELECT COUNT(*) FROM (SELECT DISTINCT poem_id, card_index FROM review_log);
 
 lastReviewLogByPoemId:
 SELECT * FROM review_log

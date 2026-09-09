@@ -2,7 +2,6 @@ package abkabk.azbarkon.data.repository
 
 import abkabk.azbarkon.core.domain.result.EmptyResult
 import abkabk.azbarkon.core.domain.result.Result
-import abkabk.azbarkon.core.util.consecutiveDayStreak
 import abkabk.azbarkon.core.util.currentTimeMillis
 import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordinator
@@ -34,18 +33,12 @@ class OfflineFirstMemorizationRepository(
     private val reviewNotificationCoordinator: MemorizationReviewNotificationCoordinator,
 ) : MemorizationRepository {
     private val summaryRefresh = MutableSharedFlow<Unit>(replay = 1).apply { tryEmit(Unit) }
-    private val streakRefresh = MutableSharedFlow<Unit>(replay = 1).apply { tryEmit(Unit) }
     private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     override fun observeActiveSummary(): Flow<MemorizationSummary> =
         summaryRefresh
             .onStart { emit(Unit) }
             .map { loadSummary() }
-
-    override fun observePracticeStreak(): Flow<Int> =
-        streakRefresh
-            .onStart { emit(Unit) }
-            .map { loadPracticeStreak() }
 
     override suspend fun countReviewedVerses(): Int = localDataSource.countReviewedVerses()
 
@@ -246,11 +239,6 @@ class OfflineFirstMemorizationRepository(
     override suspend fun getLastReviewLog(poemId: Int): StoredReviewLog =
         localDataSource.getLastReviewLogByPoemId(poemId)
 
-    private suspend fun loadPracticeStreak(): Int {
-        val dayKeys = localDataSource.getReviewDayKeys()
-        return consecutiveDayStreak(dayKeys)
-    }
-
     private suspend fun buildMemorizationPoem(
         poemId: Int,
         nowMillis: Long,
@@ -284,7 +272,6 @@ class OfflineFirstMemorizationRepository(
 
     private fun notifySummaryChanged() {
         summaryRefresh.tryEmit(Unit)
-        streakRefresh.tryEmit(Unit)
     }
 
     private fun syncReviewNotifications() {
