@@ -1,37 +1,29 @@
 -- SRS flashcard for poems.
--- Each card represents one verse of a poem, tracking review state
--- (score, interval, due date, consecutive correct reviews).
+-- Each card represents one verse of a poem.
 CREATE TABLE srs_poem_card (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     poem_id INTEGER NOT NULL,
-    card_index INTEGER NOT NULL,
     front TEXT NOT NULL,
-    back TEXT NOT NULL,
-    interval INTEGER NOT NULL,
-    due_date INTEGER NOT NULL,
-    consecutive_correct INTEGER NOT NULL,
-    score REAL NOT NULL DEFAULT 0.0
+    back TEXT NOT NULL
 );
 
 -- Insert a new SRS card with auto-generated id.
 insertCard:
 INSERT INTO srs_poem_card(
-    poem_id, card_index, front, back,
-    interval, due_date, consecutive_correct, score
+    poem_id, front, back
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?);
 
 -- Insert an SRS card with a specific id (used during import/restore).
 insertCardWithId:
 INSERT INTO srs_poem_card(
-    id, poem_id, card_index, front, back,
-    interval, due_date, consecutive_correct, score
+    id, poem_id, front, back
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?);
 
 -- Fetch every card in the database, ordered by id.
 selectAllCards:
-SELECT id, poem_id, card_index, front, back, interval, due_date, consecutive_correct, score
+SELECT *
 FROM srs_poem_card
 ORDER BY id;
 
@@ -41,68 +33,37 @@ DELETE FROM srs_poem_card;
 
 -- Fetch a single card by its primary key.
 selectCardById:
-SELECT id, poem_id, card_index, front, back, interval, due_date, consecutive_correct, score
+SELECT *
 FROM srs_poem_card
 WHERE id = ?;
 
--- Fetch all cards belonging to a specific poem, ordered by card index.
+-- Fetch all cards belonging to a specific poem, ordered by id.
 selectCardsByPoemId:
-SELECT id, poem_id, card_index, front, back, interval, due_date, consecutive_correct, score
+SELECT *
 FROM srs_poem_card
 WHERE poem_id = ?
-ORDER BY card_index;
-
--- Fetch cards due for review across all active poems.
-selectDueCards:
-SELECT id, poem_id, card_index, front, back, interval, due_date, consecutive_correct, score
-FROM srs_poem_card
-WHERE due_date <= ?
-  AND poem_id IN (
-    SELECT poem_id FROM active_srs_poem WHERE status = 'ACTIVE'
-  )
-ORDER BY due_date ASC, card_index ASC;
+ORDER BY id;
 
 -- Fetch cards due for review for a specific poem only.
 selectDueCardsByPoemId:
-SELECT id, poem_id, card_index, front, back, interval, due_date, consecutive_correct, score
-FROM srs_poem_card
-WHERE poem_id = ?
-  AND due_date <= ?
-ORDER BY card_index ASC;
-
--- Count total due cards across all active poems.
-countDueCards:
-SELECT COUNT(*)
-FROM srs_poem_card
-WHERE due_date <= ?
-  AND poem_id IN (
-    SELECT poem_id FROM active_srs_poem WHERE status = 'ACTIVE'
-  );
+SELECT *
+FROM srs_poem_card c
+WHERE c.poem_id = ?
+  AND EXISTS (
+    SELECT 1 FROM srs_poem a
+    WHERE a.poem_id = c.poem_id AND a.due_date <= ?
+  )
+ORDER BY c.id ASC;
 
 -- Count due cards for a specific poem.
 countDueCardsByPoemId:
 SELECT COUNT(*)
-FROM srs_poem_card
-WHERE poem_id = ?
-  AND due_date <= ?;
-
--- Update review state after a review.
-updateCard:
-UPDATE srs_poem_card
-SET interval = ?,
-    due_date = ?,
-    consecutive_correct = ?,
-    score = ?
-WHERE id = ?;
-
--- Update interval, due_date, score and consecutive_correct for all cards in a poem.
-updateCardsByPoemIdSchedule:
-UPDATE srs_poem_card
-SET interval = ?,
-    due_date = ?,
-    score = ?,
-    consecutive_correct = ?
-WHERE poem_id = ?;
+FROM srs_poem_card c
+WHERE c.poem_id = ?
+  AND EXISTS (
+    SELECT 1 FROM srs_poem a
+    WHERE a.poem_id = c.poem_id AND a.due_date <= ?
+  );
 
 -- Delete all cards belonging to a poem.
 deleteCardsByPoemId:
@@ -112,24 +73,5 @@ WHERE poem_id = ?;
 -- Count total cards for a poem.
 countCardsByPoemId:
 SELECT COUNT(*)
-FROM srs_poem_card
-WHERE poem_id = ?;
-
--- Count cards that have been reviewed at least once (any score).
-countReviewedCardsByPoemId:
-SELECT COUNT(*)
-FROM srs_poem_card
-WHERE poem_id = ?
-  AND interval > 0;
-
--- Get maximum interval for a poem (used for next review calculation).
-getMaxIntervalByPoemId:
-SELECT MAX(interval)
-FROM srs_poem_card
-WHERE poem_id = ?;
-
--- Count total reviews for a poem (sum of consecutive_correct).
-getReviewCountByPoemId:
-SELECT SUM(consecutive_correct)
 FROM srs_poem_card
 WHERE poem_id = ?;

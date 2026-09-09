@@ -2,8 +2,9 @@ package abkabk.azbarkon.testing
 
 import abkabk.azbarkon.core.domain.result.EmptyResult
 import abkabk.azbarkon.core.domain.result.Result
-import abkabk.azbarkon.domain.model.memorization.ActiveMemorizationPoem
+import abkabk.azbarkon.domain.model.memorization.MemorizationPoem
 import abkabk.azbarkon.domain.model.memorization.MemorizationError
+import abkabk.azbarkon.domain.model.memorization.MemorizationStatus
 import abkabk.azbarkon.domain.model.memorization.MemorizationSummary
 import abkabk.azbarkon.domain.model.memorization.QuickStartTarget
 import abkabk.azbarkon.domain.model.memorization.SrsCard
@@ -14,10 +15,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeMemorizationRepository : MemorizationRepository {
     var summary = MemorizationSummary(activePoemCount = 0, dueCardsToday = 0)
-    var activePoems: Result<List<ActiveMemorizationPoem>, MemorizationError> = Result.Success(emptyList())
+    var activePoems: Result<List<MemorizationPoem>, MemorizationError> = Result.Success(emptyList())
     var dueCards: Result<List<SrsCard>, MemorizationError> = Result.Success(emptyList())
     var addPoemResult: EmptyResult<MemorizationError> = Result.Success(Unit)
-    var reviewResult: Result<SrsCard, MemorizationError> = Result.Error(MemorizationError.CardNotFound)
     var isActive: Boolean = false
     var lastAddedPoemId: Int? = null
     var lastReviewedCardId: Long? = null
@@ -45,9 +45,7 @@ class FakeMemorizationRepository : MemorizationRepository {
         summaryFlow.value = value
     }
 
-    override suspend fun getActivePoems(): Result<List<ActiveMemorizationPoem>, MemorizationError> = activePoems
-
-    override suspend fun getCompletedPoems(): Result<List<ActiveMemorizationPoem>, MemorizationError> = activePoems
+    override suspend fun getPoemsByStatus(status: MemorizationStatus): Result<List<MemorizationPoem>, MemorizationError> = activePoems
 
     override suspend fun resetPoemToActive(poemId: Int): EmptyResult<MemorizationError> = Result.Success(Unit)
 
@@ -58,23 +56,25 @@ class FakeMemorizationRepository : MemorizationRepository {
 
     override suspend fun removePoem(poemId: Int): EmptyResult<MemorizationError> = Result.Success(Unit)
 
-    override suspend fun getDueCards(poemId: Int?): Result<List<SrsCard>, MemorizationError> = dueCards
+    override suspend fun getDueCards(poemId: Int): Result<List<SrsCard>, MemorizationError> = dueCards
 
     override suspend fun getCardsByPoemId(poemId: Int): Result<List<SrsCard>, MemorizationError> = dueCards
 
-    override suspend fun submitReview(
+    override suspend fun submitCardReview(
+        poemId: Int,
         cardId: Long,
         grade: SrsGrade,
-    ): Result<SrsCard, MemorizationError> {
+        totalCards: Int,
+    ): Result<Int, MemorizationError> {
         lastReviewedCardId = cardId
         lastReviewGrade = grade
-        return reviewResult
+        lastPoemReviewPoemId = poemId
+        return Result.Success(1)
     }
 
     override suspend fun submitPoemReview(
         poemId: Int,
         verseGrades: List<SrsGrade>,
-        consecutiveEasy: Int,
     ): Result<Int, MemorizationError> {
         lastPoemReviewPoemId = poemId
         lastPoemReviewGrades = verseGrades

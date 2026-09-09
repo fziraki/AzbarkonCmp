@@ -5,7 +5,7 @@ import abkabk.azbarkon.data.repository.OfflineFirstMemorizationRepository
 import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordinator
 import abkabk.azbarkon.domain.repository.MemorizationRepository
-import com.azbarkon.memorization.ActiveSrsPoemQueries
+import com.azbarkon.memorization.SrsPoemQueries
 import com.azbarkon.memorization.MemorizationDatabase
 import com.azbarkon.memorization.ReviewLogQueries
 import com.azbarkon.memorization.SrsPoemCardQueries
@@ -13,8 +13,8 @@ import org.koin.dsl.module
 
 val memorizationDataModule =
     module {
-        single<ActiveSrsPoemQueries> {
-            get<MemorizationDatabase>().activeSrsPoemQueries
+        single<SrsPoemQueries> {
+            get<MemorizationDatabase>().srsPoemQueries
         }
 
         single<SrsPoemCardQueries> {
@@ -27,7 +27,7 @@ val memorizationDataModule =
 
         single<MemorizationLocalDataSource> {
             SqlDelightMemorizationLocalDataSource(
-                activePoemQueries = get(),
+                poemQueries = get(),
                 cardQueries = get(),
                 reviewLogQueries = get(),
                 poetQueries = get(),

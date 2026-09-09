@@ -91,6 +91,8 @@ kotlin {
             implementation(libs.sqldelight.runtime)
             implementation(libs.paging.common)
             implementation(libs.paging.compose)
+            implementation(libs.kotlinx.datetime)
+
         }
         val androidHostTest by getting {
             dependencies {

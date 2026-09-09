@@ -1,8 +1,8 @@
-package abkabk.azbarkon.features.memorization.active
+package abkabk.azbarkon.features.memorization.list
 
 import abkabk.azbarkon.core.uidata.BaseScreen
 import abkabk.azbarkon.core.uidata.ObserveAsEvents
-import abkabk.azbarkon.features.memorization.ActivePoemCard
+import abkabk.azbarkon.features.memorization.PoemCard
 import abkabk.azbarkon.features.memorization.MemorizationHeroSection
 import abkabk.azbarkon.features.memorization.MemorizationOptionRow
 import abkabk.azbarkon.ui.components.AnimatedTabRow
@@ -24,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,33 +46,33 @@ import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 private const val MAX_ACTIVE_POEMS = 3
 
 @Composable
-fun ActiveMemorizationRoot(
+fun MemorizationListRoot(
     onBackClick: () -> Unit,
     onNavigateToPractice: (Int) -> Unit,
     onNavigateToSelect: () -> Unit,
-    viewModel: ActiveMemorizationViewModel = koinViewModel(),
+    viewModel: MemorizationListViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        viewModel.onAction(ActiveMemorizationAction.OnResume)
+        viewModel.onAction(MemorizationAction.OnResume)
     }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
-            ActiveMemorizationEvent.NavigateBack -> onBackClick()
-            ActiveMemorizationEvent.NavigateToSelect -> onNavigateToSelect()
-            is ActiveMemorizationEvent.NavigateToPractice -> onNavigateToPractice(event.poemId)
+            MemorizationEvent.NavigateBack -> onBackClick()
+            MemorizationEvent.NavigateToSelect -> onNavigateToSelect()
+            is MemorizationEvent.NavigateToPractice -> onNavigateToPractice(event.poemId)
         }
     }
 
     if (state.poemToDelete != null) {
         SarvAlertDialog(
-            onDismissRequest = { viewModel.onAction(ActiveMemorizationAction.OnDeleteDismiss) },
+            onDismissRequest = { viewModel.onAction(MemorizationAction.OnDeleteDismiss) },
             title = stringResource(Res.string.memorization_remove_confirm_title),
             text = stringResource(Res.string.memorization_remove_confirm_body),
             confirmLabel = stringResource(Res.string.clear_confirm),
-            onConfirm = { viewModel.onAction(ActiveMemorizationAction.OnDeleteConfirm) },
+            onConfirm = { viewModel.onAction(MemorizationAction.OnDeleteConfirm) },
             dismissLabel = stringResource(Res.string.clear_cancel),
         )
     }
@@ -81,7 +80,7 @@ fun ActiveMemorizationRoot(
     BaseScreen(
         screenState = state.screenState,
     ) {
-        ActiveMemorizationScreen(
+        MemorizationListScreen(
             state = state,
             onAction = viewModel::onAction,
         )
@@ -89,9 +88,9 @@ fun ActiveMemorizationRoot(
 }
 
 @Composable
-fun ActiveMemorizationScreen(
-    state: ActiveMemorizationState,
-    onAction: (ActiveMemorizationAction) -> Unit,
+fun MemorizationListScreen(
+    state: MemorizationState,
+    onAction: (MemorizationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val tabs = MemorizationTab.entries
@@ -105,12 +104,12 @@ fun ActiveMemorizationScreen(
     Column(modifier = modifier.fillMaxSize()) {
         Header(
             title = stringResource(Res.string.memorization_active_poems),
-            onBackClick = { onAction(ActiveMemorizationAction.OnBackClick) },
+            onBackClick = { onAction(MemorizationAction.OnBackClick) },
         )
 
         AnimatedTabRow(
             selectedTab = state.selectedTab,
-            onSelectTab = { tab -> onAction(ActiveMemorizationAction.OnTabSelected(tab)) },
+            onSelectTab = { tab -> onAction(MemorizationAction.OnTabSelected(tab)) },
             tabTitles = tabTitles,
             tabs = tabs,
         )
@@ -134,7 +133,7 @@ fun ActiveMemorizationScreen(
                         )
                         SarvPrimaryButton(
                             text = stringResource(Res.string.memorization_active_add_poem),
-                            onClick = { onAction(ActiveMemorizationAction.OnAddPoemClick) },
+                            onClick = { onAction(MemorizationAction.OnAddPoemClick) },
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
@@ -145,14 +144,14 @@ fun ActiveMemorizationScreen(
                         verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
                     ) {
                         items(state.poems, key = { it.poemId }) { poem ->
-                            ActivePoemCard(
+                            PoemCard(
                                 title = poem.title,
                                 poetName = poem.poetName,
                                 reviewCount = poem.reviewCount,
                                 nextReviewDays = poem.nextReviewDays,
                                 isCompleted = poem.isCompleted,
-                                onClick = { onAction(ActiveMemorizationAction.OnPoemClick(poem.poemId)) },
-                                onDeleteClick = { onAction(ActiveMemorizationAction.OnDeleteClick(poem.poemId)) },
+                                onClick = { onAction(MemorizationAction.OnPoemClick(poem.poemId)) },
+                                onDeleteClick = { onAction(MemorizationAction.OnDeleteClick(poem.poemId)) },
                                 onReReviewClick = { },
                                 totalCards = poem.totalCards,
                                 reviewedCards = poem.reviewedCards,
@@ -165,7 +164,7 @@ fun ActiveMemorizationScreen(
                                     title = stringResource(Res.string.memorization_active_add_poem),
                                     description = stringResource(Res.string.memorization_select_hero_subtitle),
                                     icon = Res.drawable.add_box_24px,
-                                    onClick = { onAction(ActiveMemorizationAction.OnAddPoemClick) },
+                                    onClick = { onAction(MemorizationAction.OnAddPoemClick) },
                                 )
                             }
                         }
@@ -196,15 +195,15 @@ fun ActiveMemorizationScreen(
                         verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
                     ) {
                         items(state.completedPoems, key = { it.poemId }) { poem ->
-                            ActivePoemCard(
+                            PoemCard(
                                 title = poem.title,
                                 poetName = poem.poetName,
                                 reviewCount = poem.reviewCount,
                                 nextReviewDays = poem.nextReviewDays,
                                 isCompleted = poem.isCompleted,
-                                onClick = { onAction(ActiveMemorizationAction.OnPoemClick(poem.poemId)) },
+                                onClick = { onAction(MemorizationAction.OnPoemClick(poem.poemId)) },
                                 onDeleteClick = { },
-                                onReReviewClick = { onAction(ActiveMemorizationAction.OnReReviewClick(poem.poemId)) },
+                                onReReviewClick = { onAction(MemorizationAction.OnReReviewClick(poem.poemId)) },
                                 totalCards = poem.totalCards,
                                 reviewedCards = poem.reviewedCards,
                             )
@@ -218,14 +217,14 @@ fun ActiveMemorizationScreen(
 
 @Preview
 @Composable
-private fun ActiveMemorizationScreenPreview() {
+private fun MemorizationListScreenPreview() {
     SarvTheme {
-        ActiveMemorizationScreen(
+        MemorizationListScreen(
             state =
-                ActiveMemorizationState(
+                MemorizationState(
                     poems =
                         listOf(
-                            ActiveMemorizationPoemUi(
+                            MemorizationPoemUi(
                                 poemId = 1,
                                 title = "غزل ۱",
                                 poetName = "حافظ",
@@ -244,10 +243,10 @@ private fun ActiveMemorizationScreenPreview() {
 
 @Preview
 @Composable
-private fun ActiveMemorizationEmptyScreenPreview() {
+private fun MemorizationEmptyListScreenPreview() {
     SarvTheme {
-        ActiveMemorizationScreen(
-            state = ActiveMemorizationState(),
+        MemorizationListScreen(
+            state = MemorizationState(),
             onAction = {},
         )
     }

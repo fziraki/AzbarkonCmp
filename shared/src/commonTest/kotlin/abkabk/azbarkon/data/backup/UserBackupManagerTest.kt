@@ -1,7 +1,7 @@
 package abkabk.azbarkon.data.backup
 
 import abkabk.azbarkon.core.domain.result.Result
-import abkabk.azbarkon.domain.model.memorization.StoredActivePoem
+import abkabk.azbarkon.domain.model.memorization.StoredPoem
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
@@ -34,7 +34,7 @@ class UserBackupManagerTest {
                     UserBackupMemorization(
                         activePoems =
                             listOf(
-                                StoredActivePoem(poemId = 5, addedAtMillis = 1000, status = "ACTIVE"),
+                                StoredPoem(poemId = 5, addedAtMillis = 1000, status = "ACTIVE"),
                             ),
                     ),
             )

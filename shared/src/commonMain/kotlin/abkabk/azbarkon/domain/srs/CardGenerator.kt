@@ -1,6 +1,5 @@
 package abkabk.azbarkon.domain.srs
 
-import abkabk.azbarkon.core.util.currentTimeMillis
 import abkabk.azbarkon.domain.model.PoemVerse
 import abkabk.azbarkon.domain.model.memorization.SrsCard
 
@@ -14,20 +13,14 @@ object CardGenerator {
     fun generateCards(
         poemId: Int,
         verses: List<PoemVerse>,
-        nowMillis: Long = currentTimeMillis(),
     ): List<SrsCard> {
         val generated = buildGeneratedCards(verses)
         return generated.map { card ->
             SrsCard(
                 id = 0,
                 poemId = poemId,
-                cardIndex = card.cardIndex,
                 front = card.front,
                 back = card.back,
-                interval = 0,
-                dueDateMillis = nowMillis,
-                consecutiveCorrect = 0,
-                score = 0.0,
             )
         }
     }

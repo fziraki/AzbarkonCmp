@@ -1,13 +1,16 @@
 package abkabk.azbarkon.domain.srs
 
-import abkabk.azbarkon.core.util.currentTimeMillis
-import abkabk.azbarkon.core.util.localTimezoneOffsetMillis
 import abkabk.azbarkon.domain.model.memorization.SrsGrade
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 
 object SrsScheduler {
-    const val MILLIS_PER_DAY = 86_400_000L
-    private const val MILLIS_PER_HOUR = 3_600_000L
-    private const val MILLIS_PER_MINUTE = 60_000L
     private const val DELIVERY_HOUR = 10
     private const val DELIVERY_MINUTE = 0
 
@@ -20,12 +23,11 @@ object SrsScheduler {
 
     data class ReviewResult(
         val interval: Int,
-        val score: Double,
-        val dueDateMillis: Long,
         val consecutiveEasy: Int,
+        val dueDateMillis: Long
     )
 
-    fun updateVerseScore(currentScore: Double, grade: SrsGrade): Double =
+    fun getNewScoreFromGradeEnum(currentScore: Double, grade: SrsGrade): Double =
         when (grade) {
             SrsGrade.AGAIN -> currentScore + AGAIN_DELTA
             SrsGrade.HARD -> currentScore + HARD_DELTA
@@ -35,37 +37,47 @@ object SrsScheduler {
         }
 
     fun calculatePoemInterval(
-        verseScores: List<Double>,
-        consecutiveEasy: Int,
+        minTotalScore: Double,
+        userTotalScore: Double,
+        consecutiveEasy: Int
     ): ReviewResult {
-        val total = verseScores.sum()
-        val minTotal = verseScores.size * 1.0
 
-        val interval: Int
-        val newConsecutiveEasy: Int
+        var interval: Int = 0
+        var newConsecutiveEasy: Int = 0
 
-        if (total > minTotal) {
-            newConsecutiveEasy = consecutiveEasy + 1
-            interval = newConsecutiveEasy
-        } else {
-            newConsecutiveEasy = 0
-            interval = 1
+        when {
+            userTotalScore > minTotalScore -> {
+                newConsecutiveEasy = consecutiveEasy + 1
+                interval = newConsecutiveEasy
+            }
+            userTotalScore == minTotalScore -> {
+                newConsecutiveEasy = 0
+                interval = 2
+            }
+
+            userTotalScore < minTotalScore -> {
+                newConsecutiveEasy = 0
+                interval = 1
+            }
         }
 
         return ReviewResult(
             interval = interval,
-            score = verseScores.average(),
-            dueDateMillis = nextDeliveryMillis(interval),
             consecutiveEasy = newConsecutiveEasy,
+            dueDateMillis = nextDeliveryMillis(interval = interval)
         )
     }
 
     private fun nextDeliveryMillis(interval: Int): Long {
-        val now = currentTimeMillis()
-        val offset = localTimezoneOffsetMillis()
-        val localNow = now + offset
-        val midnightUtc = localNow - (localNow % MILLIS_PER_DAY)
-        val todayDeliveryUtc = midnightUtc + DELIVERY_HOUR * MILLIS_PER_HOUR + DELIVERY_MINUTE * MILLIS_PER_MINUTE
-        return todayDeliveryUtc - offset + interval * MILLIS_PER_DAY
+        val timeZone = TimeZone.currentSystemDefault()
+        val tomorrow = Clock.System.now()
+            .toLocalDateTime(timeZone)
+            .date
+            .plus(DatePeriod(days = interval))
+
+        return LocalDateTime(
+            date = tomorrow,
+            time = LocalTime(DELIVERY_HOUR, DELIVERY_MINUTE)
+        ).toInstant(timeZone).toEpochMilliseconds()
     }
 }

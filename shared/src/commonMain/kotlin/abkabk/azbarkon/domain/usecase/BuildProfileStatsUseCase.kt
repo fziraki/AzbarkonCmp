@@ -1,6 +1,7 @@
 package abkabk.azbarkon.domain.usecase
 
 import abkabk.azbarkon.core.domain.result.Result
+import abkabk.azbarkon.domain.model.memorization.MemorizationStatus
 import abkabk.azbarkon.domain.model.memorization.MemorizationSummary
 import abkabk.azbarkon.domain.model.profile.BadgeCatalog
 import abkabk.azbarkon.domain.model.profile.BadgeUi
@@ -30,7 +31,7 @@ class BuildProfileStatsUseCase(
     ): ProfileStatsResult {
         val levelProgress = GameLevelCatalog.progressFromCoinBalance(gameStats.coinBalance)
         val reviewedVerses = memorizationRepository.countReviewedVerses()
-        val activePoems = when (val result = memorizationRepository.getActivePoems()) {
+        val activePoems = when (val result = memorizationRepository.getPoemsByStatus(MemorizationStatus.ACTIVE)) {
             is Result.Success -> result.data
             is Result.Error -> emptyList()
         }

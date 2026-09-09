@@ -10,9 +10,8 @@ enum class SrsGrade {
     UNSPECIFIED,
 }
 
-enum class ActiveMemorizationStatus {
+enum class MemorizationStatus {
     ACTIVE,
-    PAUSED,
     COMPLETED,
 }
 
@@ -20,30 +19,32 @@ enum class ActiveMemorizationStatus {
 data class SrsCard(
     val id: Long,
     val poemId: Int,
-    val cardIndex: Int,
     val front: String,
     val back: String,
-    val interval: Int,
-    val dueDateMillis: Long,
-    val consecutiveCorrect: Int,
-    val score: Double = 0.0,
 )
 
 @Serializable
-data class StoredActivePoem(
+data class StoredPoem(
     val poemId: Int,
     val addedAtMillis: Long,
     val status: String,
+    val interval: Int = 0,
+    val dueDate: Long = 0,
+    val consecutiveCorrect: Int = 0,
+    val totalCards: Int,
 )
 
 @Serializable
 data class StoredReviewLog(
-    val id: Long,
-    val cardId: Long,
-    val grade: String,
-    val previousInterval: Int,
-    val newInterval: Int,
-    val reviewTimeMillis: Long,
+    val id: Int,
+    val poemId: Int,
+    val reviewRound: Int,
+    val minTotalScore: Double,
+    val userTotalScore: Double,
+    val cardIndex: Int,
+    val sessionReviewed: Int,
+    val sessionMistakes: Int,
+    val sessionLearned: Int
 )
 
 data class MemorizationSummary(
@@ -51,18 +52,18 @@ data class MemorizationSummary(
     val dueCardsToday: Int,
 )
 
-data class ActiveMemorizationPoem(
+data class MemorizationPoem(
     val poemId: Int,
     val title: String,
     val poetName: String,
     val categoryName: String,
     val addedAtMillis: Long,
-    val status: ActiveMemorizationStatus,
+    val status: MemorizationStatus,
     val totalCards: Int,
     val reviewedCards: Int,
-    val dueCards: Int,
-    val reviewCount: Int,
+    val reviewSessionsCount: Int,
     val nextReviewDays: Int,
+    val dueDate: Long
 )
 
 data class QuickStartTarget(

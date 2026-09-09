@@ -2,7 +2,7 @@ package abkabk.azbarkon.core.util
 
 private const val MILLIS_PER_DAY = 86_400_000L
 
-fun dayKeyFromMillis(millis: Long): Int = ((millis + localTimezoneOffsetMillis()) / MILLIS_PER_DAY).toInt()
+fun dayKeyFromMillis(millis: Long): Int = ((millis) / MILLIS_PER_DAY).toInt()
 
 fun consecutiveDayStreak(
     reviewDayKeys: List<Int>,

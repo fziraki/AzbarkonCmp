@@ -8,31 +8,31 @@ import kotlin.test.Test
 class SrsSchedulerTest {
     @Test
     fun `again decreases score by 1_20`() {
-        val score = SrsScheduler.updateVerseScore(0.0, SrsGrade.AGAIN)
+        val score = SrsScheduler.getNewScoreFromGradeEnum(0.0, SrsGrade.AGAIN)
         assertThat(score).isEqualTo(-1.20)
     }
 
     @Test
     fun `hard decreases score by 1_15`() {
-        val score = SrsScheduler.updateVerseScore(0.0, SrsGrade.HARD)
+        val score = SrsScheduler.getNewScoreFromGradeEnum(0.0, SrsGrade.HARD)
         assertThat(score).isEqualTo(-1.15)
     }
 
     @Test
     fun `good increases score by 1`() {
-        val score = SrsScheduler.updateVerseScore(0.0, SrsGrade.GOOD)
+        val score = SrsScheduler.getNewScoreFromGradeEnum(0.0, SrsGrade.GOOD)
         assertThat(score).isEqualTo(1.0)
     }
 
     @Test
     fun `easy increases score by 1_15`() {
-        val score = SrsScheduler.updateVerseScore(0.0, SrsGrade.EASY)
+        val score = SrsScheduler.getNewScoreFromGradeEnum(0.0, SrsGrade.EASY)
         assertThat(score).isEqualTo(1.15)
     }
 
     @Test
     fun `unspecified keeps score unchanged`() {
-        val score = SrsScheduler.updateVerseScore(0.0, SrsGrade.UNSPECIFIED)
+        val score = SrsScheduler.getNewScoreFromGradeEnum(0.0, SrsGrade.UNSPECIFIED)
         assertThat(score).isEqualTo(0.0)
     }
 

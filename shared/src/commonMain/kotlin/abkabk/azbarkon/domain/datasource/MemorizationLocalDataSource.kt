@@ -3,8 +3,7 @@ package abkabk.azbarkon.domain.datasource
 import abkabk.azbarkon.core.domain.result.DataError
 import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.domain.model.memorization.SrsCard
-import abkabk.azbarkon.domain.model.memorization.SrsGrade
-import abkabk.azbarkon.domain.model.memorization.StoredActivePoem
+import abkabk.azbarkon.domain.model.memorization.StoredPoem
 import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 
 interface MemorizationLocalDataSource {
@@ -12,79 +11,71 @@ interface MemorizationLocalDataSource {
 
     suspend fun isPoemActive(poemId: Int): Boolean
 
-    suspend fun insertActivePoem(
+    suspend fun insertPoem(
         poemId: Int,
         addedAtMillis: Long,
         status: String,
+        interval: Int = 0,
+        dueDateMillis: Long = 0,
+        consecutiveCorrect: Int = 0,
+        totalCard: Int
     )
 
-    suspend fun deleteActivePoem(poemId: Int)
+    suspend fun deletePoem(poemId: Int)
 
-    suspend fun getActivePoemIds(): List<Int>
+    suspend fun getPoemAddedAt(poemId: Int): Long?
 
-    suspend fun getActivePoemAddedAt(poemId: Int): Long?
+    suspend fun getMemorizationPoem(poemId: Int): StoredPoem?
 
     suspend fun insertCards(cards: List<SrsCard>)
 
     suspend fun getCardById(cardId: Long): SrsCard?
 
     suspend fun getDueCards(
-        nowMillis: Long,
-        poemId: Int? = null,
+        poemId: Int,
     ): List<SrsCard>
 
     suspend fun getCardsByPoemId(poemId: Int): List<SrsCard>
 
     suspend fun countDueCards(
-        nowMillis: Long,
-        poemId: Int? = null,
+        poemId: Int,
     ): Int
 
-    suspend fun updateCard(card: SrsCard)
-
-    suspend fun updateCardsByPoemIdSchedule(
+    suspend fun updatePoemSchedule(
         poemId: Int,
+        status: String,
         interval: Int,
         dueDateMillis: Long,
-        score: Double,
-        consecutiveEasy: Int,
+        consecutiveCorrect: Int,
     )
 
     suspend fun countCardsByPoemId(poemId: Int): Int
-
-    suspend fun countReviewedCardsByPoemId(poemId: Int): Int
-
-    suspend fun getMaxIntervalByPoemId(poemId: Int): Int
-
-    suspend fun getReviewCountByPoemId(poemId: Int): Int
-
-    suspend fun getActivePoemIdsByStatus(status: String): List<Int>
-
-    suspend fun updatePoemStatus(
-        poemId: Int,
-        status: String,
-    )
+    suspend fun getLastReviewLogByPoemId(poemId: Int): StoredReviewLog
+    suspend fun getPoemIdsByStatus(status: String): List<Int>
 
     suspend fun insertReviewLog(
-        cardId: Long,
-        grade: SrsGrade,
-        previousInterval: Int,
-        newInterval: Int,
-        reviewTimeMillis: Long,
+        poemId: Int,
+        reviewRound: Int,
+        minTotalScore: Double,
+        userTotalScore: Double,
+        cardIndex: Int,
+        sessionReviewed: Int,
+        sessionMistakes: Int,
+        sessionLearned: Int
     )
 
     suspend fun getReviewDayKeys(): List<Int>
 
     suspend fun countReviewedVerses(): Int
 
-    suspend fun dumpActivePoems(): List<StoredActivePoem>
+    suspend fun dumpActivePoems(): List<StoredPoem>
 
     suspend fun dumpCards(): List<SrsCard>
 
     suspend fun dumpReviewLogs(): List<StoredReviewLog>
 
     suspend fun replaceAll(
-        activePoems: List<StoredActivePoem>,
+        activePoems: List<StoredPoem>,
         cards: List<SrsCard>,
         reviewLogs: List<StoredReviewLog>,
     )

@@ -1,6 +1,6 @@
 package abkabk.azbarkon.features.memorization.navigation
 
-import abkabk.azbarkon.features.memorization.active.ActiveMemorizationRoot
+import abkabk.azbarkon.features.memorization.list.MemorizationListRoot
 import abkabk.azbarkon.features.memorization.practice.MemorizationPracticeRoot
 import abkabk.azbarkon.features.memorization.select.MemorizationSelectRoot
 import abkabk.azbarkon.features.poets.navigation.PoemListRoute
@@ -37,7 +37,7 @@ fun NavGraphBuilder.memorizationGraph(
     }
 
     composable<ActiveMemorizationRoute> {
-        ActiveMemorizationRoot(
+        MemorizationListRoot(
             onBackClick = navController::navigateUp,
             onNavigateToPractice = { poemId ->
                 navController.navigate(MemorizationPracticeRoute(poemId = poemId))

@@ -8,7 +8,7 @@ import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordin
 import abkabk.azbarkon.domain.model.ThemeMode
 import abkabk.azbarkon.domain.model.memorization.SrsCard
 import abkabk.azbarkon.domain.model.memorization.SrsGrade
-import abkabk.azbarkon.domain.model.memorization.StoredActivePoem
+import abkabk.azbarkon.domain.model.memorization.StoredPoem
 import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import abkabk.azbarkon.domain.model.profile.ProfileSheet
 import abkabk.azbarkon.testing.FakeDailyDistichNotificationScheduler
@@ -248,17 +248,22 @@ class ProfileViewModelTest {
 
         override suspend fun isPoemActive(poemId: Int): Boolean = false
 
-        override suspend fun insertActivePoem(
+        override suspend fun insertPoem(
             poemId: Int,
             addedAtMillis: Long,
             status: String,
+            interval: Int,
+            dueDateMillis: Long,
+            consecutiveCorrect: Int,
         ) = Unit
 
-        override suspend fun deleteActivePoem(poemId: Int) = Unit
+        override suspend fun deletePoem(poemId: Int) = Unit
 
-        override suspend fun getActivePoemIds(): List<Int> = emptyList()
+        override suspend fun getPoemIdsByStatus(status: String): List<Int> = emptyList()
 
-        override suspend fun getActivePoemAddedAt(poemId: Int): Long? = null
+        override suspend fun getPoemAddedAt(poemId: Int): Long? = null
+
+        override suspend fun getMemorizationPoem(poemId: Int): StoredPoem? = null
 
         override suspend fun insertCards(cards: List<SrsCard>) = Unit
 
@@ -266,35 +271,35 @@ class ProfileViewModelTest {
 
         override suspend fun getDueCards(
             nowMillis: Long,
-            poemId: Int?,
+            poemId: Int,
         ): List<SrsCard> = emptyList()
 
         override suspend fun getCardsByPoemId(poemId: Int): List<SrsCard> = emptyList()
 
         override suspend fun countDueCards(
             nowMillis: Long,
-            poemId: Int?,
+            poemId: Int,
         ): Int = 0
 
-        override suspend fun updateCard(card: SrsCard) = Unit
+        override suspend fun updateCardScore(
+            cardId: Long,
+            score: Double?,
+        ) = Unit
 
-        override suspend fun updateCardsByPoemIdSchedule(
+        override suspend fun updatePoemSchedule(
             poemId: Int,
             interval: Int,
             dueDateMillis: Long,
-            score: Double,
-            consecutiveEasy: Int,
+            consecutiveCorrect: Int,
         ) = Unit
 
         override suspend fun countCardsByPoemId(poemId: Int): Int = 0
 
         override suspend fun countReviewedCardsByPoemId(poemId: Int): Int = 0
 
-        override suspend fun getMaxIntervalByPoemId(poemId: Int): Int = 0
+        override suspend fun getReviewSessionsCountByPoemId(poemId: Int): Int = 0
 
-        override suspend fun getReviewCountByPoemId(poemId: Int): Int = 0
-
-        override suspend fun getActivePoemIdsByStatus(status: String): List<Int> = emptyList()
+        override suspend fun getPoemIdsByStatus(status: String): List<Int> = emptyList()
 
         override suspend fun updatePoemStatus(
             poemId: Int,
@@ -313,14 +318,14 @@ class ProfileViewModelTest {
 
         override suspend fun countReviewedVerses(): Int = 0
 
-        override suspend fun dumpActivePoems(): List<StoredActivePoem> = emptyList()
+        override suspend fun dumpActivePoems(): List<StoredPoem> = emptyList()
 
         override suspend fun dumpCards(): List<SrsCard> = emptyList()
 
         override suspend fun dumpReviewLogs(): List<StoredReviewLog> = emptyList()
 
         override suspend fun replaceAll(
-            activePoems: List<StoredActivePoem>,
+            activePoems: List<StoredPoem>,
             cards: List<SrsCard>,
             reviewLogs: List<StoredReviewLog>,
         ) = Unit

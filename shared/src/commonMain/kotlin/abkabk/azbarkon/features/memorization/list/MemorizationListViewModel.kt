@@ -1,55 +1,56 @@
-package abkabk.azbarkon.features.memorization.active
+package abkabk.azbarkon.features.memorization.list
 
 import abkabk.azbarkon.core.domain.result.onFailure
 import abkabk.azbarkon.core.domain.result.onSuccess
 import abkabk.azbarkon.core.uidata.BaseViewModel
 import abkabk.azbarkon.core.uidata.UiScreenState
 import abkabk.azbarkon.core.uidata.UiText
-import abkabk.azbarkon.domain.model.memorization.ActiveMemorizationPoem
+import abkabk.azbarkon.domain.model.memorization.MemorizationPoem
+import abkabk.azbarkon.domain.model.memorization.MemorizationStatus
 import abkabk.azbarkon.domain.repository.MemorizationRepository
 import androidx.lifecycle.viewModelScope
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.error_db_query
 import kotlinx.coroutines.launch
 
-class ActiveMemorizationViewModel(
+class MemorizationListViewModel(
     private val memorizationRepository: MemorizationRepository,
-) : BaseViewModel<ActiveMemorizationAction, ActiveMemorizationState, ActiveMemorizationEvent>(
-        initialState = ActiveMemorizationState(),
+) : BaseViewModel<MemorizationAction, MemorizationState, MemorizationEvent>(
+        initialState = MemorizationState(),
     ) {
     init {
-        onAction(ActiveMemorizationAction.OnLoad)
+        onAction(MemorizationAction.OnLoad)
     }
 
-    override fun onAction(action: ActiveMemorizationAction) {
+    override fun onAction(action: MemorizationAction) {
         when (action) {
-            ActiveMemorizationAction.OnLoad -> loadPoems()
+            MemorizationAction.OnLoad -> loadPoems()
 
-            ActiveMemorizationAction.OnResume -> loadPoems()
+            MemorizationAction.OnResume -> loadPoems()
 
-            ActiveMemorizationAction.OnBackClick -> {
-                viewModelScope.launch { sendEvent(ActiveMemorizationEvent.NavigateBack) }
+            MemorizationAction.OnBackClick -> {
+                viewModelScope.launch { sendEvent(MemorizationEvent.NavigateBack) }
             }
 
-            ActiveMemorizationAction.OnAddPoemClick -> {
-                viewModelScope.launch { sendEvent(ActiveMemorizationEvent.NavigateToSelect) }
+            MemorizationAction.OnAddPoemClick -> {
+                viewModelScope.launch { sendEvent(MemorizationEvent.NavigateToSelect) }
             }
 
-            is ActiveMemorizationAction.OnPoemClick -> {
+            is MemorizationAction.OnPoemClick -> {
                 viewModelScope.launch {
-                    sendEvent(ActiveMemorizationEvent.NavigateToPractice(action.poemId))
+                    sendEvent(MemorizationEvent.NavigateToPractice(action.poemId))
                 }
             }
 
-            is ActiveMemorizationAction.OnDeleteClick -> {
+            is MemorizationAction.OnDeleteClick -> {
                 setState { copy(poemToDelete = action.poemId) }
             }
 
-            ActiveMemorizationAction.OnDeleteDismiss -> {
+            MemorizationAction.OnDeleteDismiss -> {
                 setState { copy(poemToDelete = null) }
             }
 
-            ActiveMemorizationAction.OnDeleteConfirm -> {
+            MemorizationAction.OnDeleteConfirm -> {
                 val poemId = state.value.poemToDelete ?: return
                 viewModelScope.launch {
                     memorizationRepository
@@ -65,11 +66,11 @@ class ActiveMemorizationViewModel(
                 }
             }
 
-            is ActiveMemorizationAction.OnTabSelected -> {
+            is MemorizationAction.OnTabSelected -> {
                 setState { copy(selectedTab = action.tab) }
             }
 
-            is ActiveMemorizationAction.OnReReviewClick -> {
+            is MemorizationAction.OnReReviewClick -> {
                 viewModelScope.launch {
                     memorizationRepository
                         .resetPoemToActive(action.poemId)
@@ -90,7 +91,7 @@ class ActiveMemorizationViewModel(
             setState { copy(screenState = UiScreenState.Loading) }
 
             memorizationRepository
-                .getActivePoems()
+                .getPoemsByStatus(MemorizationStatus.ACTIVE)
                 .onSuccess { poems ->
                     setState {
                         copy(
@@ -103,7 +104,7 @@ class ActiveMemorizationViewModel(
                 }
 
             memorizationRepository
-                .getCompletedPoems()
+                .getPoemsByStatus(MemorizationStatus.COMPLETED)
                 .onSuccess { poems ->
                     setState {
                         copy(
@@ -115,14 +116,14 @@ class ActiveMemorizationViewModel(
     }
 }
 
-private fun ActiveMemorizationPoem.toUi(): ActiveMemorizationPoemUi =
-    ActiveMemorizationPoemUi(
+private fun MemorizationPoem.toUi(): MemorizationPoemUi =
+    MemorizationPoemUi(
         poemId = poemId,
         title = title,
         poetName = poetName,
-        reviewCount = reviewCount,
+        reviewCount = reviewSessionsCount,
         nextReviewDays = nextReviewDays,
-        isCompleted = status == abkabk.azbarkon.domain.model.memorization.ActiveMemorizationStatus.COMPLETED,
+        isCompleted = status == MemorizationStatus.COMPLETED,
         totalCards = totalCards,
         reviewedCards = reviewedCards,
     )

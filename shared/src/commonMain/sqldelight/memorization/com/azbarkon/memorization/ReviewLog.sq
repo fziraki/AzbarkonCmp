@@ -2,26 +2,33 @@
 -- Used for statistics (review history, streaks, daily review counts).
 CREATE TABLE review_log (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    card_id INTEGER NOT NULL,
-    grade TEXT NOT NULL,
-    previous_interval INTEGER NOT NULL,
-    new_interval INTEGER NOT NULL,
-    review_time INTEGER NOT NULL
+    poem_id INTEGER NOT NULL,
+    review_round INTEGER NOT NULL DEFAULT 0,
+    min_total_score REAL NOT NULL DEFAULT 0.0,
+    user_total_score REAL NOT NULL DEFAULT 0.0,
+    card_index INTEGER NOT NULL DEFAULT 0,
+    session_reviewed INTEGER NOT NULL DEFAULT 0,
+    session_mistakes INTEGER NOT NULL DEFAULT 0,
+    session_learned INTEGER NOT NULL DEFAULT 0
 );
 
 -- Log a new review event (normal usage).
 insertReviewLog:
-INSERT INTO review_log(card_id, grade, previous_interval, new_interval, review_time)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO review_log(poem_id, review_round, min_total_score,
+user_total_score, card_index, session_reviewed, session_mistakes,
+session_learned)
+VALUES (?, ?, ?,?,?,?,?,?);
 
 -- Log a review event with a specific id (used during import/restore).
 insertReviewLogWithId:
-INSERT INTO review_log(id, card_id, grade, previous_interval, new_interval, review_time)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT INTO review_log(id, poem_id, review_round, min_total_score,
+            user_total_score, card_index, session_reviewed, session_mistakes,
+            session_learned)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 -- Fetch all review logs ordered by id (full history export).
 selectAllReviewLogs:
-SELECT id, card_id, grade, previous_interval, new_interval, review_time
+SELECT *
 FROM review_log
 ORDER BY id;
 
@@ -29,16 +36,22 @@ ORDER BY id;
 deleteAllReviewLogs:
 DELETE FROM review_log;
 
+-- Delete all reviews belonging to a poem.
+deleteReviewLogsByPoemId:
+DELETE FROM review_log
+WHERE poem_id = ?;
+
+-- ToDO()
 -- Get all review timestamps in descending order (used to derive unique review days for streaks).
 selectReviewDayKeys:
-SELECT review_time FROM review_log ORDER BY review_time DESC;
+SELECT review_round FROM review_log ORDER BY review_round DESC;
 
 -- Total number of reviews ever performed (lifetime stat).
 countReviewedVerses:
 SELECT COUNT(*) FROM review_log;
 
--- Count distinct review sessions (days) for a specific poem.
-countReviewSessionsByPoemId:
-SELECT COUNT(DISTINCT review_time / 86400000)
-FROM review_log
-WHERE card_id IN (SELECT id FROM srs_poem_card WHERE poem_id = ?);
+lastReviewLogByPoemId:
+SELECT * FROM review_log
+WHERE poem_id = ?
+ORDER BY id DESC LIMIT 1;
+

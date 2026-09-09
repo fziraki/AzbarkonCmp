@@ -9,7 +9,7 @@ import abkabk.azbarkon.data.repository.LocalSavedPoemRepository
 import abkabk.azbarkon.data.repository.LocalUserPreferencesRepository
 import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.model.memorization.SrsCard
-import abkabk.azbarkon.domain.model.memorization.StoredActivePoem
+import abkabk.azbarkon.domain.model.memorization.StoredPoem
 import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import io.github.aakira.napier.Napier
 import kotlinx.serialization.Serializable
@@ -45,7 +45,7 @@ data class UserBackupPrefs(
 
 @Serializable
 data class UserBackupMemorization(
-    val activePoems: List<StoredActivePoem> = emptyList(),
+    val activePoems: List<StoredPoem> = emptyList(),
     val cards: List<SrsCard> = emptyList(),
     val reviewLogs: List<StoredReviewLog> = emptyList(),
 )

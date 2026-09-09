@@ -1,5 +1,6 @@
 package abkabk.azbarkon.core.util
 
-expect fun currentTimeMillis(): Long
+import kotlin.time.Clock
 
-expect fun localTimezoneOffsetMillis(): Long
+fun currentTimeMillis(): Long =
+    Clock.System.now().toEpochMilliseconds()

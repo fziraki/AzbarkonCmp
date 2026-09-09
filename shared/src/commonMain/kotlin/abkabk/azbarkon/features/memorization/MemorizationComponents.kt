@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,7 +36,6 @@ import sarv.shared.generated.resources.feather
 import sarv.shared.generated.resources.forward
 import sarv.shared.generated.resources.ic_delete
 import sarv.shared.generated.resources.memorization_cards_progress_format
-import sarv.shared.generated.resources.memorization_due_cards_format
 import sarv.shared.generated.resources.memorization_quick_start
 import sarv.shared.generated.resources.memorization_quick_start_couplet
 import sarv.shared.generated.resources.memorization_quick_start_desc
@@ -256,7 +254,7 @@ fun MemorizationOptionRow(
 
 @Suppress("LongParameterList")
 @Composable
-fun ActivePoemCard(
+fun PoemCard(
     title: String,
     poetName: String,
     reviewCount: Int,
@@ -398,9 +396,9 @@ private fun MemorizationOptionRowPreview() {
 
 @Preview
 @Composable
-private fun ActivePoemCardPreview() {
+private fun PoemCardPreview() {
     SarvTheme {
-        ActivePoemCard(
+        PoemCard(
             title = "غزل ۱",
             poetName = "حافظ",
             reviewCount = 5,

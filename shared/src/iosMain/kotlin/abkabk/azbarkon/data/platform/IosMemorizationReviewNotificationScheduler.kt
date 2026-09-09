@@ -58,7 +58,8 @@ class IosMemorizationReviewNotificationScheduler(
             listOf(MemorizationReviewNotificationPayload.REQUEST_ID),
         )
 
-        val dueCount = localDataSource.countDueCards(currentTimeMillis())
+        val poemIds = localDataSource.getPoemIdsByStatus("ACTIVE")
+        val dueCount = poemIds.sumOf { localDataSource.countDueCards(currentTimeMillis(), it) }
         if (dueCount <= 0) return
 
         val content =
