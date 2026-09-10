@@ -293,4 +293,11 @@
     <string name="tasvir_font_3">تنها</string>
     <string name="tasvir_help_explanation">با دکمه ویرایش در پایین صفحه، منوهای رنگ، شکل، متن، بافت و فونت را امتحان کنید. برای تغییر اندازه، نوار کناری را بکشید. برای جابه‌جایی هر عنصر، آن را لمس کرده و بکشید.</string>
 
+    <string name="update_required_title"> به‌روزرسانی مهم</string>
+    <string name="update_required_body">نسخه جدیدی از برنامه در دسترس است. برای ادامه استفاده، لطفاً برنامه را به‌روزرسانی کنید.</string>
+    <string name="update_optional_title">نسخه جدید</string>
+    <string name="update_optional_body">نسخه جدیدی از برنامه با بهبودها و اصلاحات منتشر شده است.</string>
+    <string name="update_button">به‌روزرسانی</string>
+    <string name="update_later">بعداً</string>
+
 </resources>

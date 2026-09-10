@@ -5,6 +5,12 @@ import abkabk.azbarkon.domain.model.Poet
 import abkabk.azbarkon.domain.model.RandomDistich
 import androidx.compose.runtime.Stable
 
+enum class UpdateType {
+    NONE,
+    OPTIONAL,
+    MANDATORY,
+}
+
 @Stable
 data class MemorizationHeroUi(
     val hasActivePoems: Boolean = false,
@@ -18,6 +24,7 @@ data class HomeState(
     val poets: List<Poet> = emptyList(),
     val memorizationHero: MemorizationHeroUi = MemorizationHeroUi(),
     val todayDistich: RandomDistich? = null,
+    val updateType: UpdateType = UpdateType.NONE,
 )
 
 sealed interface HomeAction {
@@ -42,6 +49,8 @@ sealed interface HomeAction {
     data object OnChallengeClick : HomeAction
 
     data object OnDistichOfDayClick : HomeAction
+
+    data object OnDismissUpdate : HomeAction
 }
 
 sealed interface HomeEvent {
