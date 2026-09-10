@@ -1,11 +1,22 @@
 package abkabk.azbarkon.domain.srs
 
+import abkabk.azbarkon.core.domain.result.DataError
+import abkabk.azbarkon.core.domain.result.Result
+import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
+import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordinator
+import abkabk.azbarkon.domain.model.memorization.SrsCard
 import abkabk.azbarkon.domain.model.memorization.SrsGrade
+import abkabk.azbarkon.domain.model.memorization.StoredPoem
+import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import abkabk.azbarkon.domain.model.profile.BadgeCatalog
+import abkabk.azbarkon.testing.FakeMemorizationReviewNotificationScheduler
+import abkabk.azbarkon.testing.FakeUserPreferencesRepository
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isTrue
+import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.test.Test
@@ -169,5 +180,141 @@ class SrsSchedulerIntegrationTest {
             perfectGameSessions = 0,
         )
         assertThat(badgeEarned).isTrue()
+    }
+
+    @Test
+    fun `notification fires after adding poem and sync`() = runTest {
+        val preferences = FakeUserPreferencesRepository()
+        val scheduler = FakeMemorizationReviewNotificationScheduler()
+        val localDataSource = MutableFakeMemorizationLocalDataSource()
+        val coordinator = MemorizationReviewNotificationCoordinator(
+            localDataSource = localDataSource,
+            scheduler = scheduler,
+            userPreferencesRepository = preferences,
+        )
+
+        // no active poems → disabled
+        coordinator.sync()
+        assertThat(scheduler.isEnabled).isFalse()
+        assertThat(scheduler.disableCallCount).isEqualTo(1)
+
+        // add a poem
+        localDataSource.activePoemCount = 1
+        coordinator.sync()
+        assertThat(scheduler.isEnabled).isTrue()
+        assertThat(scheduler.enableCallCount).isEqualTo(1)
+        assertThat(scheduler.lastDeliveryHour).isEqualTo(10)
+        assertThat(scheduler.lastDeliveryMinute).isEqualTo(0)
+    }
+
+    @Test
+    fun `notification disables when reminder turned off even with active poems`() = runTest {
+        val preferences = FakeUserPreferencesRepository()
+        val scheduler = FakeMemorizationReviewNotificationScheduler()
+        val localDataSource = MutableFakeMemorizationLocalDataSource(activePoemCount = 3)
+        val coordinator = MemorizationReviewNotificationCoordinator(
+            localDataSource = localDataSource,
+            scheduler = scheduler,
+            userPreferencesRepository = preferences,
+        )
+
+        // active poems + reminder on → enabled
+        coordinator.sync()
+        assertThat(scheduler.isEnabled).isTrue()
+
+        // turn off reminder
+        preferences.setMemorizationReminderEnabled(false)
+        coordinator.sync()
+        assertThat(scheduler.isEnabled).isFalse()
+        assertThat(scheduler.disableCallCount).isEqualTo(1)
+    }
+
+    @Test
+    fun `notification disables after removing all poems`() = runTest {
+        val preferences = FakeUserPreferencesRepository()
+        val scheduler = FakeMemorizationReviewNotificationScheduler()
+        val localDataSource = MutableFakeMemorizationLocalDataSource(activePoemCount = 2)
+        val coordinator = MemorizationReviewNotificationCoordinator(
+            localDataSource = localDataSource,
+            scheduler = scheduler,
+            userPreferencesRepository = preferences,
+        )
+
+        coordinator.sync()
+        assertThat(scheduler.isEnabled).isTrue()
+
+        // remove all poems
+        localDataSource.activePoemCount = 0
+        coordinator.sync()
+        assertThat(scheduler.isEnabled).isFalse()
+        assertThat(scheduler.disableCallCount).isEqualTo(1)
+    }
+
+    @Test
+    fun `srs schedule then notification sync full lifecycle`() = runTest {
+        val preferences = FakeUserPreferencesRepository()
+        val scheduler = FakeMemorizationReviewNotificationScheduler()
+        val localDataSource = MutableFakeMemorizationLocalDataSource()
+        val coordinator = MemorizationReviewNotificationCoordinator(
+            localDataSource = localDataSource,
+            scheduler = scheduler,
+            userPreferencesRepository = preferences,
+        )
+
+        // 1. no poems → disabled
+        coordinator.sync()
+        assertThat(scheduler.disableCallCount).isEqualTo(1)
+
+        // 2. add poem via SRS, time travel through 5 reviews
+        localDataSource.activePoemCount = 1
+        var consecutiveEasy = 0
+        repeat(5) {
+            val result = SrsScheduler.calculatePoemInterval(
+                minTotalScore = 2.0,
+                userTotalScore = 4.0,
+                consecutiveEasy = consecutiveEasy,
+                clock = testClock,
+            )
+            consecutiveEasy = result.consecutiveEasy
+            currentTime = Instant.fromEpochMilliseconds(result.dueDateMillis)
+        }
+
+        // 3. sync → notifications enabled (poems still active)
+        coordinator.sync()
+        assertThat(scheduler.isEnabled).isTrue()
+        assertThat(scheduler.enableCallCount).isEqualTo(1)
+
+        // 4. simulate poem completed → remove from active
+        localDataSource.activePoemCount = 0
+        coordinator.sync()
+        assertThat(scheduler.disableCallCount).isEqualTo(2)
+    }
+
+    private class MutableFakeMemorizationLocalDataSource(
+        var activePoemCount: Int = 0,
+    ) : MemorizationLocalDataSource {
+        override suspend fun countActivePoems(): Int = activePoemCount
+        override suspend fun isPoemActive(poemId: Int): Boolean = activePoemCount > 0
+        override suspend fun insertPoem(poemId: Int, addedAtMillis: Long, status: String, interval: Int, dueDateMillis: Long, consecutiveCorrect: Int, totalCard: Int) = Unit
+        override suspend fun deletePoem(poemId: Int) = Unit
+        override suspend fun getPoemIdsByStatus(status: String): List<Int> = emptyList()
+        override suspend fun getPoemAddedAt(poemId: Int): Long? = null
+        override suspend fun getMemorizationPoem(poemId: Int): StoredPoem? = null
+        override suspend fun insertCards(cards: List<SrsCard>) = Unit
+        override suspend fun getCardById(cardId: Long): SrsCard? = null
+        override suspend fun getDueCards(poemId: Int): List<SrsCard> = emptyList()
+        override suspend fun getCardsByPoemId(poemId: Int): List<SrsCard> = emptyList()
+        override suspend fun countDueCards(poemId: Int): Int = 0
+        override suspend fun updatePoemSchedule(poemId: Int, status: String, interval: Int, dueDateMillis: Long, consecutiveCorrect: Int) = Unit
+        override suspend fun countCardsByPoemId(poemId: Int): Int = 0
+        override suspend fun getLastReviewLogByPoemId(poemId: Int): StoredReviewLog = StoredReviewLog(id = -1, poemId = poemId, reviewRound = 0, minTotalScore = 0.0, userTotalScore = 0.0, cardIndex = 0, sessionReviewed = 0, sessionMistakes = 0, sessionLearned = 0)
+        override suspend fun insertReviewLog(poemId: Int, reviewRound: Int, minTotalScore: Double, userTotalScore: Double, cardIndex: Int, sessionReviewed: Int, sessionMistakes: Int, sessionLearned: Int) = Unit
+        override suspend fun countReviewedVerses(): Int = 0
+        override suspend fun dumpActivePoems(): List<StoredPoem> = emptyList()
+        override suspend fun dumpCards(): List<SrsCard> = emptyList()
+        override suspend fun dumpReviewLogs(): List<StoredReviewLog> = emptyList()
+        override suspend fun replaceAll(activePoems: List<StoredPoem>, cards: List<SrsCard>, reviewLogs: List<StoredReviewLog>) = Unit
+        override suspend fun findPoetIdByName(nameFragment: String): Result<Int, DataError.Local> = Result.Error(DataError.Local.UNKNOWN)
+        override suspend fun findCategoryByPoetAndText(poetId: Int, textFragment: String): Result<Pair<Int, String>, DataError.Local> = Result.Error(DataError.Local.UNKNOWN)
     }
 }
