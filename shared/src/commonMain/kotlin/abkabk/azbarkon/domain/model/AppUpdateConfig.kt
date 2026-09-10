@@ -1,5 +1,6 @@
 package abkabk.azbarkon.domain.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,6 +11,6 @@ data class AppUpdateConfig(
 
 @Serializable
 data class PlatformUpdateConfig(
-    val stable_version_code: Int = 0,
-    val last_version_code: Int = 0,
+    @SerialName("stable_version_code") val stableVersionCode: Int = 0,
+    @SerialName("last_version_code") val lastVersionCode: Int = 0,
 )

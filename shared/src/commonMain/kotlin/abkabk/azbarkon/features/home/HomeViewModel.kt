@@ -187,13 +187,13 @@ class HomeViewModel(
                         Napier.d(
                             "UpdateCheck: platform=$platform, " +
                                 "currentVersion=$currentVersion, " +
-                                "stable=${platformConfig.stable_version_code}, " +
-                                "last=${platformConfig.last_version_code}",
+                                "stable=${platformConfig.stableVersionCode}, " +
+                                "last=${platformConfig.lastVersionCode}",
                         )
 
                         val updateType = when {
-                            currentVersion < platformConfig.stable_version_code -> UpdateType.MANDATORY
-                            currentVersion < platformConfig.last_version_code -> UpdateType.OPTIONAL
+                            currentVersion < platformConfig.stableVersionCode -> UpdateType.MANDATORY
+                            currentVersion < platformConfig.lastVersionCode -> UpdateType.OPTIONAL
                             else -> UpdateType.NONE
                         }
 
