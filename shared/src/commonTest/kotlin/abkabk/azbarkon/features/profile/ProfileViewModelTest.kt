@@ -149,7 +149,7 @@ class ProfileViewModelTest {
             viewModel.onAction(ProfileAction.OnExportData)
 
             assertThat(shareService.lastSharedFileBytes).isNotNull()
-            assertThat(shareService.lastSharedFileName).isEqualTo("azbarkon-backup.json")
+            assertThat(shareService.lastSharedFileName).isEqualTo("sarv-backup.json")
             assertThat(shareService.lastSharedFileMimeType).isEqualTo("application/json")
         }
 

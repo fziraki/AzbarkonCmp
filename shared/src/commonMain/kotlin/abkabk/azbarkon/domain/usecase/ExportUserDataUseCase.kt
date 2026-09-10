@@ -13,7 +13,7 @@ class ExportUserDataUseCase(
             val json = userBackupManager.exportJson()
             shareService.shareFile(
                 bytes = json.encodeToByteArray(),
-                fileName = "azbarkon-backup.json",
+                fileName = "sarv-backup.json",
                 mimeType = "application/json",
                 title = null,
             )

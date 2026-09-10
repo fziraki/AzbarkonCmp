@@ -168,6 +168,6 @@ class LocalUserBackupManager(
     }
 
     companion object {
-        private val FONT_SIZE_SCALES = floatArrayOf(1f, 1.05f, 1.1f)
+        private val FONT_SIZE_SCALES = floatArrayOf(1f, 1.1f, 1.2f)
     }
 }
