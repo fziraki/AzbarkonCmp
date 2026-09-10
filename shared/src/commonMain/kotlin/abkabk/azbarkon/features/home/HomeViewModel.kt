@@ -172,36 +172,40 @@ class HomeViewModel(
 
     private fun checkForUpdate() {
         viewModelScope.launch {
-            Napier.d("UpdateCheck: starting...")
-            appUpdateRepository.getUpdateConfig()
-                .onSuccess { config ->
-                    val currentVersion = versionCode()
-                    val platform = platformName()
-                    val platformConfig = if (platform == "android") {
-                        config.android
-                    } else {
-                        config.ios
+            try {
+                Napier.d("UpdateCheck: starting...")
+                appUpdateRepository.getUpdateConfig()
+                    .onSuccess { config ->
+                        val currentVersion = versionCode()
+                        val platform = platformName()
+                        val platformConfig = if (platform == "android") {
+                            config.android
+                        } else {
+                            config.ios
+                        }
+
+                        Napier.d(
+                            "UpdateCheck: platform=$platform, " +
+                                "currentVersion=$currentVersion, " +
+                                "stable=${platformConfig.stable_version_code}, " +
+                                "last=${platformConfig.last_version_code}",
+                        )
+
+                        val updateType = when {
+                            currentVersion < platformConfig.stable_version_code -> UpdateType.MANDATORY
+                            currentVersion < platformConfig.last_version_code -> UpdateType.OPTIONAL
+                            else -> UpdateType.NONE
+                        }
+
+                        Napier.d("UpdateCheck: updateType=$updateType")
+                        setState { copy(updateType = updateType) }
                     }
-
-                    Napier.d(
-                        "UpdateCheck: platform=$platform, " +
-                            "currentVersion=$currentVersion, " +
-                            "stable=${platformConfig.stable_version_code}, " +
-                            "last=${platformConfig.last_version_code}",
-                    )
-
-                    val updateType = when {
-                        currentVersion < platformConfig.stable_version_code -> UpdateType.MANDATORY
-                        currentVersion < platformConfig.last_version_code -> UpdateType.OPTIONAL
-                        else -> UpdateType.NONE
+                    .onFailure { error ->
+                        Napier.e("UpdateCheck: failed - $error")
                     }
-
-                    Napier.d("UpdateCheck: updateType=$updateType")
-                    setState { copy(updateType = updateType) }
-                }
-                .onFailure { error ->
-                    Napier.e("UpdateCheck: failed - $error")
-                }
+            } catch (_: Exception) {
+                Napier.e("UpdateCheck: skipped (platform not available)")
+            }
         }
     }
 }

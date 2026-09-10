@@ -4,6 +4,7 @@ import abkabk.azbarkon.core.uidata.UiScreenState
 import abkabk.azbarkon.domain.model.CatNode
 import abkabk.azbarkon.domain.model.Poet
 import abkabk.azbarkon.domain.model.PoetWithRootCategories
+import abkabk.azbarkon.testing.FakeAppUpdateRepository
 import abkabk.azbarkon.testing.FakeDailyDistichRepository
 import abkabk.azbarkon.testing.FakeMemorizationRepository
 import abkabk.azbarkon.testing.FakePoetRepository
@@ -46,7 +47,7 @@ class HomeViewModelTest {
                             ),
                         )
                 }
-            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository())
+            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository(), FakeAppUpdateRepository())
 
             val state = viewModel.state.value
             assertThat(state.screenState).isInstanceOf(UiScreenState.Success::class)
@@ -94,7 +95,7 @@ class HomeViewModelTest {
                             ),
                         )
                 }
-            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository())
+            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository(), FakeAppUpdateRepository())
 
             val state = viewModel.state.value
             assertThat(state.poets.size).isEqualTo(1)
@@ -108,7 +109,7 @@ class HomeViewModelTest {
                 FakePoetRepository().apply {
                     shouldFail = true
                 }
-            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository())
+            val viewModel = HomeViewModel(repository, FakeMemorizationRepository(), FakeDailyDistichRepository(), FakeAppUpdateRepository())
 
             assertThat(viewModel.state.value.screenState).isInstanceOf(UiScreenState.Error::class)
         }
@@ -120,7 +121,7 @@ class HomeViewModelTest {
                 FakeDailyDistichRepository().apply {
                     todayDistich = todayDistich.copy(poemId = 42)
                 }
-            val viewModel = HomeViewModel(FakePoetRepository(), FakeMemorizationRepository(), dailyDistichRepository)
+            val viewModel = HomeViewModel(FakePoetRepository(), FakeMemorizationRepository(), dailyDistichRepository, FakeAppUpdateRepository())
 
             viewModel.onAction(HomeAction.OnDistichOfDayClick)
 
