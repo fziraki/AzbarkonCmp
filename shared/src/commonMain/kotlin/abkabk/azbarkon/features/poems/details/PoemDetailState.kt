@@ -1,7 +1,6 @@
 package abkabk.azbarkon.features.poems.details
 
 import abkabk.azbarkon.core.uidata.UiScreenState
-import abkabk.azbarkon.core.uidata.UiText
 import abkabk.azbarkon.domain.model.PoemAudioTrack
 
 data class PoemDetailState(

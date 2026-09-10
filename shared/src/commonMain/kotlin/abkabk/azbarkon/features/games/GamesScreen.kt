@@ -5,7 +5,6 @@ import abkabk.azbarkon.core.uidata.BaseScreen
 import abkabk.azbarkon.core.uidata.UiScreenState
 import abkabk.azbarkon.core.ui.LocalWindowSizeClass
 import abkabk.azbarkon.core.ui.WindowWidthSizeClass
-import abkabk.azbarkon.features.games.navigation.toRoute
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -36,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.complete_poem_desc
 import sarv.shared.generated.resources.complete_poem_title
-import sarv.shared.generated.resources.games
 import sarv.shared.generated.resources.next_line_desc
 import sarv.shared.generated.resources.next_line_title
 import sarv.shared.generated.resources.poetry_arrangement_desc
@@ -44,7 +42,6 @@ import sarv.shared.generated.resources.poetry_arrangement_title
 import sarv.shared.generated.resources.whois_poet_desc
 import sarv.shared.generated.resources.whois_poet_title
 import abkabk.azbarkon.ui.theme.SarvTheme
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.ui.layout.ContentScale
 import sarv.shared.generated.resources.guess_poet_icon

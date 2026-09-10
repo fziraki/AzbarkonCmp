@@ -113,7 +113,7 @@ internal object GameSessionPoolBuilder {
         val isValid = first != null && second != null &&
             first.length <= GameConstants.MAX_HEMISTICH_LENGTH &&
             second.length <= GameConstants.MAX_HEMISTICH_LENGTH
-        return if (isValid) listOf(first!!, second!!) else null
+        return if (isValid) listOf(first, second) else null
     }
 
     /**

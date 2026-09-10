@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val SHIMMER_ROW_COUNT = 4

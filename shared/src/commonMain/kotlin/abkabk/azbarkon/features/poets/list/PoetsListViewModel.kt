@@ -15,7 +15,6 @@ import abkabk.azbarkon.features.poets.toFeaturedPoetUi
 import abkabk.azbarkon.features.poets.toListItemUi
 import androidx.lifecycle.viewModelScope
 import sarv.shared.generated.resources.Res
-import sarv.shared.generated.resources.poets_download_failed
 import sarv.shared.generated.resources.poets_download_merge_error
 import sarv.shared.generated.resources.poets_download_network_error
 import sarv.shared.generated.resources.poets_download_success

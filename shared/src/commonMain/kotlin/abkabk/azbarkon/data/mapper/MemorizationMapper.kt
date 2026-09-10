@@ -4,7 +4,6 @@ import abkabk.azbarkon.domain.model.memorization.SrsCard
 import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import com.azbarkon.memorization.Review_log
 import com.azbarkon.memorization.Srs_poem_card
-import kotlin.Int
 
 fun Srs_poem_card.toSrsCard(): SrsCard =
     SrsCard(

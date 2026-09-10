@@ -7,7 +7,6 @@ import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordinator
 import abkabk.azbarkon.domain.model.ThemeMode
 import abkabk.azbarkon.domain.model.memorization.SrsCard
-import abkabk.azbarkon.domain.model.memorization.SrsGrade
 import abkabk.azbarkon.domain.model.memorization.StoredPoem
 import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import abkabk.azbarkon.domain.model.profile.ProfileSheet

@@ -65,7 +65,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.arrow_drop_down
@@ -83,7 +82,6 @@ import org.koin.core.parameter.parametersOf
 import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 import abkabk.azbarkon.core.ui.LocalWindowSizeClass
 import abkabk.azbarkon.core.ui.WindowWidthSizeClass
-import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 
 private const val RING_SPIN_DURATION_MS = 3000

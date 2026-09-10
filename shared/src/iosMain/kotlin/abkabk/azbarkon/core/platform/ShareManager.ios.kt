@@ -3,12 +3,10 @@
 package abkabk.azbarkon.core.platform
 
 import kotlinx.cinterop.ExperimentalForeignApi
-import platform.CoreGraphics.CGRectZero
 import platform.Foundation.NSCachesDirectory
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
-import platform.Foundation.dataWithBytes
 import platform.Foundation.writeToFile
 import platform.UIKit.UIActivityViewController
 import platform.UIKit.UIApplication

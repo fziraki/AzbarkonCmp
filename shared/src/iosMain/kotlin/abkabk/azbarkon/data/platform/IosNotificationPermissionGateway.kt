@@ -8,7 +8,6 @@ import platform.UserNotifications.UNAuthorizationOptionSound
 import platform.UserNotifications.UNAuthorizationStatusAuthorized
 import platform.UserNotifications.UNAuthorizationStatusProvisional
 import platform.UserNotifications.UNUserNotificationCenter
-import kotlin.concurrent.AtomicReference
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.resume
 

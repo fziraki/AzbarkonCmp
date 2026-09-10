@@ -9,7 +9,6 @@ import abkabk.azbarkon.core.uidata.BaseViewModel
 import abkabk.azbarkon.core.uidata.UiScreenState
 import abkabk.azbarkon.core.uidata.UiText
 import abkabk.azbarkon.core.uidata.toUiText
-import abkabk.azbarkon.domain.model.PARAGRAPH_POSITION
 import abkabk.azbarkon.domain.model.PoemAudioTrack
 import abkabk.azbarkon.domain.model.memorization.MemorizationError
 import abkabk.azbarkon.domain.platform.ShareService

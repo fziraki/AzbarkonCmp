@@ -4,7 +4,6 @@ import abkabk.azbarkon.core.domain.result.DataError
 import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.model.memorization.SrsCard
-import abkabk.azbarkon.domain.model.memorization.SrsGrade
 import abkabk.azbarkon.testing.FakeMemorizationReviewNotificationScheduler
 import abkabk.azbarkon.testing.FakeUserPreferencesRepository
 import assertk.assertThat

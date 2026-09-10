@@ -29,7 +29,6 @@ import sarv.shared.generated.resources.tasvir_negar_save_failed
 import sarv.shared.generated.resources.tasvir_negar_saved
 import sarv.shared.generated.resources.tasvir_negar_share_failed
 import kotlinx.coroutines.launch
-import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val MIN_TEXT_SIZE = 1f
 private const val MAX_TEXT_SIZE = 32f

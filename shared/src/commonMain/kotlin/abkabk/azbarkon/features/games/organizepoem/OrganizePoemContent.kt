@@ -4,7 +4,6 @@ import abkabk.azbarkon.domain.model.games.GameQuestion
 import abkabk.azbarkon.domain.model.games.OrganizeLine
 import abkabk.azbarkon.features.games.components.GameInstructionText
 import abkabk.azbarkon.features.games.components.GameOptionState
-import abkabk.azbarkon.features.games.components.GamePoemCard
 import abkabk.azbarkon.features.games.components.GamePoemCorrectRevealText
 import abkabk.azbarkon.features.games.components.gameOptionColors
 import abkabk.azbarkon.features.games.components.gamePoemUserAnswerTextColor

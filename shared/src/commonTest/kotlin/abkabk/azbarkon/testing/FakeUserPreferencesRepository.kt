@@ -5,7 +5,6 @@ import abkabk.azbarkon.domain.model.profile.GameProfileStats
 import abkabk.azbarkon.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
 
 class FakeUserPreferencesRepository : UserPreferencesRepository {
     private var dailyDistichEnabled: Boolean = false
