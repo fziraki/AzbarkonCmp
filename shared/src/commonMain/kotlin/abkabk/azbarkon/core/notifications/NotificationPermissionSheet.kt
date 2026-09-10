@@ -33,6 +33,7 @@ const val MAX_NOTIFICATION_PERMISSION_DECLINES = 2
 fun NotificationPermissionSheet(
     onDismiss: () -> Unit,
     onResult: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val userPreferencesRepository: UserPreferencesRepository = koinInject()
     val requestNotificationPermission =
@@ -47,7 +48,7 @@ fun NotificationPermissionSheet(
         onDismissRequest = onDismiss,
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(
+            modifier = modifier.fillMaxWidth().padding(
                 bottom = LocalSarvDimensions.current.dimen16,
                 start = LocalSarvDimensions.current.dimen24,
                 end = LocalSarvDimensions.current.dimen24

@@ -154,10 +154,10 @@ fun GameQuizProgressSection(
 }
 
 @Composable
-private fun GameCoinBadge(balance: Int) {
+private fun GameCoinBadge(balance: Int, modifier: Modifier = Modifier) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .border(
                     width = LocalSarvDimensions.current.dimen1,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

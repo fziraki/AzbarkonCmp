@@ -91,6 +91,7 @@ fun ProfileSheets(
     onAction: (ProfileAction) -> Unit,
     onExportData: () -> Unit,
     onImportData: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val sheet = state.activeSheet ?: return
     val openWidgetPicker = rememberWidgetPickerLauncher()
@@ -103,6 +104,7 @@ fun ProfileSheets(
 
     SarvModalBottomSheet(
         onDismissRequest = { onAction(ProfileAction.OnDismissSheet) },
+        modifier = modifier,
     ) {
         when (sheet) {
             ProfileSheet.Settings ->
@@ -147,10 +149,11 @@ private fun ProfileSettingsSheetContent(
     onAddWidgetClick: (() -> Unit)?,
     onExportData: () -> Unit,
     onImportData: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState())
@@ -224,8 +227,9 @@ private fun ProfileSettingsSheetContent(
 private fun ProfileThemeSelector(
     themeMode: ThemeMode,
     onThemeModeSelect: (ThemeMode) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         horizontalAlignment = Alignment.Start) {
         Text(
             text = stringResource(Res.string.profile_theme_title),
@@ -263,8 +267,9 @@ private fun ProfileThemeSelector(
 private fun ProfileFontSizeSelector(
     fontSizeScale: Float,
     onFontSizeScaleSelect: (Float) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         horizontalAlignment = Alignment.Start) {
         Text(
             text = stringResource(Res.string.profile_font_size_title),
@@ -304,9 +309,10 @@ private fun ProfileSettingToggleRow(
     subtitle: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {    Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
@@ -359,10 +365,11 @@ private fun ProfileDataActionRow(
     onClick: () -> Unit,
     iconFilled: Painter = icon,
     filled: Boolean = true,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
@@ -440,10 +447,10 @@ private fun ProfileSegmentedOption(
 }
 
 @Composable
-private fun ProfileBadgesSheetContent(badges: List<BadgeUi>) {
+private fun ProfileBadgesSheetContent(badges: List<BadgeUi>, modifier: Modifier = Modifier) {
     Column(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .padding(horizontal = LocalSarvDimensions.current.dimen16)
                 .padding(bottom = LocalSarvDimensions.current.dimen24),
@@ -472,10 +479,10 @@ private fun ProfileBadgesSheetContent(badges: List<BadgeUi>) {
 }
 
 @Composable
-private fun ProfileLevelsSheetContent(levels: List<LevelListItemUi>) {
+private fun ProfileLevelsSheetContent(levels: List<LevelListItemUi>, modifier: Modifier = Modifier) {
     Column(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(horizontal = LocalSarvDimensions.current.dimen16)
@@ -497,7 +504,7 @@ private fun ProfileLevelsSheetContent(levels: List<LevelListItemUi>) {
 }
 
 @Composable
-private fun ProfileLevelRow(item: LevelListItemUi) {
+private fun ProfileLevelRow(item: LevelListItemUi, modifier: Modifier = Modifier) {
     val backgroundColor =
         when (item.state) {
             LevelRowState.Current -> MaterialTheme.colorScheme.primary.copy(alpha = 0.45f)
@@ -515,7 +522,7 @@ private fun ProfileLevelRow(item: LevelListItemUi) {
 
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .background(backgroundColor)

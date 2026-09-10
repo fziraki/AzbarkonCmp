@@ -9,12 +9,14 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 @Composable
 fun SarvModalBottomSheet(
     onDismissRequest: () -> Unit,
     sheetGesturesEnabled: Boolean = true,
     properties: ModalBottomSheetProperties = ModalBottomSheetProperties(),
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -25,6 +27,7 @@ fun SarvModalBottomSheet(
         sheetGesturesEnabled = sheetGesturesEnabled,
         properties = properties,
         containerColor = MaterialTheme.colorScheme.surface,
+        modifier = modifier,
         content = content,
     )
 }

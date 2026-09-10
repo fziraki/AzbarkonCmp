@@ -215,10 +215,11 @@ private fun ChatTopBar(
     colors: ChatColors,
     onBackClick: () -> Unit,
     isPoetTyping: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = LocalSarvDimensions.current.dimen16, vertical = LocalSarvDimensions.current.dimen12),
@@ -404,12 +405,13 @@ private fun ChatInputBar(
     colors: ChatColors,
     onValueChange: (String) -> Unit,
     onSendClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val pillShape = RoundedCornerShape(LocalSarvDimensions.current.dimen28)
 
     Box(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .keyboardAboveIme()
                 .background(MaterialTheme.colorScheme.background)

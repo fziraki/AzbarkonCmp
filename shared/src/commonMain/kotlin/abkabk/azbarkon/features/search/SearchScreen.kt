@@ -226,16 +226,17 @@ private fun SearchResultsList(
     isSearching: Boolean,
     showNoResults: Boolean,
     onResultClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val isExpanded = LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Expanded
     val columns = if (isExpanded) GridCells.Fixed(2) else GridCells.Fixed(1)
 
     when {
-        isSearching -> SearchResultsShimmer()
+        isSearching -> SearchResultsShimmer(modifier = modifier)
 
         showNoResults -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -250,7 +251,7 @@ private fun SearchResultsList(
             LazyVerticalGrid(
                 columns = columns,
                 state = rememberLazyGridState(),
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
                     horizontal = LocalSarvDimensions.current.dimen16,
                     vertical = LocalSarvDimensions.current.dimen8,
@@ -288,10 +289,12 @@ private fun SearchResultsList(
 }
 
 @Composable
-private fun SearchResultsShimmer() {
+private fun SearchResultsShimmer(
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier =
-            Modifier
+            modifier
                 .fillMaxSize()
                 .padding(horizontal = LocalSarvDimensions.current.dimen16, vertical = LocalSarvDimensions.current.dimen8),
         verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen10),
@@ -504,6 +507,7 @@ private fun SearchResultRow(
 private fun SearchOptionSheet(
     title: String,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     SarvModalBottomSheet(
@@ -511,7 +515,7 @@ private fun SearchOptionSheet(
     ) {
         Column(
             modifier =
-                Modifier
+                modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = LocalSarvDimensions.current.dimen16)

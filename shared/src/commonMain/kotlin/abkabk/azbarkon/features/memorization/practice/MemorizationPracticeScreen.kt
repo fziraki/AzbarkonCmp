@@ -362,9 +362,10 @@ private fun PracticeProgressSection(
 private fun PracticeCardContent(
     state: MemorizationPracticeState,
     card: PracticeCardUi,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(vertical = LocalSarvDimensions.current.dimen16),
+        modifier = modifier.fillMaxWidth().padding(vertical = LocalSarvDimensions.current.dimen16),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
     ) {
@@ -545,6 +546,7 @@ private fun PracticeModeIconButton(
 private fun PracticeActionRow(
     state: MemorizationPracticeState,
     onAction: (MemorizationPracticeAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val showModeIcons = state.phase == PracticePhase.SHOW_FRONT
     val primaryButtonState = primaryButtonState(state)
@@ -553,7 +555,7 @@ private fun PracticeActionRow(
         SarvPrimaryButton(
             text = stringResource(primaryButtonState.labelRes),
             onClick = { onAction(primaryButtonState.action) },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             enabled = primaryButtonState.enabled,
             verticalTextPadding = LocalSarvDimensions.current.dimen8
         )
@@ -563,7 +565,7 @@ private fun PracticeActionRow(
     val showPrimaryButton = primaryButtonState.visible
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
     ) {
@@ -603,10 +605,13 @@ private fun PracticeActionRow(
     }
 
 @Composable
-private fun PracticeSessionStatsBar(state: MemorizationPracticeState) {
+private fun PracticeSessionStatsBar(
+    state: MemorizationPracticeState,
+    modifier: Modifier = Modifier,
+) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
@@ -723,9 +728,10 @@ private fun GradeButtons(
     selectedGrade: SrsGrade? = null,
     suggestedGrade: SrsGrade? = null,
     enabled: Boolean = true,
+    modifier: Modifier = Modifier,
 ) {
     FlowRow(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8, Alignment.CenterHorizontally),
         verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
@@ -772,6 +778,7 @@ private fun GradeButton(
     isSuggested: Boolean,
     enabled: Boolean,
     onAction: (MemorizationPracticeAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val containerColor =
         when {
@@ -788,6 +795,7 @@ private fun GradeButton(
     SarvButton(
         text = label,
         onClick = { onAction(MemorizationPracticeAction.OnGradeClick(grade)) },
+        modifier = modifier,
         enabled = enabled,
         colors =
             ButtonDefaults.buttonColors(

@@ -47,6 +47,7 @@ expect fun TasvirCustomColorPicker(
 internal fun HsvColorPickerContent(
     onDismiss: () -> Unit,
     onColorSelect: (Color) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var hue by remember { mutableFloatStateOf(0f) }
     var saturation by remember { mutableFloatStateOf(1f) }
@@ -59,7 +60,7 @@ internal fun HsvColorPickerContent(
     ) {
         Column(
             modifier =
-                Modifier
+                modifier
                     .fillMaxWidth()
                     .padding(horizontal = LocalSarvDimensions.current.dimen16)
                     .padding(bottom = LocalSarvDimensions.current.dimen24),
@@ -110,10 +111,11 @@ private fun ColorSlider(
     label: String,
     value: Float,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    modifier: Modifier = Modifier,
     onValueChange: (Float) -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         verticalAlignment = Alignment.CenterVertically,
     ) {

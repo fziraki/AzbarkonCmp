@@ -123,10 +123,11 @@ private fun SarvTopBar(
     navController: NavController,
     appState: SarvAppState,
     isExpandedScreen: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier =
-            Modifier
+            modifier
                 .windowInsetsPadding(WindowInsets.statusBars)
                 .fillMaxWidth()
                 .heightIn(min = if (isExpandedScreen) LocalSarvDimensions.current.dimen40 else LocalSarvDimensions.current.dimen56),
@@ -208,10 +209,11 @@ private fun SarvTopBar(
 private fun SarvBottomBar(
     currentDestination: NavDestination?,
     navController: NavController,
+    modifier: Modifier = Modifier,
 ) {
     NavigationBar(
         modifier =
-            Modifier
+            modifier
                 .shadow(spotColor = MaterialTheme.colorScheme.tertiary, elevation = LocalSarvDimensions.current.dimen1)
                 .windowInsetsPadding(WindowInsets.navigationBars)
                 .fillMaxWidth()
@@ -282,9 +284,10 @@ private fun SarvBottomBar(
 private fun SarvNavigationRail(
     currentDestination: NavDestination?,
     navController: NavController,
+    modifier: Modifier = Modifier,
 ) {
     NavigationRail(
-        modifier = Modifier.heightIn(min = LocalSarvDimensions.current.dimen64),
+        modifier = modifier.heightIn(min = LocalSarvDimensions.current.dimen64),
         containerColor = MaterialTheme.colorScheme.surface,
     ) {
         Column(

@@ -267,9 +267,10 @@ private fun PoemDetailExpandedLayout(
     state: PoemDetailState,
     onAction: (PoemDetailAction) -> Unit,
     paddingValues: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
             .padding(
                 top = paddingValues.calculateTopPadding(),
                 bottom = paddingValues.calculateBottomPadding(),
@@ -320,10 +321,11 @@ private fun PoemDetailCompactLayout(
     listState: LazyListState,
     state: PoemDetailState,
     paddingValues: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
             .padding(
                 top = paddingValues.calculateTopPadding(),
                 bottom = paddingValues.calculateBottomPadding(),
@@ -355,10 +357,11 @@ private fun PoemDetailBottomBar(
     keyboardController: SoftwareKeyboardController?,
     focusManager: FocusManager,
     onAction: (PoemDetailAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
-            Modifier
+            modifier
                 .keyboardAboveIme()
                 .fillMaxWidth()
                 .padding(horizontal = LocalSarvDimensions.current.dimen16)
@@ -422,10 +425,11 @@ private fun TrackSelector(
     tracks: List<TrackPlaybackUiState>,
     selected: TrackPlaybackUiState,
     onSelectTrack: (PoemAudioTrack) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
-    Box {
+    Box(modifier = modifier) {
         Row(
             modifier =
                 Modifier
@@ -569,12 +573,13 @@ private fun PlayPauseButton(
     isPlaying: Boolean,
     isLoading: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     val iconTint = MaterialTheme.colorScheme.tertiary
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(LocalSarvDimensions.current.dimen48)
             .clip(CircleShape)
             .clickable(enabled = !isLoading, onClick = onClick),

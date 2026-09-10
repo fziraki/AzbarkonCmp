@@ -38,6 +38,7 @@ fun UpdateBottomSheet(
     updateType: UpdateType,
     properties: ModalBottomSheetProperties,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
     val scope = rememberCoroutineScope()
@@ -52,6 +53,7 @@ fun UpdateBottomSheet(
         onDismissRequest = if (updateType == UpdateType.MANDATORY) {{}} else onDismiss,
         sheetGesturesEnabled = updateType == UpdateType.OPTIONAL,
         properties = properties,
+        modifier = modifier,
     ) {
         Column(
             modifier = Modifier

@@ -85,8 +85,9 @@ private fun CompletePoemPoemCard(
     question: GameQuestion.CompletePoem,
     filledWords: List<String>,
     answerPhase: QuizAnswerPhase,
+    modifier: Modifier = Modifier,
 ) {
-    GamePoemCard(poetName = question.poetName) {
+    GamePoemCard(poetName = question.poetName, modifier = modifier) {
         Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -113,10 +114,12 @@ private fun CompletePoemOptionGrid(
     answerPhase: QuizAnswerPhase,
     enabled: Boolean,
     onWordSelect: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val firstCorrectIndex = question.options.indexOf(question.correctWords.first)
     val secondCorrectIndex = question.options.indexOf(question.correctWords.second)
 
+    Column(modifier = modifier) {
     question.options.chunked(2).forEach { rowWords ->
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -177,6 +180,7 @@ private fun CompletePoemOptionGrid(
             }
         }
     }
+    }
 }
 
 private fun completePoemOptionLabel(
@@ -201,11 +205,12 @@ private fun CompletePoemBlankedLine(
     filledWords: List<String>,
     answerPhase: QuizAnswerPhase,
     correctWords: Pair<String, String>,
+    modifier: Modifier = Modifier,
 ) {
     val parts = blankedLine.split("____")
     if (parts.size < MIN_BLANK_PARTS) {
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             text = blankedLine,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
@@ -245,7 +250,7 @@ private fun CompletePoemBlankedLine(
     )
 
     Text(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         text = buildAnnotatedString {
             append(parts[0])
             withStyle(firstStyle) { append(firstBlank) }
