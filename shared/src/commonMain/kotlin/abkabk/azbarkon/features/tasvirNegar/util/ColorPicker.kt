@@ -32,6 +32,7 @@ import sarv.shared.generated.resources.clear_cancel
 import sarv.shared.generated.resources.tasvir_pick_color
 import org.jetbrains.compose.resources.stringResource
 import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 private const val LABEL_WEIGHT = 0.2f
 private const val SLIDER_WEIGHT = 0.8f
@@ -43,6 +44,7 @@ expect fun TasvirCustomColorPicker(
     onColorSelect: (Color) -> Unit,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HsvColorPickerContent(
     onDismiss: () -> Unit,

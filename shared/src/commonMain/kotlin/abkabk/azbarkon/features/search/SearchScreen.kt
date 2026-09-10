@@ -69,6 +69,7 @@ import org.koin.core.parameter.parametersOf
 import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 import abkabk.azbarkon.core.ui.LocalWindowSizeClass
 import abkabk.azbarkon.core.ui.WindowWidthSizeClass
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 private const val SHIMMER_ROW_COUNT = 7
 @Composable
@@ -499,6 +500,7 @@ private fun SearchResultRow(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchOptionSheet(
     title: String,
