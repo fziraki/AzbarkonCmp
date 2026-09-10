@@ -1,8 +1,7 @@
 package abkabk.azbarkon.core.notifications
 
 import java.util.Calendar
-
-internal object DailyDistichScheduleCalculator {
+internal object MemorizationReviewScheduleCalculator {
     fun initialDelayMillis(
         deliveryHour: Int,
         deliveryMinute: Int,

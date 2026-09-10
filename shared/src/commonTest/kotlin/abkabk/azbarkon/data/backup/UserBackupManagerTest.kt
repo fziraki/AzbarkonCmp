@@ -34,7 +34,7 @@ class UserBackupManagerTest {
                     UserBackupMemorization(
                         activePoems =
                             listOf(
-                                StoredPoem(poemId = 5, addedAtMillis = 1000, status = "ACTIVE"),
+                                StoredPoem(poemId = 5, addedAtMillis = 1000, status = "ACTIVE", totalCards = 1),
                             ),
                     ),
             )

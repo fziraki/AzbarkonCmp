@@ -304,8 +304,6 @@ class ProfileViewModelTest {
             sessionLearned: Int,
         ) = Unit
 
-        override suspend fun getReviewDayKeys(): List<Int> = emptyList()
-
         override suspend fun countReviewedVerses(): Int = 0
 
         override suspend fun dumpActivePoems(): List<StoredPoem> = emptyList()

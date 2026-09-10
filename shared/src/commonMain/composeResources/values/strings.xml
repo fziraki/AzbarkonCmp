@@ -182,9 +182,9 @@
     <string name="cd_expand_category">باز کردن دسته</string>
 
     <string name="profile_daily_distich_title">بیت روزانه</string>
-    <string name="profile_daily_distich_subtitle">هر روز ساعت ۸ صبح یک بیت تصادفی</string>
+    <string name="profile_daily_distich_subtitle">هر روز صبح یک بیت تصادفی</string>
     <string name="profile_memorization_reminder_title">یادآور مرور حفظ</string>
-    <string name="profile_memorization_reminder_subtitle">هر روز ساعت ۱۰ صبح یادآوری مرور شعرها</string>
+    <string name="profile_memorization_reminder_subtitle">یادآوری روزانه برای شعرهای در حال حفظ</string>
     <string name="profile_settings_title">تنظیمات</string>
     <string name="profile_export_data">پشتیبان‌گیری از اطلاعات</string>
     <string name="profile_export_data_subtitle">ذخیره اطلاعات سرو در فایل</string>
