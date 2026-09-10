@@ -41,7 +41,7 @@ actual fun TasvirCustomColorPicker(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     ModalBottomSheet(
-        onDismissRequest = {},
+        onDismissRequest = onDismiss,
         sheetState = sheetState,
         sheetGesturesEnabled = false,
         containerColor = MaterialTheme.colorScheme.surface,

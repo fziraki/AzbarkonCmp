@@ -9,21 +9,21 @@ import kotlin.test.Test
 
 class CardGeneratorTest {
     @Test
-    fun `groups verses into couplet cards`() {
+    fun `each verse becomes a masked card`() {
         val verses =
             listOf(
-                PoemVerse(poemId = 1, vorder = 0, position = 0, text = "مصرع اول"),
-                PoemVerse(poemId = 1, vorder = 0, position = 1, text = "مصرع دوم"),
-                PoemVerse(poemId = 1, vorder = 1, position = 0, text = "بیت دوم راست"),
-                PoemVerse(poemId = 1, vorder = 1, position = 1, text = "بیت دوم چپ"),
+                PoemVerse(poemId = 1, vorder = 1, position = 0, text = "مصرع اول"),
+                PoemVerse(poemId = 1, vorder = 2, position = 1, text = "مصرع دوم"),
+                PoemVerse(poemId = 1, vorder = 3, position = 0, text = "بیت دوم راست"),
+                PoemVerse(poemId = 1, vorder = 4, position = 1, text = "بیت دوم چپ"),
             )
 
         val cards = CardGenerator.buildGeneratedCards(verses)
 
-        assertThat(cards).hasSize(2)
-        assertThat(cards[0].front).isEqualTo("مصرع اول\n...")
-        assertThat(cards[0].back).isEqualTo("مصرع اول\nمصرع دوم")
-        assertThat(cards[1].back).isEqualTo("بیت دوم راست\nبیت دوم چپ")
+        assertThat(cards).hasSize(4)
+        assertThat(cards[0].front).isEqualTo("مصرع اول")
+        assertThat(cards[0].back).isEqualTo("مصرع اول")
+        assertThat(cards[1].back).isEqualTo("مصرع دوم")
     }
 
     @Test
@@ -40,31 +40,11 @@ class CardGeneratorTest {
     }
 
     @Test
-    fun `expectedContinuation returns hidden couplet line`() {
-        val front = "مصرع اول\n..."
-        val back = "مصرع اول\nمصرع دوم"
-
-        assertThat(CardGenerator.expectedContinuation(front, back)).isEqualTo("مصرع دوم")
-    }
-
-    @Test
     fun `expectedContinuation returns hidden words for masked single line`() {
         val front = "یک دو ..."
         val back = "یک دو سه چهار"
 
         assertThat(CardGenerator.expectedContinuation(front, back)).isEqualTo("سه چهار")
-    }
-
-    @Test
-    fun `revealedFrontParts replaces couplet ellipsis`() {
-        val parts =
-            CardGenerator.revealedFrontParts(
-                front = "مصرع اول\n...",
-                continuation = "مصرع دوم",
-            )
-
-        assertThat(parts.prefix).isEqualTo("مصرع اول\n ")
-        assertThat(parts.continuation).isEqualTo("مصرع دوم")
     }
 
     @Test

@@ -4,7 +4,7 @@ import abkabk.azbarkon.core.domain.result.DataError
 import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.domain.model.RandomDistich
 
-interface DailyBeytRepository {
+interface DailyDistichRepository {
     suspend fun getRandomDistich(
         seed: Long,
         poetId: Int = 0,

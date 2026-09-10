@@ -39,7 +39,7 @@ object IosNotificationDelegate : NSObject(), UNUserNotificationCenterDelegatePro
         withCompletionHandler: () -> Unit,
     ) {
         val userInfo = didReceiveNotificationResponse.notification.request.content.userInfo
-        userInfo[DailyBeytNotificationPayload.KEY_POEM_ID]
+        userInfo[DailyDistichNotificationPayload.KEY_POEM_ID]
             ?.toString()
             ?.toIntOrNull()
             ?.let { poemId.value = it }

@@ -4,8 +4,8 @@ import abkabk.azbarkon.core.local.DatabaseDriverFactory
 import abkabk.azbarkon.core.local.MemorizationDatabaseDriverFactory
 import abkabk.azbarkon.core.local.PoetDbDriverFactory
 import abkabk.azbarkon.core.local.PoetDbFileStorage
-import abkabk.azbarkon.core.notifications.DailyBeytNotificationPresenter
-import abkabk.azbarkon.core.notifications.DailyBeytWorker
+import abkabk.azbarkon.core.notifications.DailyDistichNotificationPresenter
+import abkabk.azbarkon.core.notifications.DailyDistichWorker
 import abkabk.azbarkon.core.notifications.MemorizationReviewNotificationPresenter
 import abkabk.azbarkon.core.notifications.MemorizationReviewWorker
 import abkabk.azbarkon.core.widget.RandomDistichWidgetPreferences
@@ -17,12 +17,12 @@ import abkabk.azbarkon.core.platform.ImageExportManager
 import abkabk.azbarkon.core.platform.ShareManager
 import abkabk.azbarkon.core.player.AudioPlayer
 import abkabk.azbarkon.core.player.Media3AudioPlayer
-import abkabk.azbarkon.data.platform.AndroidDailyBeytNotificationScheduler
+import abkabk.azbarkon.data.platform.AndroidDailyDistichNotificationScheduler
 import abkabk.azbarkon.data.platform.AndroidMemorizationReviewNotificationScheduler
 import abkabk.azbarkon.data.platform.AndroidNotificationPermissionGateway
 import abkabk.azbarkon.data.cache.CoilPoetImagePrefetcher
 import abkabk.azbarkon.domain.datasource.PoetImagePrefetcher
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
 import abkabk.azbarkon.domain.platform.MemorizationReviewNotificationScheduler
 import abkabk.azbarkon.domain.platform.NotificationPermissionGateway
 import androidx.media3.exoplayer.ExoPlayer
@@ -95,11 +95,11 @@ val androidPlatformModule =
             ImageExportManager(context = androidContext())
         }
 
-        single<DailyBeytNotificationScheduler> {
-            AndroidDailyBeytNotificationScheduler(
+        single<DailyDistichNotificationScheduler> {
+            AndroidDailyDistichNotificationScheduler(
                 context = androidContext(),
                 userPreferencesRepository = get(),
-                dailyBeytRepository = get(),
+                dailyDistichRepository = get(),
                 notificationPresenter = get(),
                 ioDispatcher = get(),
             )
@@ -125,7 +125,7 @@ val androidPlatformModule =
         }
 
         single {
-            DailyBeytNotificationPresenter(
+            DailyDistichNotificationPresenter(
                 context = androidContext(),
             )
         }
@@ -144,7 +144,7 @@ val androidPlatformModule =
             RandomDistichWidgetRefresher()
         }
 
-        workerOf(::DailyBeytWorker)
+        workerOf(::DailyDistichWorker)
         workerOf(::MemorizationReviewWorker)
 
         factory<AudioPlayer> {

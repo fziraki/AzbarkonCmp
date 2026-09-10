@@ -10,6 +10,8 @@ import abkabk.azbarkon.features.games.components.gamePoemCorrectAnswerTextColor
 import abkabk.azbarkon.features.games.components.gamePoemUserAnswerTextColor
 import abkabk.azbarkon.features.games.components.optionStateForIndex
 import abkabk.azbarkon.features.games.session.QuizAnswerPhase
+import abkabk.azbarkon.core.ui.LocalWindowSizeClass
+import abkabk.azbarkon.core.ui.WindowWidthSizeClass
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,10 +26,10 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.game_complete_poem_instruction
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val MIN_BLANK_PARTS = 3
 
@@ -41,101 +43,137 @@ fun CompletePoemContent(
     onWordSelect: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val firstCorrectIndex = question.options.indexOf(question.correctWords.first)
-    val secondCorrectIndex = question.options.indexOf(question.correctWords.second)
+    val isExpanded = LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Expanded
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-
-        GamePoemCard(poetName = question.poetName) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = question.line1,
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                )
-                CompletePoemBlankedLine(
-                    blankedLine = question.blankedLine2,
-                    filledWords = filledWords,
-                    answerPhase = answerPhase,
-                    correctWords = question.correctWords,
+    if (isExpanded) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
+            ) {
+                CompletePoemPoemCard(question, filledWords, answerPhase)
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
+            ) {
+                CompletePoemOptionGrid(
+                    question, filledWords, disabledOptionIndices,
+                    answerPhase, enabled, onWordSelect,
                 )
             }
         }
+    } else {
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
+        ) {
+            CompletePoemPoemCard(question, filledWords, answerPhase)
+            CompletePoemOptionGrid(
+                question, filledWords, disabledOptionIndices,
+                answerPhase, enabled, onWordSelect,
+            )
+        }
+    }
+}
 
-        GameInstructionText(text = stringResource(Res.string.game_complete_poem_instruction))
-
-        question.options.chunked(2).forEach { rowWords ->
-            Row(
+@Composable
+private fun CompletePoemPoemCard(
+    question: GameQuestion.CompletePoem,
+    filledWords: List<String>,
+    answerPhase: QuizAnswerPhase,
+) {
+    GamePoemCard(poetName = question.poetName) {
+        Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
+            Text(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                rowWords.forEach { word ->
-                    val index = question.options.indexOf(word)
-                    val selectedIndex =
-                        when {
-                            filledWords.isNotEmpty() && word == filledWords.first() -> index
-                            filledWords.size > 1 && word == filledWords[1] -> index
-                            else -> null
-                        }
-                    val revealCorrectIndex =
-                        when (answerPhase) {
-                            QuizAnswerPhase.Correct,
-                            QuizAnswerPhase.Wrong,
-                            ->
-                                if (word == question.correctWords.first) {
-                                    firstCorrectIndex
-                                } else if (word == question.correctWords.second) {
-                                    secondCorrectIndex
-                                } else {
-                                    -1
-                                }
+                text = question.rightHemistich,
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+            )
+            CompletePoemBlankedLine(
+                blankedLine = question.blankedLeftHemistich,
+                filledWords = filledWords,
+                answerPhase = answerPhase,
+                correctWords = question.correctWords,
+            )
+        }
+    }
+    GameInstructionText(text = stringResource(Res.string.game_complete_poem_instruction))
+}
 
-                            QuizAnswerPhase.Answering -> -1
-                        }
-                    val effectiveCorrectIndex =
-                        if (revealCorrectIndex >= 0) revealCorrectIndex else firstCorrectIndex
-                    val state =
-                        if (answerPhase != QuizAnswerPhase.Answering && index == revealCorrectIndex) {
-                            GameOptionState.Correct
-                        } else {
-                            optionStateForIndex(
-                                index = index,
-                                selectedIndex = selectedIndex,
-                                correctIndex = effectiveCorrectIndex,
-                                disabledIndices = disabledOptionIndices,
-                                answerPhase = answerPhase,
-                            )
-                        }
-                    val (background, contentColor) = gameOptionColors(state)
-                    val clickable =
-                        enabled &&
-                            answerPhase == QuizAnswerPhase.Answering &&
-                            state != GameOptionState.Disabled &&
-                            (word in filledWords || filledWords.size < 2)
+@Composable
+private fun CompletePoemOptionGrid(
+    question: GameQuestion.CompletePoem,
+    filledWords: List<String>,
+    disabledOptionIndices: Set<Int>,
+    answerPhase: QuizAnswerPhase,
+    enabled: Boolean,
+    onWordSelect: (String) -> Unit,
+) {
+    val firstCorrectIndex = question.options.indexOf(question.correctWords.first)
+    val secondCorrectIndex = question.options.indexOf(question.correctWords.second)
 
-                    Text(
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .gameOptionStyle(state)
-                                .clickable(enabled = clickable) { onWordSelect(word) }
-                                .padding(horizontal = 12.dp, vertical = 14.dp),
-                        text =
-                            completePoemOptionLabel(
-                                word = word,
-                                filledWords = filledWords,
-                                answerPhase = answerPhase,
-                                correctWords = question.correctWords,
-                            ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = contentColor,
-                        textAlign = TextAlign.Center,
+    question.options.chunked(2).forEach { rowWords ->
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+        ) {
+            rowWords.forEach { word ->
+                val index = question.options.indexOf(word)
+                val selectedIndex = when {
+                    filledWords.isNotEmpty() && word == filledWords.first() -> index
+                    filledWords.size > 1 && word == filledWords[1] -> index
+                    else -> null
+                }
+                val revealCorrectIndex = when (answerPhase) {
+                    QuizAnswerPhase.Correct, QuizAnswerPhase.Wrong ->
+                        if (word == question.correctWords.first) firstCorrectIndex
+                        else if (word == question.correctWords.second) secondCorrectIndex
+                        else -1
+                    QuizAnswerPhase.Answering -> -1
+                }
+                val effectiveCorrectIndex =
+                    if (revealCorrectIndex >= 0) revealCorrectIndex else firstCorrectIndex
+                val state = if (answerPhase != QuizAnswerPhase.Answering && index == revealCorrectIndex) {
+                    GameOptionState.Correct
+                } else {
+                    optionStateForIndex(
+                        index = index,
+                        selectedIndex = selectedIndex,
+                        correctIndex = effectiveCorrectIndex,
+                        disabledIndices = disabledOptionIndices,
+                        answerPhase = answerPhase,
                     )
                 }
+                val (_, contentColor) = gameOptionColors(state)
+                val clickable = enabled &&
+                    answerPhase == QuizAnswerPhase.Answering &&
+                    state != GameOptionState.Disabled &&
+                    (word in filledWords || filledWords.size < 2)
+
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .gameOptionStyle(state)
+                        .clickable(enabled = clickable) { onWordSelect(word) }
+                        .padding(
+                            horizontal = LocalSarvDimensions.current.dimen12,
+                            vertical = LocalSarvDimensions.current.dimen16,
+                        ),
+                    text = completePoemOptionLabel(
+                        word = word,
+                        filledWords = filledWords,
+                        answerPhase = answerPhase,
+                        correctWords = question.correctWords,
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = contentColor,
+                    textAlign = TextAlign.Center,
+                )
             }
         }
     }
@@ -147,15 +185,13 @@ private fun completePoemOptionLabel(
     answerPhase: QuizAnswerPhase,
     correctWords: Pair<String, String>,
 ): String {
-    val order =
-        when {
-            answerPhase == QuizAnswerPhase.Answering ->
-                filledWords.indexOf(word).takeIf { it >= 0 }?.plus(1)
-
-            word == correctWords.first -> 1
-            word == correctWords.second -> 2
-            else -> null
-        }
+    val order = when {
+        answerPhase == QuizAnswerPhase.Answering ->
+            filledWords.indexOf(word).takeIf { it >= 0 }?.plus(1)
+        word == correctWords.first -> 1
+        word == correctWords.second -> 2
+        else -> null
+    }
     return order?.let { "($it) $word" } ?: word
 }
 
@@ -179,55 +215,44 @@ private fun CompletePoemBlankedLine(
 
     val userAnswerColor = gamePoemUserAnswerTextColor()
     val correctAnswerColor = gamePoemCorrectAnswerTextColor()
-    val firstBlank =
-        if (answerPhase == QuizAnswerPhase.Answering) {
-            filledWords.getOrElse(0) { "____" }
+    val firstBlank = if (answerPhase == QuizAnswerPhase.Answering) {
+        filledWords.getOrElse(0) { "____" }
+    } else {
+        correctWords.first
+    }
+    val secondBlank = if (answerPhase == QuizAnswerPhase.Answering) {
+        filledWords.getOrElse(1) { "____" }
+    } else {
+        correctWords.second
+    }
+    val firstStyle = SpanStyle(
+        color = if (answerPhase == QuizAnswerPhase.Answering && filledWords.isNotEmpty()) {
+            userAnswerColor
+        } else if (answerPhase != QuizAnswerPhase.Answering) {
+            correctAnswerColor
         } else {
-            correctWords.first
-        }
-    val secondBlank =
-        if (answerPhase == QuizAnswerPhase.Answering) {
-            filledWords.getOrElse(1) { "____" }
+            MaterialTheme.colorScheme.onBackground
+        },
+    )
+    val secondStyle = SpanStyle(
+        color = if (answerPhase == QuizAnswerPhase.Answering && filledWords.size > 1) {
+            userAnswerColor
+        } else if (answerPhase != QuizAnswerPhase.Answering) {
+            correctAnswerColor
         } else {
-            correctWords.second
-        }
-    val firstStyle =
-        SpanStyle(
-            color =
-                if (answerPhase == QuizAnswerPhase.Answering && filledWords.isNotEmpty()) {
-                    userAnswerColor
-                } else if (answerPhase != QuizAnswerPhase.Answering) {
-                    correctAnswerColor
-                } else {
-                    MaterialTheme.colorScheme.onBackground
-                },
-        )
-    val secondStyle =
-        SpanStyle(
-            color =
-                if (answerPhase == QuizAnswerPhase.Answering && filledWords.size > 1) {
-                    userAnswerColor
-                } else if (answerPhase != QuizAnswerPhase.Answering) {
-                    correctAnswerColor
-                } else {
-                    MaterialTheme.colorScheme.onBackground
-                },
-        )
+            MaterialTheme.colorScheme.onBackground
+        },
+    )
 
     Text(
         modifier = Modifier.fillMaxWidth(),
-        text =
-            buildAnnotatedString {
-                append(parts[0])
-                withStyle(firstStyle) {
-                    append(firstBlank)
-                }
-                append(parts[1])
-                withStyle(secondStyle) {
-                    append(secondBlank)
-                }
-                append(parts[2])
-            },
+        text = buildAnnotatedString {
+            append(parts[0])
+            withStyle(firstStyle) { append(firstBlank) }
+            append(parts[1])
+            withStyle(secondStyle) { append(secondBlank) }
+            append(parts[2])
+        },
         style = MaterialTheme.typography.bodyLarge,
         textAlign = TextAlign.Center,
     )

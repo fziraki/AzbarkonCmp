@@ -31,6 +31,10 @@ import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.clear_cancel
 import sarv.shared.generated.resources.tasvir_pick_color
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+
+private const val LABEL_WEIGHT = 0.2f
+private const val SLIDER_WEIGHT = 0.8f
 
 @Composable
 expect fun TasvirCustomColorPicker(
@@ -50,16 +54,16 @@ internal fun HsvColorPickerContent(
     val selectedColor = remember(hue, saturation, value) { Color.hsv(hue, saturation, value) }
 
     SarvModalBottomSheet(
-        onDismissRequest = {},
+        onDismissRequest = onDismiss,
         sheetGesturesEnabled = false,
     ) {
         Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                    .padding(horizontal = LocalSarvDimensions.current.dimen16)
+                    .padding(bottom = LocalSarvDimensions.current.dimen24),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         ) {
             Text(
                 text = stringResource(Res.string.tasvir_pick_color),
@@ -71,20 +75,20 @@ internal fun HsvColorPickerContent(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(48.dp)
-                        .background(selectedColor, RoundedCornerShape(8.dp)),
+                        .height(LocalSarvDimensions.current.dimen48)
+                        .background(selectedColor, RoundedCornerShape(LocalSarvDimensions.current.dimen8)),
             )
             ColorSlider(label = "رنگ", value = hue, valueRange = 0f..360f) { hue = it }
             ColorSlider(label = "اشباع", value = saturation) { saturation = it }
             ColorSlider(label = "روشنایی", value = value) { value = it }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
             ) {
                 SarvButton(
                     text = stringResource(Res.string.clear_cancel),
                     onClick = onDismiss,
-                    modifier = Modifier.weight(1f).height(48.dp),
+                    modifier = Modifier.weight(1f),
                     colors =
                         ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -94,7 +98,7 @@ internal fun HsvColorPickerContent(
                 SarvPrimaryButton(
                     text = stringResource(Res.string.tasvir_pick_color),
                     onClick = { onColorSelect(selectedColor) },
-                    modifier = Modifier.weight(1f).height(48.dp),
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -110,15 +114,19 @@ private fun ColorSlider(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = label, modifier = Modifier.size(width = 80.dp, height = 24.dp), style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = label,
+            modifier = Modifier.weight(LABEL_WEIGHT),
+            style = MaterialTheme.typography.labelMedium,
+        )
         SarvSlider(
             value = value,
             onValueChange = onValueChange,
             valueRange = valueRange,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(SLIDER_WEIGHT),
         )
     }
 }

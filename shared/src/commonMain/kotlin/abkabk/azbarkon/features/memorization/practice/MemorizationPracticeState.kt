@@ -37,6 +37,8 @@ data class MemorizationPracticeState(
     val sessionMistakes: Int = 0,
     val sessionReviewed: Int = 0,
     val sessionLearned: Int = 0,
+    val hasOtherDuePoems: Boolean = false,
+    val nextPoemId: Int? = null,
 )
 
 sealed interface MemorizationPracticeAction {
@@ -60,9 +62,13 @@ sealed interface MemorizationPracticeAction {
 
     data object OnNextCard : MemorizationPracticeAction
 
+    data object OnNextPoemClick : MemorizationPracticeAction
+
     data object OnNotificationPermissionGranted : MemorizationPracticeAction
 }
 
 sealed interface MemorizationPracticeEvent {
     data object NavigateBack : MemorizationPracticeEvent
+
+    data class NavigateToPoem(val poemId: Int) : MemorizationPracticeEvent
 }

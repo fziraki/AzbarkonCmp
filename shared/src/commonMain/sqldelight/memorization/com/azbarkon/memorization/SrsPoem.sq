@@ -1,0 +1,67 @@
+-- Tracks which poems are currently enrolled in the SRS review system.
+-- A poem must be 'ACTIVE' for its cards to appear in the due-cards queries.
+CREATE TABLE srs_poem (
+    poem_id INTEGER NOT NULL PRIMARY KEY,
+    added_at INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    interval INTEGER NOT NULL DEFAULT 1,
+    due_date INTEGER NOT NULL DEFAULT 0,
+    consecutive_correct INTEGER NOT NULL DEFAULT 0,
+    total_cards INTEGER NOT NULL DEFAULT 0
+);
+
+-- Enroll a poem in the SRS system.
+insertPoem:
+INSERT INTO srs_poem(
+poem_id, added_at, status,
+interval, due_date, consecutive_correct,
+total_cards)
+VALUES (?, ?, ?, ?, ?, ?,?);
+
+-- Remove a poem from the SRS system (deactivate).
+deletePoem:
+DELETE FROM srs_poem
+WHERE poem_id = ?;
+
+-- Check enrollment status of a single poem.
+selectPoem:
+SELECT *
+FROM srs_poem
+WHERE poem_id = ?;
+
+-- Count how many poems are currently active.
+countActive:
+SELECT COUNT(*)
+FROM srs_poem
+WHERE status = 'ACTIVE';
+
+-- Boolean check: is a specific poem currently active?
+isPoemActive:
+SELECT COUNT(*) > 0
+FROM srs_poem
+WHERE poem_id = ? AND status = 'ACTIVE';
+
+-- Fetch all enrolled poems regardless of status (full list for import/export).
+selectAll:
+SELECT * FROM srs_poem;
+
+-- Fetch poem ids by status.
+selectPoemIdsByStatus:
+SELECT poem_id
+FROM srs_poem
+WHERE status = ?;
+
+-- Update poem-level SRS schedule (interval, due date, consecutive correct count).
+updatePoemSchedule:
+UPDATE srs_poem
+SET
+    status = ?,
+    interval = ?,
+    due_date = ?,
+    consecutive_correct = ?
+
+WHERE poem_id = ?;
+
+-- Remove all enrollments (full reset/restore).
+deleteAll:
+DELETE FROM srs_poem;

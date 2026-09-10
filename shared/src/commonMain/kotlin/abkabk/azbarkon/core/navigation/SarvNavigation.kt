@@ -1,10 +1,12 @@
 package abkabk.azbarkon.core.navigation
 
-import abkabk.azbarkon.core.uidata.SarvAppState
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+import abkabk.azbarkon.core.ui.LocalWindowSizeClass
+import abkabk.azbarkon.core.ui.WindowWidthSizeClass
 import abkabk.azbarkon.core.uidata.LocalSarvAppState
 import abkabk.azbarkon.core.uidata.LocalSnackbarHostState
+import abkabk.azbarkon.core.uidata.SarvAppState
 import abkabk.azbarkon.core.uidata.rememberSarvAppState
-import abkabk.azbarkon.ui.components.SarvSnackbarHost
 import abkabk.azbarkon.features.games.navigation.GamePlayRoute
 import abkabk.azbarkon.features.games.navigation.GameTypeRoute
 import abkabk.azbarkon.features.games.navigation.GamesRoute
@@ -15,6 +17,10 @@ import abkabk.azbarkon.features.home.navigation.HomeRoute
 import abkabk.azbarkon.features.home.navigation.MyPoemsRoute
 import abkabk.azbarkon.features.home.navigation.homeGraph
 import abkabk.azbarkon.features.memorization.navigation.MemorizationPracticeRoute
+import abkabk.azbarkon.features.memorization.navigation.memorizationGraph
+import abkabk.azbarkon.features.memorization.navigation.navigateToActiveMemorization
+import abkabk.azbarkon.features.memorization.navigation.navigateToMemorizationPractice
+import abkabk.azbarkon.features.memorization.navigation.navigateToMemorizationSelect
 import abkabk.azbarkon.features.poets.navigation.ChatRoute
 import abkabk.azbarkon.features.poets.navigation.PoemDetailRoute
 import abkabk.azbarkon.features.poets.navigation.PoetDetailRoute
@@ -22,22 +28,20 @@ import abkabk.azbarkon.features.poets.navigation.PoetsListRoute
 import abkabk.azbarkon.features.poets.navigation.poetsGraph
 import abkabk.azbarkon.features.profile.navigation.ProfileRoute
 import abkabk.azbarkon.features.profile.navigation.profileGraph
-import abkabk.azbarkon.features.tasvirNegar.navigation.TasvirNegarRoute
-import abkabk.azbarkon.features.tasvirNegar.navigation.tasvirNegarGraph
-import abkabk.azbarkon.features.memorization.navigation.memorizationGraph
-import abkabk.azbarkon.features.memorization.navigation.navigateToActiveMemorization
-import abkabk.azbarkon.features.memorization.navigation.navigateToMemorizationPractice
-import abkabk.azbarkon.features.memorization.navigation.navigateToMemorizationSelect
 import abkabk.azbarkon.features.search.navigation.navigateToSearch
 import abkabk.azbarkon.features.search.navigation.searchGraph
+import abkabk.azbarkon.features.tasvirNegar.navigation.TasvirNegarRoute
+import abkabk.azbarkon.features.tasvirNegar.navigation.tasvirNegarGraph
+import abkabk.azbarkon.ui.components.SarvSnackbarHost
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -50,6 +54,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -62,17 +69,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.jetbrains.compose.resources.Font
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.Shekasteh
 import sarv.shared.generated.resources.app_name
@@ -82,9 +88,6 @@ import sarv.shared.generated.resources.cd_search
 import sarv.shared.generated.resources.cd_settings
 import sarv.shared.generated.resources.search
 import sarv.shared.generated.resources.settings
-import org.jetbrains.compose.resources.Font
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 // ponytail: null destination = start destination not yet resolved; treat as a root tab
 // so top/bottom bars render on the first frame and the content never reflows.
@@ -119,13 +122,14 @@ private fun SarvTopBar(
     currentDestination: NavDestination?,
     navController: NavController,
     appState: SarvAppState,
+    isExpandedScreen: Boolean,
 ) {
     Box(
         modifier =
             Modifier
                 .windowInsetsPadding(WindowInsets.statusBars)
                 .fillMaxWidth()
-                .height(56.dp),
+                .heightIn(min = if (isExpandedScreen) LocalSarvDimensions.current.dimen40 else LocalSarvDimensions.current.dimen56),
     ) {
         if (navController.previousBackStackEntry != null) {
             IconButton(
@@ -133,6 +137,7 @@ private fun SarvTopBar(
                 onClick = { navController.navigateUp() },
             ) {
                 Icon(
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
                     painter = painterResource(Res.drawable.arrow_back_right),
                     contentDescription = stringResource(Res.string.cd_back),
                 )
@@ -150,13 +155,13 @@ private fun SarvTopBar(
                     Text(
                         text = stringResource(it),
                         fontFamily = FontFamily(Font(Res.font.Shekasteh)),
-                        fontSize = 28.sp,
+                        style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
                     )
                 }else{
                     Text(
                         text = stringResource(it),
-                        style = MaterialTheme.typography.headlineLarge,
+                        style = MaterialTheme.typography.titleLarge,
                     )
                 }
 
@@ -177,6 +182,7 @@ private fun SarvTopBar(
                 onClick = { appState.onProfileSettingsClick?.invoke() },
             ) {
                 Icon(
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
                     painter = painterResource(Res.drawable.settings),
                     contentDescription = stringResource(Res.string.cd_settings),
                 )
@@ -189,6 +195,7 @@ private fun SarvTopBar(
                 onClick = { navController.navigateToSearch() },
             ) {
                 Icon(
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
                     painter = painterResource(Res.drawable.search),
                     contentDescription = stringResource(Res.string.cd_search),
                 )
@@ -205,10 +212,10 @@ private fun SarvBottomBar(
     NavigationBar(
         modifier =
             Modifier
-                .shadow(spotColor = MaterialTheme.colorScheme.tertiary, elevation = 1.dp)
+                .shadow(spotColor = MaterialTheme.colorScheme.tertiary, elevation = LocalSarvDimensions.current.dimen1)
                 .windowInsetsPadding(WindowInsets.navigationBars)
                 .fillMaxWidth()
-                .height(64.dp),
+                .heightIn(min = LocalSarvDimensions.current.dimen64),
         containerColor = MaterialTheme.colorScheme.surface,
     ) {
         bottomNavItems.forEach { item ->
@@ -246,7 +253,7 @@ private fun SarvBottomBar(
                 },
                 icon = {
                     Icon(
-                        modifier = Modifier.size(22.dp),
+                        modifier = Modifier.size(LocalSarvDimensions.current.dimen22),
                         painter = painterResource(item.icon),
                         contentDescription = stringResource(item.title),
                     )
@@ -271,6 +278,119 @@ private fun SarvBottomBar(
     }
 }
 
+@Composable
+private fun SarvNavigationRail(
+    currentDestination: NavDestination?,
+    navController: NavController,
+) {
+    NavigationRail(
+        modifier = Modifier.heightIn(min = LocalSarvDimensions.current.dimen64),
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(
+                space = LocalSarvDimensions.current.dimen16,
+                alignment = Alignment.CenterVertically
+            ),
+        ) {
+            bottomNavItems.forEach { item ->
+                val selected =
+                    when (item) {
+                        BottomNavItem.Home -> currentDestination?.hasRoute<HomeRoute>() == true
+                        BottomNavItem.Treasure -> currentDestination?.hasRoute<PoetsListRoute>() == true
+                        BottomNavItem.Games -> currentDestination?.hasRoute<GamesRoute>() == true
+                        BottomNavItem.Profile -> currentDestination?.hasRoute<ProfileRoute>() == true
+                    }
+
+                NavigationRailItem(
+                    selected = selected,
+                    onClick = {
+                        val route =
+                            when (item) {
+                                BottomNavItem.Home -> HomeRoute
+                                BottomNavItem.Treasure -> PoetsListRoute
+                                BottomNavItem.Games -> GamesRoute
+                                BottomNavItem.Profile -> ProfileRoute
+                            }
+                        if (item == BottomNavItem.Home) {
+                            navController.navigate(HomeRoute) {
+                                popUpTo(HomeRoute) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        } else {
+                            navController.navigate(route) {
+                                popUpTo(HomeRoute) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            modifier = Modifier.size(LocalSarvDimensions.current.dimen22),
+                            painter = painterResource(item.icon),
+                            contentDescription = stringResource(item.title),
+                        )
+                    },
+                    colors =
+                        NavigationRailItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.secondary,
+                            selectedTextColor = MaterialTheme.colorScheme.secondary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                    label = {
+                        Text(
+                            text = stringResource(item.title),
+                            style = MaterialTheme.typography.labelSmall,
+                        )
+                    },
+                )
+            }
+        }
+    }
+}
+
+private fun homeCallbacks(navController: NavController): HomeCallbacks =
+    HomeCallbacks(
+        onNavigateToPoetsList = {
+            navController.navigate(PoetsListRoute) {
+                popUpTo(HomeRoute) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
+        },
+        onNavigateToPoetDetail = { poetId ->
+            navController.navigate(PoetDetailRoute(poetId))
+        },
+        onNavigateToPoemDetail = { poemId ->
+            navController.navigate(PoemDetailRoute(poemId = poemId))
+        },
+        onNavigateToMyPoems = {
+            navController.navigate(MyPoemsRoute)
+        },
+        onNavigateToSearch = {
+            navController.navigateToSearch()
+        },
+        onNavigateToTasvirNegar = {
+            navController.navigate(TasvirNegarRoute(poemId = null))
+        },
+        onNavigateToMemorizationSelect = {
+            navController.navigateToMemorizationSelect()
+        },
+        onNavigateToMemorizationPractice = {
+            navController.navigateToMemorizationPractice()
+        },
+        onNavigateToActiveMemorization = {
+            navController.navigateToActiveMemorization()
+        },
+        onNavigateToGame = {
+            navController.navigateToGame(GameTypeRoute.NEXT_VERSE)
+        },
+    )
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SarvNavigation(
@@ -281,6 +401,8 @@ fun SarvNavigation(
     val navController = rememberNavController()
     val appState = rememberSarvAppState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val windowSizeClass = LocalWindowSizeClass.current
+    val isExpandedScreen = windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact
 
     LaunchedEffect(initialPoemId) {
         initialPoemId?.let { poemId ->
@@ -314,90 +436,64 @@ fun SarvNavigation(
         LocalSarvAppState provides appState,
         LocalSnackbarHostState provides snackbarHostState,
     ) {
-        Scaffold(
-            modifier = modifier,
-            containerColor = MaterialTheme.colorScheme.background,
-            snackbarHost = {
-                if (!currentDestination.hasOwnScaffold()) SarvSnackbarHost(hostState = snackbarHostState)
-            },
-            topBar = {
-                if (isRootDestination) {
-                    SarvTopBar(
-                        currentItem = currentItem,
-                        currentDestination = currentDestination,
-                        navController = navController,
-                        appState = appState,
-                    )
-                }
-            },
-            bottomBar = {
-                if (isRootDestination) {
-                    SarvBottomBar(
-                        currentDestination = currentDestination,
-                        navController = navController,
-                    )
-                }
-            },
-        ) { padding ->
-            NavHost(
-                navController = navController,
-                startDestination = HomeRoute,
-                modifier = Modifier.padding(padding),
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None },
-            ) {
-                homeGraph(
-                    callbacks =
-                        HomeCallbacks(
-                            onNavigateToPoetsList = {
-                                navController.navigate(PoetsListRoute) {
-                                    popUpTo(HomeRoute) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            onNavigateToPoetDetail = { poetId ->
-                                navController.navigate(PoetDetailRoute(poetId))
-                            },
-                            onNavigateToPoemDetail = { poemId ->
-                                navController.navigate(PoemDetailRoute(poemId = poemId))
-                            },
-                            onNavigateToMyPoems = {
-                                navController.navigate(MyPoemsRoute)
-                            },
-                            onNavigateToSearch = {
-                                navController.navigateToSearch()
-                            },
-                            onNavigateToTasvirNegar = {
-                                navController.navigate(TasvirNegarRoute(poemId = null))
-                            },
-                            onNavigateToMemorizationSelect = {
-                                navController.navigateToMemorizationSelect()
-                            },
-                            onNavigateToMemorizationPractice = {
-                                navController.navigateToMemorizationPractice()
-                            },
-                            onNavigateToActiveMemorization = {
-                                navController.navigateToActiveMemorization()
-                            },
-                            onNavigateToGame = {
-                                navController.navigateToGame(GameTypeRoute.NEXT_VERSE)
-                            },
-                        ),
-                    onBackFromMyPoems = navController::navigateUp,
-                    onNavigateToPoemDetailFromMyPoems = { poemId ->
-                        navController.navigate(PoemDetailRoute(poemId = poemId))
-                    },
+        Row(modifier = modifier) {
+            if (isExpandedScreen && isRootDestination) {
+                SarvNavigationRail(
+                    currentDestination = currentDestination,
+                    navController = navController,
                 )
-                tasvirNegarGraph(onBackClick = navController::navigateUp)
-                memorizationGraph(navController)
-                gamesGraph(navController)
-                profileGraph()
-                poetsGraph(navController)
-                searchGraph(navController)
             }
+
+            Scaffold(
+                modifier = Modifier.weight(1f),
+                containerColor = MaterialTheme.colorScheme.background,
+                snackbarHost = {
+                    if (!currentDestination.hasOwnScaffold()) SarvSnackbarHost(hostState = snackbarHostState)
+                },
+                topBar = {
+                    if (isRootDestination) {
+                        SarvTopBar(
+                            currentItem = currentItem,
+                            currentDestination = currentDestination,
+                            navController = navController,
+                            appState = appState,
+                            isExpandedScreen = isExpandedScreen,
+                        )
+                    }
+                },
+                bottomBar = {
+                    if (isRootDestination && !isExpandedScreen) {
+                        SarvBottomBar(
+                            currentDestination = currentDestination,
+                            navController = navController,
+                        )
+                    }
+                },
+            ) { padding ->
+                NavHost(
+                    navController = navController,
+                    startDestination = HomeRoute,
+                    modifier = Modifier.padding(padding),
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None },
+                ) {
+                    homeGraph(
+                        callbacks = homeCallbacks(navController),
+                        onBackFromMyPoems = navController::navigateUp,
+                        onNavigateToPoemDetailFromMyPoems = { poemId ->
+                            navController.navigate(PoemDetailRoute(poemId = poemId))
+                        },
+                    )
+                    tasvirNegarGraph(onBackClick = navController::navigateUp)
+                    memorizationGraph(navController)
+                    gamesGraph(navController)
+                    profileGraph()
+                    poetsGraph(navController)
+                    searchGraph(navController)
+        }
         }
     }
 }
+    }

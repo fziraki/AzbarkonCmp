@@ -1,5 +1,6 @@
 package abkabk.azbarkon.features.memorization.practice
 
+import abkabk.azbarkon.domain.model.memorization.MemorizationPoem
 import abkabk.azbarkon.domain.model.memorization.SrsCard
 import abkabk.azbarkon.domain.model.memorization.SrsGrade
 import abkabk.azbarkon.testing.FakeMemorizationRepository
@@ -24,6 +25,12 @@ class MemorizationPracticeViewModelTest {
                         sampleCard(id = 2),
                     ),
                 )
+            repository.activePoems =
+                abkabk.azbarkon.core.domain.result.Result.Success(
+                    listOf(
+                        sampleActivePoem(poemId = 10, dueCards = 2),
+                    ),
+                )
 
             val viewModel = MemorizationPracticeViewModel(repository, poemId = null)
             val state = viewModel.state.value
@@ -38,16 +45,11 @@ class MemorizationPracticeViewModelTest {
         runViewModelTest {
             val card = sampleCard(id = 5)
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
-            repository.reviewResult =
-                abkabk.azbarkon.core.domain.result.Result.Success(
-                    card.copy(interval = 3, consecutiveCorrect = 1),
-                )
 
             val viewModel = MemorizationPracticeViewModel(repository, poemId = 10)
             viewModel.onAction(MemorizationPracticeAction.OnRevealClick)
             viewModel.onAction(MemorizationPracticeAction.OnGradeClick(SrsGrade.GOOD))
 
-            assertThat(repository.lastReviewedCardId).isNull()
             assertThat(viewModel.state.value.phase).isEqualTo(PracticePhase.REVEALED)
             assertThat(viewModel.state.value.selectedGrade).isEqualTo(SrsGrade.GOOD)
 
@@ -68,7 +70,7 @@ class MemorizationPracticeViewModelTest {
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
             repository.reviewResult =
                 abkabk.azbarkon.core.domain.result.Result.Success(
-                    card.copy(interval = 0, consecutiveCorrect = 0),
+                    card.copy(score = 0.0),
                 )
 
             val viewModel = MemorizationPracticeViewModel(repository, poemId = 10)
@@ -87,14 +89,10 @@ class MemorizationPracticeViewModelTest {
             val card =
                 sampleCard(
                     id = 7,
-                    front = "مصرع اول\n...",
-                    back = "مصرع اول\nمصرع دوم",
+                    front = "مصرع دوم ...",
+                    back = "مصرع دوم",
                 )
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
-            repository.reviewResult =
-                abkabk.azbarkon.core.domain.result.Result.Success(
-                    card.copy(interval = 1, consecutiveCorrect = 1),
-                )
 
             val viewModel = MemorizationPracticeViewModel(repository, poemId = 10)
             viewModel.onAction(MemorizationPracticeAction.OnTypingModeClick)
@@ -120,8 +118,8 @@ class MemorizationPracticeViewModelTest {
             val card =
                 sampleCard(
                     id = 8,
-                    front = "مصرع اول\n...",
-                    back = "مصرع اول\nمصرع دوم",
+                    front = "مصرع ...",
+                    back = "مصرع دوم",
                 )
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
 
@@ -155,8 +153,8 @@ class MemorizationPracticeViewModelTest {
             val card =
                 sampleCard(
                     id = 10,
-                    front = "مصرع اول\n...",
-                    back = "مصرع اول\nمصرع دوم",
+                    front = "مصرع دوم ...",
+                    back = "مصرع دوم",
                 )
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
 
@@ -172,6 +170,7 @@ class MemorizationPracticeViewModelTest {
     fun `empty due queue completes session`() =
         runViewModelTest {
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(emptyList())
+            repository.activePoems = abkabk.azbarkon.core.domain.result.Result.Success(emptyList())
 
             val viewModel = MemorizationPracticeViewModel(repository, poemId = null)
 
@@ -186,12 +185,24 @@ class MemorizationPracticeViewModelTest {
     ) = SrsCard(
         id = id,
         poemId = 10,
-        cardIndex = 0,
         front = front,
         back = back,
-        interval = 0,
-        ease = 2.5,
-        dueDateMillis = 0,
-        consecutiveCorrect = 0,
+    )
+
+    private fun sampleActivePoem(
+        poemId: Int,
+        dueCards: Int,
+    ) = MemorizationPoem(
+        poemId = poemId,
+        title = "title",
+        poetName = "poet",
+        categoryName = "cat",
+        addedAtMillis = 0L,
+        status = abkabk.azbarkon.domain.model.memorization.MemorizationStatus.ACTIVE,
+        totalCards = dueCards,
+        reviewedCards = 0,
+        reviewSessionsCount = 0,
+        nextReviewDays = 0,
+        dueDate = 0L,
     )
 }

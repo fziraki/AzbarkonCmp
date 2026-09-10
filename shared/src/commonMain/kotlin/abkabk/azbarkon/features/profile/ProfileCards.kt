@@ -12,13 +12,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -38,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -48,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.cd_levels
 import sarv.shared.generated.resources.ic_help
-import sarv.shared.generated.resources.beyt100_badge
+import sarv.shared.generated.resources.distich100_badge
 import sarv.shared.generated.resources.first_badge
 import sarv.shared.generated.resources.hafez_star_badge
 import sarv.shared.generated.resources.level1
@@ -60,20 +56,20 @@ import sarv.shared.generated.resources.level6
 import sarv.shared.generated.resources.level7
 import sarv.shared.generated.resources.level8
 import sarv.shared.generated.resources.night_badge
-import sarv.shared.generated.resources.palette
 import sarv.shared.generated.resources.poetry_lover_badge
 import sarv.shared.generated.resources.profile_game_status_title
 import sarv.shared.generated.resources.profile_game_streak
 import sarv.shared.generated.resources.profile_game_total_points
 import sarv.shared.generated.resources.profile_level_format
-import sarv.shared.generated.resources.profile_mem_completed_poems
-import sarv.shared.generated.resources.profile_mem_streak
+import sarv.shared.generated.resources.memorization_active_poems
+import sarv.shared.generated.resources.memorization_completed_poems
 import sarv.shared.generated.resources.profile_memorization_status_title
 import sarv.shared.generated.resources.profile_view_all_badges
 import sarv.shared.generated.resources.profile_xp_format
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val WEEKLY_STREAK_BADGE_ID = 3
 private const val POETRY_LOVER_BADGE_ID = 4
@@ -102,14 +98,14 @@ fun ProfileHeader(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         levelImageResource(levelProgress.levelId)?.let { drawable ->
             Image(
                 painter = painterResource(drawable),
                 contentDescription = null,
-                modifier = Modifier.size(96.dp).clickable(onClick = onLevelsClick),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen96).clickable(onClick = onLevelsClick),
             )
         }
 
@@ -118,7 +114,7 @@ fun ProfileHeader(
                 Modifier
                     .fillMaxWidth()
                     .clickable(onClick = onLevelsClick),
-            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally ),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4, Alignment.CenterHorizontally ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -128,7 +124,7 @@ fun ProfileHeader(
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
             )
-            Box(modifier = Modifier.size(3.dp)
+            Box(modifier = Modifier.size(LocalSarvDimensions.current.dimen2)
                 .background(
                     color = MaterialTheme.colorScheme.onSurface,
                     shape = CircleShape
@@ -141,12 +137,12 @@ fun ProfileHeader(
             )
             IconButton(
                 onClick = onLevelsClick,
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen32),
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_help),
                     contentDescription = stringResource(Res.string.cd_levels),
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen20),
                 )
             }
         }
@@ -164,8 +160,8 @@ fun ProfileHeader(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp)
-                        .height(8.dp),
+                        .padding(horizontal = LocalSarvDimensions.current.dimen32)
+                        .height(LocalSarvDimensions.current.dimen8),
                 trackColor = LightColorScheme.outlineVariant,
                 strokeCap = StrokeCap.Round,
                 drawStopIndicator = {},
@@ -198,8 +194,8 @@ fun MemorizationStatusCard(
         title = stringResource(Res.string.profile_memorization_status_title),
         items =
             listOf(
-                stats.practiceStreak to stringResource(Res.string.profile_mem_streak),
-                stats.completedPoemCount to stringResource(Res.string.profile_mem_completed_poems),
+                stats.activePoemCount to stringResource(Res.string.memorization_active_poems),
+                stats.completedPoemCount to stringResource(Res.string.memorization_completed_poems),
             ),
     )
 }
@@ -228,14 +224,14 @@ private fun ProfileStatusCard(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        tonalElevation = 1.dp,
-        shadowElevation = 1.dp,
+        shape = RoundedCornerShape(LocalSarvDimensions.current.dimen12),
+        tonalElevation = LocalSarvDimensions.current.dimen1,
+        shadowElevation = LocalSarvDimensions.current.dimen1,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -260,7 +256,7 @@ private fun ProfileStatusCard(
                     if (index < items.lastIndex) {
                         VerticalDivider(
                             modifier = Modifier.fillMaxHeight(),
-                            thickness = 1.dp,
+                            thickness = LocalSarvDimensions.current.dimen1,
                             color = MaterialTheme.colorScheme.secondary,
                         )
                     }
@@ -278,14 +274,14 @@ private fun ProfileStatItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 4.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.padding(horizontal = LocalSarvDimensions.current.dimen4),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value.toString(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
         Text(
@@ -306,18 +302,18 @@ fun ProfileBadges(
 
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        tonalElevation = 1.dp,
-        shadowElevation = 1.dp,
+        shape = RoundedCornerShape(LocalSarvDimensions.current.dimen12),
+        tonalElevation = LocalSarvDimensions.current.dimen1,
+        shadowElevation = LocalSarvDimensions.current.dimen1,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Column(
-            modifier = Modifier.padding(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(vertical = LocalSarvDimensions.current.dimen16),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
             horizontalAlignment = Alignment.End,
         ) {
             Text(
-                modifier = Modifier.clickable(onClick = onViewAllClick).padding(end = 16.dp),
+                modifier = Modifier.clickable(onClick = onViewAllClick).padding(end = LocalSarvDimensions.current.dimen16),
                 text = stringResource(Res.string.profile_view_all_badges),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.secondary,
@@ -346,7 +342,7 @@ fun BadgeItem(
     BadgeIcon(
         badgeId = item.id,
         isEarned = item.isEarned,
-        modifier = modifier.width(80.dp),
+        modifier = modifier.width(LocalSarvDimensions.current.dimen80),
         showName = true,
         name = item.name,
     )
@@ -360,17 +356,17 @@ fun BadgeListRow(
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
     ) {
         BadgeIcon(
             badgeId = item.id,
             isEarned = item.isEarned,
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen56),
         )
 
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
@@ -407,7 +403,7 @@ private fun BadgeIcon(
     val drawable =
         when (badgeId) {
             1 -> Res.drawable.first_badge
-            2 -> Res.drawable.beyt100_badge
+            2 -> Res.drawable.distich100_badge
             WEEKLY_STREAK_BADGE_ID -> Res.drawable.night_badge
             POETRY_LOVER_BADGE_ID -> Res.drawable.poetry_lover_badge
             PERFECT_GAMES_BADGE_ID -> Res.drawable.hafez_star_badge
@@ -415,7 +411,7 @@ private fun BadgeIcon(
         }
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(

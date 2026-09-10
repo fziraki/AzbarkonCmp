@@ -1,7 +1,8 @@
 package abkabk.azbarkon.ui.components
 
 import abkabk.azbarkon.ui.theme.SarvTheme
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -20,6 +22,7 @@ fun SarvPrimaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    verticalTextPadding: Dp = 0.dp
 ) {
     SarvButton(
         text = text,
@@ -27,6 +30,7 @@ fun SarvPrimaryButton(
         modifier = modifier,
         enabled = enabled,
         textStyle = textStyle,
+        verticalTextPadding = verticalTextPadding,
         colors =
             ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -45,6 +49,7 @@ fun SarvButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    verticalTextPadding: Dp = 0.dp
 ) {
     Button(
         onClick = onClick,
@@ -54,6 +59,7 @@ fun SarvButton(
         colors = colors,
     ) {
         Text(
+            modifier = Modifier.padding(vertical = verticalTextPadding),
             text = text,
             style = textStyle,
         )
@@ -67,7 +73,7 @@ private fun SarvPrimaryButtonPreview() {
         SarvPrimaryButton(
             text = "تمرین حفظ این شعر",
             onClick = {},
-            modifier = Modifier.height(52.dp),
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

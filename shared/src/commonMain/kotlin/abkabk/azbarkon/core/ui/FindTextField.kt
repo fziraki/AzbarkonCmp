@@ -1,11 +1,13 @@
 package abkabk.azbarkon.core.ui
 
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -39,17 +41,18 @@ fun FindTextField(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .border(
-                    width = 1.dp,
+                    width = LocalSarvDimensions.current.dimen1,
                     color = MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(14.dp),
-                ).padding(horizontal = 14.dp, vertical = 12.dp),
+                    shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
+                ).padding(horizontal = LocalSarvDimensions.current.dimen16, vertical = LocalSarvDimensions.current.dimen12),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
         Icon(
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
             painter = painterResource(Res.drawable.search),
             contentDescription = stringResource(Res.string.search),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,

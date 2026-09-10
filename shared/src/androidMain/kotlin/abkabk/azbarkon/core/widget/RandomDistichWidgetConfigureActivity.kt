@@ -161,7 +161,7 @@ private fun PoetSelectionList(
         item {
             Text(
                 text = stringResource(R.string.widget_random_distich_config_title),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.titleMedium,
                 modifier =
                     Modifier
                         .fillMaxWidth()

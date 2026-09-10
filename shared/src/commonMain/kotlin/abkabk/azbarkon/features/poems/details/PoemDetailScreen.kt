@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -79,6 +80,11 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+import abkabk.azbarkon.core.ui.LocalWindowSizeClass
+import abkabk.azbarkon.core.ui.WindowWidthSizeClass
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.fillMaxHeight
 
 private const val RING_SPIN_DURATION_MS = 3000
 private const val MILLIS_PER_SECOND = 1000L
@@ -129,6 +135,7 @@ fun PoemDetailScreen(
     val focusManager = LocalFocusManager.current
     val findFocusRequester = remember { FocusRequester() }
     val currentOnAction by rememberUpdatedState(onAction)
+    val isExpanded = LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Expanded
 
     LaunchedEffect(state.isFindBarVisible) {
         if (state.isFindBarVisible) {
@@ -169,14 +176,61 @@ fun PoemDetailScreen(
             }
         },
         bottomBar = {
-            PoemDetailBottomBar(
-                state = state,
-                audioState = audioState,
-                findFocusRequester = findFocusRequester,
-                keyboardController = keyboardController,
-                focusManager = focusManager,
-                onAction = onAction,
-            )
+            if (!isExpanded) {
+                PoemDetailBottomBar(
+                    state = state,
+                    audioState = audioState,
+                    findFocusRequester = findFocusRequester,
+                    keyboardController = keyboardController,
+                    focusManager = focusManager,
+                    onAction = onAction,
+                )
+            } else {
+                Column(
+                    modifier = Modifier
+                        .keyboardAboveIme()
+                        .padding(end = LocalSarvDimensions.current.dimen96, start = LocalSarvDimensions.current.dimen16)
+                        .padding(bottom = LocalSarvDimensions.current.dimen24),
+                ) {
+                    if (state.isFindBarVisible) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            FindTextField(
+                                modifier = Modifier.weight(1f).focusRequester(findFocusRequester),
+                                value = state.findInput,
+                                placeholder = stringResource(Res.string.find_in_poem_hint),
+                                onValueChange = { query -> onAction(PoemDetailAction.OnFindQueryChange(query)) },
+                                onSearch = { onAction(PoemDetailAction.OnFindSubmit) },
+                            )
+
+                            IconButton(onClick = {
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
+                                onAction(PoemDetailAction.OnFindBarClose)
+                            }) {
+                                Icon(
+                                    modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
+                                    painter = painterResource(Res.drawable.close),
+                                    contentDescription = stringResource(Res.string.cd_close_find_bar),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                    }
+
+                    TrackPlayerCard(
+                        tracks = audioState.tracks,
+                        activeTrackUrl = audioState.activeTrackUrl,
+                        onPlayPauseClick = { onAction(PoemDetailAction.OnTrackPlayPauseClick(it)) },
+                        onSelectTrack = { onAction(PoemDetailAction.OnTrackSelect(it)) },
+                        onSeekChange = { track, p -> onAction(PoemDetailAction.OnTrackSeekChanged(track, p)) },
+                        onSeekFinish = { track, p -> onAction(PoemDetailAction.OnTrackSeekFinished(track, p)) },
+                    )
+                }
+            }
         },
         snackbarHost = {
             SarvSnackbarHost(hostState = LocalSnackbarHostState.current)
@@ -199,32 +253,98 @@ fun PoemDetailScreen(
 
         CompositionLocalProvider(LocalClipboard provides capturingClipboard) {
             SelectionContainer {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxSize()
-                        .padding(
-                            top = paddingValues.calculateTopPadding(),
-                            bottom = paddingValues.calculateBottomPadding()
-                        ),
-                    contentPadding = PaddingValues(16.dp),
-                ) {
-                    items(
-                        items = state.verses,
-                        key = { verse -> verse.id },
-                    ) { verse ->
-                        PoemVerseItem(
-                            verse = verse,
-                            highlightQuery = state.highlightQuery,
-                        )
-                    }
-
-                    item {
-                        PoemOrnamentalDivider(
-                            modifier = Modifier.padding(top = 24.dp),
-                        )
-                    }
+                if (isExpanded) {
+                    PoemDetailExpandedLayout(listState, state, onAction, paddingValues)
+                } else {
+                    PoemDetailCompactLayout(listState, state, paddingValues)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun PoemDetailExpandedLayout(
+    listState: LazyListState,
+    state: PoemDetailState,
+    onAction: (PoemDetailAction) -> Unit,
+    paddingValues: PaddingValues,
+) {
+    Row(
+        modifier = Modifier.fillMaxSize()
+            .padding(
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding(),
+                end = LocalSarvDimensions.current.dimen16,
+            ),
+    ) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.weight(1f)
+                .fillMaxHeight()
+                .padding(horizontal = LocalSarvDimensions.current.dimen16),
+            contentPadding = PaddingValues(vertical = LocalSarvDimensions.current.dimen16),
+        ) {
+            items(
+                items = state.verses,
+                key = { verse -> verse.id },
+            ) { verse ->
+                PoemVerseItem(
+                    verse = verse,
+                    highlightQuery = state.highlightQuery,
+                )
+            }
+            item {
+                PoemOrnamentalDivider(
+                    modifier = Modifier.padding(top = LocalSarvDimensions.current.dimen24),
+                )
+            }
+        }
+        PoemActionBar(
+            isLiked = state.isLiked,
+            isProse = state.isProse,
+            onSearchClick = { onAction(PoemDetailAction.OnSearchClick) },
+            onShareClick = { onAction(PoemDetailAction.OnShareClick) },
+            onLikeClick = { onAction(PoemDetailAction.OnLikeClick) },
+            onImageCreatorClick = { onAction(PoemDetailAction.OnImageCreatorClick) },
+            onMemorizeClick = { onAction(PoemDetailAction.OnMemorizeClick) },
+            isExpanded = true,
+            modifier = Modifier.padding(
+                start = LocalSarvDimensions.current.dimen16,
+                top = LocalSarvDimensions.current.dimen16,
+            ),
+        )
+    }
+}
+
+@Composable
+private fun PoemDetailCompactLayout(
+    listState: LazyListState,
+    state: PoemDetailState,
+    paddingValues: PaddingValues,
+) {
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.fillMaxSize()
+            .padding(
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding(),
+            ),
+        contentPadding = PaddingValues(LocalSarvDimensions.current.dimen16),
+    ) {
+        items(
+            items = state.verses,
+            key = { verse -> verse.id },
+        ) { verse ->
+            PoemVerseItem(
+                verse = verse,
+                highlightQuery = state.highlightQuery,
+            )
+        }
+        item {
+            PoemOrnamentalDivider(
+                modifier = Modifier.padding(top = LocalSarvDimensions.current.dimen24),
+            )
         }
     }
 }
@@ -243,17 +363,16 @@ private fun PoemDetailBottomBar(
             Modifier
                 .keyboardAboveIme()
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen16)
+                .padding(bottom = LocalSarvDimensions.current.dimen24),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen10),
     ) {
         if (state.isFindBarVisible) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-
                 FindTextField(
                     modifier = Modifier.weight(1f).focusRequester(findFocusRequester),
                     value = state.findInput,
@@ -270,6 +389,7 @@ private fun PoemDetailBottomBar(
                     onAction(PoemDetailAction.OnFindBarClose)
                 }) {
                     Icon(
+                        modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
                         painter = painterResource(Res.drawable.close),
                         contentDescription = stringResource(Res.string.cd_close_find_bar),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -277,7 +397,6 @@ private fun PoemDetailBottomBar(
                 }
             }
         } else {
-
             TrackPlayerCard(
                 tracks = audioState.tracks,
                 activeTrackUrl = audioState.activeTrackUrl,
@@ -297,7 +416,6 @@ private fun PoemDetailBottomBar(
                 onMemorizeClick = { onAction(PoemDetailAction.OnMemorizeClick) },
             )
         }
-
     }
 }
 
@@ -316,7 +434,7 @@ private fun TrackSelector(
                     .fillMaxWidth()
                     .clickable { menuExpanded = true },
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         ) {
             Text(
                 text = trackLabel(selected.track),
@@ -324,13 +442,13 @@ private fun TrackSelector(
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f).padding(start = 8.dp),
+                modifier = Modifier.weight(1f).padding(start = LocalSarvDimensions.current.dimen8),
             )
             Icon(
                 painter = painterResource(Res.drawable.arrow_drop_down),
                 contentDescription = stringResource(Res.string.cd_select_track),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(22.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen22),
             )
         }
 
@@ -388,15 +506,15 @@ private fun TrackPlayerCard(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .border(
-                width = 1.dp,
+                width = LocalSarvDimensions.current.dimen1,
                 color = MaterialTheme.colorScheme.outlineVariant,
-                shape = RoundedCornerShape(16.dp),
-            ).padding(8.dp),
+                shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
+            ).padding(LocalSarvDimensions.current.dimen8),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen2)
     ) {
         PlayPauseButton(
             isPlaying = activeTrack.isPlaying,
@@ -405,7 +523,7 @@ private fun TrackPlayerCard(
         )
 
 
-        Column(modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4)) {
 
             TrackSelector(
                 tracks = tracks,
@@ -416,7 +534,7 @@ private fun TrackPlayerCard(
             Row(
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)
             ) {
 
                 SarvSlider(
@@ -430,11 +548,11 @@ private fun TrackPlayerCard(
                         onSeekFinish(activeTrack.track, finalValue)
                         dragProgress = null
                     },
-                    modifier = Modifier.weight(1f).height(16.dp),
+                    modifier = Modifier.weight(1f).height(LocalSarvDimensions.current.dimen16),
                 )
 
                 Text(
-                    modifier = modifier.padding(end = 6.dp),
+                    modifier = modifier.padding(end = LocalSarvDimensions.current.dimen6),
                     text = "${formatMs(activeTrack.positionMs)} / ${formatMs(activeTrack.durationMs)}",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -459,14 +577,14 @@ private fun PlayPauseButton(
 
     Box(
         modifier = Modifier
-            .size(48.dp)
+            .size(LocalSarvDimensions.current.dimen48)
             .clip(CircleShape)
             .clickable(enabled = !isLoading, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Box(
             modifier = Modifier
-                .size(40.dp)
+                .size(LocalSarvDimensions.current.dimen40)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center,
@@ -475,7 +593,7 @@ private fun PlayPauseButton(
                 painter = painterResource(if (isPlaying) Res.drawable.pause else Res.drawable.play),
                 contentDescription = if (isPlaying) "توقف" else "پخش",
                 tint = iconTint,
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen20),
             )
         }
 
@@ -489,8 +607,8 @@ private fun PlayPauseButton(
             }
             CircularProgressIndicator(
                 progress = { ringProgress.value },
-                modifier = Modifier.size(48.dp),
-                strokeWidth = 3.dp,
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen48),
+                strokeWidth = LocalSarvDimensions.current.dimen2,
                 color = iconTint,
                 trackColor = MaterialTheme.colorScheme.primary,
             )

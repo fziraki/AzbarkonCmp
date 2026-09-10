@@ -24,11 +24,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val DRAG_SHADOW_ELEVATION = 8f
-
-private val RowSpacing = 8.dp
-private val DragReorderThreshold = 48.dp
 
 private val dragScaleSpring =
     spring<Float>(
@@ -66,7 +64,7 @@ fun ReorderablePoemLines(
     val currentPinnedItemId by rememberUpdatedState(pinnedItemId)
     val currentOnReorder by rememberUpdatedState(onReorder)
     val density = LocalDensity.current
-    val thresholdPx = with(density) { DragReorderThreshold.toPx() }
+    val thresholdPx = with(density) { LocalSarvDimensions.current.dimen48.toPx() }
 
     fun isLocked(index: Int): Boolean = currentItems.getOrNull(index) == currentPinnedItemId
 
@@ -81,7 +79,7 @@ fun ReorderablePoemLines(
             modifier
                 .fillMaxWidth()
                 .animateContentSize(animationSpec = reorderSizeSpring),
-        verticalArrangement = Arrangement.spacedBy(RowSpacing),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
         itemsIndexed(
             items = items,

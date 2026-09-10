@@ -3,6 +3,8 @@ package abkabk.azbarkon.features.games
 import abkabk.azbarkon.domain.model.games.GameType
 import abkabk.azbarkon.core.uidata.BaseScreen
 import abkabk.azbarkon.core.uidata.UiScreenState
+import abkabk.azbarkon.core.ui.LocalWindowSizeClass
+import abkabk.azbarkon.core.ui.WindowWidthSizeClass
 import abkabk.azbarkon.features.games.navigation.toRoute
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,7 +20,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,7 +45,6 @@ import sarv.shared.generated.resources.whois_poet_desc
 import sarv.shared.generated.resources.whois_poet_title
 import abkabk.azbarkon.ui.theme.SarvTheme
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.ui.layout.ContentScale
 import sarv.shared.generated.resources.guess_poet_icon
@@ -52,9 +55,16 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val GAME_CARD_IMAGE_WEIGHT = 0.3f
 private const val GAME_CARD_CONTENT_WEIGHT = 0.7f
+
+private class GameItemData(
+    val title: StringResource,
+    val desc: StringResource,
+    val icon: DrawableResource,
+)
 
 @Composable
 fun GamesRoot(
@@ -70,52 +80,56 @@ fun GamesScreen(
     onNavigateToGame: (GameType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
+    val columns =
+        when (LocalWindowSizeClass.current.widthSizeClass) {
+            WindowWidthSizeClass.Expanded -> GridCells.Fixed(2)
+            WindowWidthSizeClass.Medium -> GridCells.Fixed(1)
+            else -> GridCells.Fixed(1)
+        }
+
+    val gameItems =
+        listOf(
+            GameType.NEXT_VERSE to GameItemData(
+                Res.string.next_line_title,
+                Res.string.next_line_desc,
+                Res.drawable.next_verse_icon,
+            ),
+            GameType.COMPLETE_POEM to GameItemData(
+                Res.string.complete_poem_title,
+                Res.string.complete_poem_desc,
+                Res.drawable.incomplete_icon,
+            ),
+            GameType.FIND_POET to GameItemData(
+                Res.string.whois_poet_title,
+                Res.string.whois_poet_desc,
+                Res.drawable.guess_poet_icon,
+            ),
+            GameType.ORGANIZE_POEM to GameItemData(
+                Res.string.poetry_arrangement_title,
+                Res.string.poetry_arrangement_desc,
+                Res.drawable.reorder_poem_icon,
+            ),
+        )
+
+    LazyVerticalGrid(
+        columns = columns,
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(vertical = 24.dp, horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
+        contentPadding = PaddingValues(vertical = LocalSarvDimensions.current.dimen24, horizontal = LocalSarvDimensions.current.dimen16),
     ) {
-        item {
+        items(
+            items = gameItems,
+            key = { (gameType, _) -> gameType.name },
+        ) { (gameType, data) ->
             GameItem(
-                gameType = GameType.NEXT_VERSE,
-                title = Res.string.next_line_title,
-                desc = Res.string.next_line_desc,
-                icon = Res.drawable.next_verse_icon,
-                onClick = { onNavigateToGame(GameType.NEXT_VERSE) },
+                gameType = gameType,
+                title = data.title,
+                desc = data.desc,
+                icon = data.icon,
+                onClick = { onNavigateToGame(gameType) },
             )
         }
-
-        item {
-            GameItem(
-                gameType = GameType.COMPLETE_POEM,
-                title = Res.string.complete_poem_title,
-                desc = Res.string.complete_poem_desc,
-                icon = Res.drawable.incomplete_icon,
-                onClick = { onNavigateToGame(GameType.COMPLETE_POEM) },
-            )
-        }
-
-
-        item {
-            GameItem(
-                gameType = GameType.FIND_POET,
-                title = Res.string.whois_poet_title,
-                desc = Res.string.whois_poet_desc,
-                icon = Res.drawable.guess_poet_icon,
-                onClick = { onNavigateToGame(GameType.FIND_POET) },
-            )
-        }
-
-        item {
-            GameItem(
-                gameType = GameType.ORGANIZE_POEM,
-                title = Res.string.poetry_arrangement_title,
-                desc = Res.string.poetry_arrangement_desc,
-                icon = Res.drawable.reorder_poem_icon,
-                onClick = { onNavigateToGame(GameType.ORGANIZE_POEM) },
-            )
-        }
-
     }
 }
 
@@ -132,9 +146,9 @@ fun GameItem(
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min).clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        tonalElevation = 1.dp,
-        shadowElevation = 1.dp,
+        shape = RoundedCornerShape(LocalSarvDimensions.current.dimen12),
+        tonalElevation = LocalSarvDimensions.current.dimen1,
+        shadowElevation = LocalSarvDimensions.current.dimen1,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row {
@@ -147,7 +161,7 @@ fun GameItem(
                             color = MaterialTheme.colorScheme.secondary,
                         )
                         .clip(RoundedCornerShape(
-                            topStart = 12.dp, bottomStart = 12.dp,
+                            topStart = LocalSarvDimensions.current.dimen12, bottomStart = LocalSarvDimensions.current.dimen12,
                             topEnd = 0.dp, bottomEnd = 0.dp
                         )),
                 painter = painterResource(icon),
@@ -161,14 +175,14 @@ fun GameItem(
                         .weight(GAME_CARD_CONTENT_WEIGHT)
                         .background(
                             color = MaterialTheme.colorScheme.surfaceVariant,
-                        ).padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                        ).padding(LocalSarvDimensions.current.dimen16),
+                verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen10),
                 horizontalAlignment = Alignment.End,
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(title),
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Start,
                 )
@@ -185,10 +199,10 @@ fun GameItem(
                     modifier =
                         Modifier
                             .border(
-                                width = 1.dp,
+                                width = LocalSarvDimensions.current.dimen1,
                                 color = MaterialTheme.colorScheme.tertiary,
-                                shape = RoundedCornerShape(8.dp),
-                            ).padding(horizontal = 8.dp, vertical = 4.dp),
+                                shape = RoundedCornerShape(LocalSarvDimensions.current.dimen8),
+                            ).padding(horizontal = LocalSarvDimensions.current.dimen8, vertical = LocalSarvDimensions.current.dimen4),
                     text = "${gameType.baseScore} امتیاز ",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

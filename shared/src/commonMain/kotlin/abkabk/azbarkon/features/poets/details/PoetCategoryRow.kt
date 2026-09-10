@@ -27,6 +27,7 @@ import sarv.shared.generated.resources.cd_expand_category
 import sarv.shared.generated.resources.maktab
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 @Composable
 fun PoetCategoryRow(
@@ -60,12 +61,12 @@ fun PoetCategoryRow(
                         Modifier
                     },
                 )
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .background(backgroundColor)
                 .border(
-                    width = 1.dp,
+                    width = LocalSarvDimensions.current.dimen1,
                     color = MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
                 ).clickable(
                     onClick = {
                         if (category.isParent) {
@@ -74,19 +75,19 @@ fun PoetCategoryRow(
                             onLeafClick()
                         }
                     },
-                ).padding(14.dp),
+                ).padding(LocalSarvDimensions.current.dimen16),
     ) {
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 2.dp),
+                    .padding(vertical = LocalSarvDimensions.current.dimen2),
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = category.title,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.titleMedium,
                 color = contentColor,
                 textAlign = TextAlign.Center,
             )
@@ -99,7 +100,7 @@ fun PoetCategoryRow(
                     modifier =
                         Modifier
                             .align(Alignment.CenterStart)
-                            .size(24.dp),
+                            .size(LocalSarvDimensions.current.dimen24),
                 )
             }
         }
@@ -111,8 +112,8 @@ fun PoetCategoryRow(
 private fun PoetCategoryRowPreview() {
     SarvTheme {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
         ) {
             PoetCategoryRow(
                 category =

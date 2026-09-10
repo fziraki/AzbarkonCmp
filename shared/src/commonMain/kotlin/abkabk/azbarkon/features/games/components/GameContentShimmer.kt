@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val SHIMMER_ROW_COUNT = 4
 
@@ -42,20 +43,20 @@ fun GameContentShimmer(
 private fun NextVerseContentShimmer(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
     ) {
         GamePoemCard {
-            ShimmerBar(height = 14.dp, widthFraction = 0.35f)
-            ShimmerBar(height = 20.dp)
-            ShimmerBar(height = 20.dp)
+            ShimmerBar(height = LocalSarvDimensions.current.dimen16, widthFraction = 0.35f)
+            ShimmerBar(height = LocalSarvDimensions.current.dimen20)
+            ShimmerBar(height = LocalSarvDimensions.current.dimen20)
         }
 
         ShimmerInstructionBar()
 
         repeat(SHIMMER_ROW_COUNT) {
             ShimmerBar(
-                height = 48.dp,
-                shape = RoundedCornerShape(12.dp),
+                height = LocalSarvDimensions.current.dimen48,
+                shape = RoundedCornerShape(LocalSarvDimensions.current.dimen12),
             )
         }
     }
@@ -65,38 +66,38 @@ private fun NextVerseContentShimmer(modifier: Modifier = Modifier) {
 private fun FindPoetContentShimmer(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
     ) {
         GamePoemCard {
-            ShimmerBar(height = 14.dp, widthFraction = 0.35f)
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                ShimmerBar(height = 20.dp)
-                ShimmerBar(height = 20.dp)
+            ShimmerBar(height = LocalSarvDimensions.current.dimen16, widthFraction = 0.35f)
+            Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
+                ShimmerBar(height = LocalSarvDimensions.current.dimen20)
+                ShimmerBar(height = LocalSarvDimensions.current.dimen20)
             }
         }
 
         ShimmerInstructionBar()
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
             repeat(2) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
                 ) {
                     repeat(2) {
                         Row(
                             modifier =
                                 Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .padding(12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
+                                    .padding(LocalSarvDimensions.current.dimen12),
+                            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            ShimmerCircle(size = 36.dp)
+                            ShimmerCircle(size = LocalSarvDimensions.current.dimen36)
                             ShimmerBar(
                                 modifier = Modifier.weight(1f),
-                                height = 16.dp,
+                                height = LocalSarvDimensions.current.dimen16,
                             )
                         }
                     }
@@ -110,29 +111,29 @@ private fun FindPoetContentShimmer(modifier: Modifier = Modifier) {
 private fun CompletePoemContentShimmer(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
     ) {
         GamePoemCard {
-            ShimmerBar(height = 14.dp, widthFraction = 0.35f)
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                ShimmerBar(height = 20.dp)
-                ShimmerBar(height = 20.dp)
+            ShimmerBar(height = LocalSarvDimensions.current.dimen16, widthFraction = 0.35f)
+            Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
+                ShimmerBar(height = LocalSarvDimensions.current.dimen20)
+                ShimmerBar(height = LocalSarvDimensions.current.dimen20)
             }
         }
 
         ShimmerInstructionBar()
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
             repeat(2) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
                 ) {
                     repeat(2) {
                         ShimmerBar(
                             modifier = Modifier.weight(1f),
-                            height = 48.dp,
-                            shape = RoundedCornerShape(12.dp),
+                            height = LocalSarvDimensions.current.dimen48,
+                            shape = RoundedCornerShape(LocalSarvDimensions.current.dimen12),
                         )
                     }
                 }
@@ -145,38 +146,38 @@ private fun CompletePoemContentShimmer(modifier: Modifier = Modifier) {
 private fun OrganizePoemContentShimmer(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
     ) {
         GamePoemCard {
-            ShimmerBar(height = 14.dp, widthFraction = 0.35f)
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            ShimmerBar(height = LocalSarvDimensions.current.dimen16, widthFraction = 0.35f)
+            Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
                 repeat(SHIMMER_ROW_COUNT) {
-                    ShimmerBar(height = 20.dp)
+                    ShimmerBar(height = LocalSarvDimensions.current.dimen20)
                 }
             }
         }
 
         ShimmerInstructionBar()
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
             repeat(SHIMMER_ROW_COUNT) {
                 Row(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
-                            .padding(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
+                            .padding(LocalSarvDimensions.current.dimen12),
+                    horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     ShimmerBar(
-                        height = 24.dp,
+                        height = LocalSarvDimensions.current.dimen24,
                         widthFraction = 0.08f,
-                        shape = RoundedCornerShape(4.dp),
+                        shape = RoundedCornerShape(LocalSarvDimensions.current.dimen4),
                     )
                     ShimmerBar(
                         modifier = Modifier.weight(1f),
-                        height = 16.dp,
+                        height = LocalSarvDimensions.current.dimen16,
                     )
                 }
             }
@@ -186,7 +187,7 @@ private fun OrganizePoemContentShimmer(modifier: Modifier = Modifier) {
 
 @Composable
 private fun ShimmerInstructionBar(
-    height: Dp = 16.dp,
+    height: Dp = LocalSarvDimensions.current.dimen16,
     widthFraction: Float = 0.6f,
 ) {
     Box(
@@ -202,7 +203,7 @@ private fun ShimmerBar(
     height: Dp,
     modifier: Modifier = Modifier,
     widthFraction: Float? = null,
-    shape: Shape = RoundedCornerShape(8.dp),
+    shape: Shape = RoundedCornerShape(LocalSarvDimensions.current.dimen8),
 ) {
     Box(
         modifier =
@@ -238,7 +239,7 @@ private fun NextVerseContentShimmerPreview() {
     SarvTheme {
         GameContentShimmer(
             gameType = GameType.NEXT_VERSE,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
         )
     }
 }
@@ -249,7 +250,7 @@ private fun FindPoetContentShimmerPreview() {
     SarvTheme {
         GameContentShimmer(
             gameType = GameType.FIND_POET,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
         )
     }
 }
@@ -260,7 +261,7 @@ private fun CompletePoemContentShimmerPreview() {
     SarvTheme {
         GameContentShimmer(
             gameType = GameType.COMPLETE_POEM,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
         )
     }
 }
@@ -271,7 +272,7 @@ private fun OrganizePoemContentShimmerPreview() {
     SarvTheme {
         GameContentShimmer(
             gameType = GameType.ORGANIZE_POEM,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
         )
     }
 }

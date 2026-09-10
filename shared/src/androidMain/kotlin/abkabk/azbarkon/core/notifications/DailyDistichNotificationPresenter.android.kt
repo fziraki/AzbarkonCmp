@@ -8,16 +8,16 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
-class DailyBeytNotificationPresenter(
+class DailyDistichNotificationPresenter(
     private val context: Context,
 ) {
     fun show(distich: RandomDistich) {
         if (!context.canPostNotifications()) return
 
         context.ensureNotificationChannel(
-            DailyBeytNotificationPayload.CHANNEL_ID,
-            context.getString(R.string.daily_beyt_notification_channel_name),
-            context.getString(R.string.daily_beyt_notification_channel_description),
+            DailyDistichNotificationPayload.CHANNEL_ID,
+            context.getString(R.string.daily_distich_notification_channel_name),
+            context.getString(R.string.daily_distich_notification_channel_description),
             lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC,
         )
 
@@ -26,16 +26,16 @@ class DailyBeytNotificationPresenter(
 
         val notification =
             NotificationCompat
-                .Builder(context, DailyBeytNotificationPayload.CHANNEL_ID)
+                .Builder(context, DailyDistichNotificationPayload.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(context.getString(R.string.daily_beyt_notification_title))
+                .setContentTitle(context.getString(R.string.daily_distich_notification_title))
                 .setContentText(distichBody(distich))
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
                 .setContentIntent(
                     context.launchAppPendingIntent(distich.poemId) {
-                        putExtra(DailyBeytNotificationPayload.KEY_POEM_ID, distich.poemId)
+                        putExtra(DailyDistichNotificationPayload.KEY_POEM_ID, distich.poemId)
                     },
                 )
                 .setAutoCancel(true)
@@ -44,7 +44,7 @@ class DailyBeytNotificationPresenter(
                 .build()
 
         NotificationManagerCompat.from(context).notify(
-            DailyBeytNotificationPayload.NOTIFICATION_ID,
+            DailyDistichNotificationPayload.NOTIFICATION_ID,
             notification,
         )
     }
@@ -58,12 +58,12 @@ class DailyBeytNotificationPresenter(
     ): RemoteViews {
         val layoutId =
             if (expanded) {
-                R.layout.notification_daily_beyt
+                R.layout.notification_daily_distich
             } else {
-                R.layout.notification_daily_beyt_collapsed
+                R.layout.notification_daily_distich_collapsed
             }
         return RemoteViews(context.packageName, layoutId).apply {
-            setTextViewText(R.id.notification_title, context.getString(R.string.daily_beyt_notification_title))
+            setTextViewText(R.id.notification_title, context.getString(R.string.daily_distich_notification_title))
             setTextViewText(R.id.notification_right_line, distich.rightText)
             setTextViewText(R.id.notification_left_line, distich.leftText)
             setTextViewText(R.id.notification_poet_name, distich.poetName)

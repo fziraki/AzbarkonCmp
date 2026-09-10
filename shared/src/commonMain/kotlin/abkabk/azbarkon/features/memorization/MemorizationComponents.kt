@@ -1,8 +1,8 @@
 package abkabk.azbarkon.features.memorization
 
-import abkabk.azbarkon.core.designsystem.brown
-import abkabk.azbarkon.ui.theme.SarvTheme
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 import abkabk.azbarkon.ui.theme.LightColorScheme
+import abkabk.azbarkon.ui.theme.SarvTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,24 +28,25 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.feather
 import sarv.shared.generated.resources.forward
 import sarv.shared.generated.resources.ic_delete
-import sarv.shared.generated.resources.memorization_due_cards_format
+import sarv.shared.generated.resources.memorization_cards_progress_format
 import sarv.shared.generated.resources.memorization_quick_start
+import sarv.shared.generated.resources.memorization_quick_start_couplet
 import sarv.shared.generated.resources.memorization_quick_start_desc
 import sarv.shared.generated.resources.memorization_quick_start_ghazal
-import sarv.shared.generated.resources.memorization_quick_start_couplet
 import sarv.shared.generated.resources.memorization_quick_start_rubaiyat
+import sarv.shared.generated.resources.memorization_re_review
+import sarv.shared.generated.resources.memorization_review_info_format
 import sarv.shared.generated.resources.memorization_select_hero_subtitle
 import sarv.shared.generated.resources.memorization_select_hero_title
-import sarv.shared.generated.resources.memorization_status_format
 import sarv.shared.generated.resources.ornoment30
 import sarv.shared.generated.resources.search
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 private const val LABEL_WIDTH_FRACTION = 0.9f
 
@@ -58,13 +57,13 @@ fun MemorizationHeroSection(
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen10),
     ) {
 
         Box(contentAlignment = Alignment.Center){
 
             Box(
-                modifier = Modifier.size(92.dp)
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen92)
                     .background(
                         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                         shape = CircleShape
@@ -79,7 +78,7 @@ fun MemorizationHeroSection(
 
         Text(
             text = stringResource(Res.string.memorization_select_hero_title),
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
         )
@@ -104,10 +103,10 @@ fun QuickStartCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen20))
                 .background(LightColorScheme.primary)
-                .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+                .padding(LocalSarvDimensions.current.dimen20),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen10),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -154,16 +153,16 @@ fun QuickStartCategoryTile(
     Column(
         modifier =
             modifier
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .clickable(onClick = onClick)
-                .padding(8.dp),
+                .padding(LocalSarvDimensions.current.dimen8),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
         Box(
             modifier =
                 Modifier
-                    .size(56.dp)
+                    .size(LocalSarvDimensions.current.dimen56)
                     .clip(CircleShape)
                     .background(LightColorScheme.surface.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center,
@@ -172,7 +171,7 @@ fun QuickStartCategoryTile(
                 painter = painterResource(Res.drawable.ornoment30),
                 contentDescription = null,
                 tint = LightColorScheme.onPrimary,
-                modifier = Modifier.size(42.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen40),
             )
         }
 
@@ -198,23 +197,23 @@ fun MemorizationOptionRow(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .border(
-                    width = 1.dp,
+                    width = LocalSarvDimensions.current.dimen1,
                     color = MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
                 ).clickable(onClick = onClick)
-                .padding(horizontal = 14.dp, vertical = 14.dp),
+                .padding(LocalSarvDimensions.current.dimen16),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
     ) {
 
 
         Box(
             modifier =
                 Modifier
-                    .size(44.dp)
+                    .size(LocalSarvDimensions.current.dimen48)
                     .clip(CircleShape)
                     .background(LightColorScheme.secondary),
             contentAlignment = Alignment.Center,
@@ -223,13 +222,13 @@ fun MemorizationOptionRow(
                 painter = painterResource(icon),
                 contentDescription = null,
                 tint = LightColorScheme.onSecondary,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
             )
         }
 
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4),
         ) {
             Text(
                 text = title,
@@ -247,82 +246,115 @@ fun MemorizationOptionRow(
             painter = painterResource(Res.drawable.forward),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.scale(scaleX = -1f, scaleY = 1f).size(20.dp),
+            modifier = Modifier.scale(scaleX = -1f, scaleY = 1f).size(LocalSarvDimensions.current.dimen20),
         )
 
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
-fun ActivePoemCard(
+fun PoemCard(
     title: String,
     poetName: String,
-    boxLevel: Int,
-    level: Int,
-    progress: Float,
-    dueCards: Int,
+    reviewCount: Int,
+    nextReviewDays: Int,
+    isCompleted: Boolean,
     onClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onReReviewClick: () -> Unit,
     modifier: Modifier = Modifier,
+    totalCards: Int = 0,
+    reviewedCards: Int = 0,
 ) {
+    val progress =
+        if (totalCards == 0) 0f
+        else (reviewedCards.toFloat() / totalCards.toFloat()).coerceIn(0f, 1f)
     Row(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .border(
-                    width = 1.dp,
+                    width = LocalSarvDimensions.current.dimen1,
                     color = MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
                 ).clickable(onClick = onClick)
-                .padding(horizontal = 14.dp, vertical = 14.dp),
+                .padding(LocalSarvDimensions.current.dimen16),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen6),
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+                Icon(
+                    modifier = Modifier.clickable{ onDeleteClick() }
+                        .size(LocalSarvDimensions.current.dimen24),
+                    painter = painterResource(Res.drawable.ic_delete),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
+                )
+            }
+
             Text(
                 text = poetName,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text =
-                    stringResource(
-                        Res.string.memorization_status_format,
-                        boxLevel,
-                        level,
-                    ),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-            LinearProgressIndicator(
-                progress = { progress.coerceIn(0f, 1f) },
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                trackColor = LightColorScheme.outlineVariant,
-                gapSize = (-4).dp
-            )
-            if (dueCards > 0) {
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
-                    text = stringResource(Res.string.memorization_due_cards_format, dueCards),
+                    text =
+                        stringResource(
+                            Res.string.memorization_review_info_format,
+                            reviewCount,
+                            nextReviewDays,
+                        ),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+                Text(
+                    text = stringResource(Res.string.memorization_cards_progress_format, reviewedCards, totalCards),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
-        }
-        IconButton(onClick = onDeleteClick) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_delete),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
-            )
+
+            if (!isCompleted){
+                LinearProgressIndicator(
+                    progress = { progress.coerceIn(0f, 1f) },
+                    modifier = Modifier.fillMaxWidth(),
+                    trackColor = LightColorScheme.outlineVariant,
+                    gapSize = (-4).dp
+                )
+            }else{
+                Text(
+                    modifier = Modifier.clickable{ onReReviewClick()},
+                    text =
+                        stringResource(
+                            Res.string.memorization_re_review,
+                            reviewCount,
+                            nextReviewDays,
+                        ),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+            }
+
         }
     }
 }
@@ -331,7 +363,7 @@ fun ActivePoemCard(
 @Composable
 private fun MemorizationHeroSectionPreview() {
     SarvTheme {
-        MemorizationHeroSection(modifier = Modifier.padding(16.dp))
+        MemorizationHeroSection(modifier = Modifier.padding(LocalSarvDimensions.current.dimen16))
     }
 }
 
@@ -343,7 +375,7 @@ private fun QuickStartCardPreview() {
             onCoupletClick = {},
             onGhazalClick = {},
             onRubaiyatClick = {},
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
         )
     }
 }
@@ -357,25 +389,27 @@ private fun MemorizationOptionRowPreview() {
             description = "شاعر، بیت یا نام شعر را جستجو کنید",
             icon = Res.drawable.search,
             onClick = {},
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
         )
     }
 }
 
 @Preview
 @Composable
-private fun ActivePoemCardPreview() {
+private fun PoemCardPreview() {
     SarvTheme {
-        ActivePoemCard(
+        PoemCard(
             title = "غزل ۱",
             poetName = "حافظ",
-            boxLevel = 2,
-            level = 2,
-            progress = 0.4f,
-            dueCards = 3,
+            reviewCount = 5,
+            nextReviewDays = 3,
+            isCompleted = false,
             onClick = {},
             onDeleteClick = {},
-            modifier = Modifier.padding(16.dp),
+            onReReviewClick = {},
+            modifier = Modifier.padding(LocalSarvDimensions.current.dimen16),
+            totalCards = 10,
+            reviewedCards = 4,
         )
     }
 }

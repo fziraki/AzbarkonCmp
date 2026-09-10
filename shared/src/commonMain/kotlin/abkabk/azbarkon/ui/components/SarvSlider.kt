@@ -30,13 +30,10 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val TRACK_MIN_DIVISOR = 0.001f
 private const val VERTICAL_ROTATION_DEGREES = 270f
-private val THUMB_SIZE: Dp = 16.dp
-private val TRACK_HEIGHT: Dp = 4.dp
-private val TOUCH_WIDTH: Dp = 32.dp
-private val SLIDER_LENGTH: Dp = 200.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +65,7 @@ fun SarvSlider(
                 Box(
                     modifier =
                         Modifier
-                            .size(THUMB_SIZE)
+                            .size(LocalSarvDimensions.current.dimen16)
                             .background(thumbColor, CircleShape),
                 )
             },
@@ -81,7 +78,7 @@ fun SarvSlider(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .height(TRACK_HEIGHT)
+                            .height(LocalSarvDimensions.current.dimen4)
                             .clip(RoundedCornerShape(percent = 50))
                             .background(inactiveTrackColor),
                 ) {
@@ -111,14 +108,14 @@ fun SarvSlider(
         // Keep LTR for the rotated horizontal Slider so vertical drag maps correctly in RTL screens.
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             Box(
-                modifier = modifier.width(TOUCH_WIDTH).height(SLIDER_LENGTH),
+                modifier = modifier
+                    .width(LocalSarvDimensions.current.dimen32),
                 contentAlignment = Alignment.Center,
             ) {
                 slider(
                     Modifier
                         .verticalSliderTransform()
-                        .width(SLIDER_LENGTH)
-                        .height(TOUCH_WIDTH),
+                        .height(LocalSarvDimensions.current.dimen32),
                 )
             }
         }

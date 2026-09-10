@@ -48,6 +48,7 @@ import sarv.shared.generated.resources.poetry_arrangement_title
 import sarv.shared.generated.resources.whois_poet_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 private const val PROGRESS_FLIP_ROTATION_DEGREES = 180f
 private const val PRIMARY_BUTTON_WEIGHT = 0.6f
@@ -65,8 +66,9 @@ fun GameSessionTopBar(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+                .background(MaterialTheme.colorScheme.background)
+                .padding(horizontal = LocalSarvDimensions.current.dimen16, vertical = LocalSarvDimensions.current.dimen12),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
         GameSessionTitleRow(
             title = gameTitle(gameType),
@@ -92,7 +94,7 @@ private fun GameSessionTitleRow(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
         )
@@ -101,6 +103,7 @@ private fun GameSessionTitleRow(
             modifier =
                 Modifier
                     .align(Alignment.CenterEnd)
+                    .size(LocalSarvDimensions.current.dimen24)
                     .clickable(onClick = onBackClick),
             painter = painterResource(Res.drawable.arrow_back_left),
             contentDescription = stringResource(Res.string.cd_back),
@@ -118,7 +121,7 @@ fun GameQuizProgressSection(
     val quizNumber = currentQuizIndex + 1
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -156,17 +159,17 @@ private fun GameCoinBadge(balance: Int) {
         modifier =
             Modifier
                 .border(
-                    width = 1.dp,
+                    width = LocalSarvDimensions.current.dimen1,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    shape = RoundedCornerShape(16.dp),
-                ).padding(horizontal = 10.dp, vertical = 6.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
+                ).padding(horizontal = LocalSarvDimensions.current.dimen10, vertical = LocalSarvDimensions.current.dimen6),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen6),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
             painter = painterResource(Res.drawable.coin),
             contentDescription = null,
-            modifier = Modifier.size(18.dp),
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen20),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
         )
         Text(
@@ -190,8 +193,9 @@ fun GameSessionBottomBar(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                .background(MaterialTheme.colorScheme.background)
+                .padding(LocalSarvDimensions.current.dimen16),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         SarvPrimaryButton(
@@ -219,19 +223,19 @@ private fun GameHintButton(
         shape = SarvButtonDefaults.Shape,
         border =
             androidx.compose.foundation.BorderStroke(
-                1.dp,
+                LocalSarvDimensions.current.dimen1,
                 MaterialTheme.colorScheme.onSurfaceVariant,
             ),
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen6),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 painter = painterResource(Res.drawable.coin),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(18.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen20),
             )
             Text(
                 text = stringResource(Res.string.game_hint_cost),
@@ -286,13 +290,13 @@ fun GamePoemCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .border(
-                    1.dp,
+                    LocalSarvDimensions.current.dimen1,
                     MaterialTheme.colorScheme.outlineVariant,
-                    RoundedCornerShape(16.dp),
-                ).padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    RoundedCornerShape(LocalSarvDimensions.current.dimen16),
+                ).padding(LocalSarvDimensions.current.dimen16),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)
     ) {
         poetName?.let {
             Text(
@@ -335,7 +339,7 @@ fun GameInstructionText(
     modifier: Modifier = Modifier,
 ) {
     Text(
-        modifier = modifier.fillMaxWidth().padding(top = 16.dp),
+        modifier = modifier.fillMaxWidth().padding(top = LocalSarvDimensions.current.dimen16),
         text = text,
         style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -392,7 +396,7 @@ fun gameOptionColors(state: GameOptionState): Pair<androidx.compose.ui.graphics.
 
 @Composable
 fun Modifier.gameOptionStyle(state: GameOptionState): Modifier {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(LocalSarvDimensions.current.dimen12)
     val (background, _) = gameOptionColors(state)
     val primary = MaterialTheme.colorScheme.primary
     return this
@@ -401,10 +405,10 @@ fun Modifier.gameOptionStyle(state: GameOptionState): Modifier {
             when (state) {
                 GameOptionState.Selected,
                 GameOptionState.Correct,
-                -> Modifier.border(2.dp, primary, shape)
+                -> Modifier.border(LocalSarvDimensions.current.dimen2, primary, shape)
 
                 GameOptionState.Disabled ->
-                    Modifier.border(2.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), shape)
+                    Modifier.border(LocalSarvDimensions.current.dimen2, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), shape)
 
                 else -> Modifier
             },

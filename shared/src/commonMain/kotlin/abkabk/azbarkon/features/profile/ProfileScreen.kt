@@ -12,8 +12,13 @@ import abkabk.azbarkon.features.profile.util.showToast
 import abkabk.azbarkon.features.profile.util.versionName
 import abkabk.azbarkon.ui.components.SarvAlertDialog
 import abkabk.azbarkon.ui.theme.SarvTheme
+import abkabk.azbarkon.core.ui.LocalWindowSizeClass
+import abkabk.azbarkon.core.ui.WindowWidthSizeClass
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +43,7 @@ import sarv.shared.generated.resources.profile_import_confirm_title
 import sarv.shared.generated.resources.profile_version
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 @Composable
 fun ProfileRoot(
@@ -52,7 +58,7 @@ fun ProfileRoot(
             viewModel.onAction(
                 ProfileAction.OnNotificationPermissionResult(
                     granted,
-                    NotificationPermissionTarget.DailyBeyt,
+                    NotificationPermissionTarget.DailyDistich,
                 ),
             )
         }
@@ -80,7 +86,7 @@ fun ProfileRoot(
 
             is ProfileEvent.RequestNotificationPermission -> {
                 when (event.target) {
-                    NotificationPermissionTarget.DailyBeyt -> requestNotificationPermission()
+                    NotificationPermissionTarget.DailyDistich -> requestNotificationPermission()
                     NotificationPermissionTarget.Remote -> showRemotePermissionSheet = true
                 }
             }
@@ -147,40 +153,91 @@ fun ProfileScreen(
     onAction: (ProfileAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        item {
-            ProfileHeader(
-                levelProgress = state.levelProgress,
-                onLevelsClick = { onAction(ProfileAction.OnLevelsIconClick) },
-            )
-        }
+    val isExpanded = LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Expanded
 
-        item {
-            GameStatusCard(stats = state.gameStats)
-        }
+    if (isExpanded) {
+        Row(
+            modifier = modifier.fillMaxSize().padding(LocalSarvDimensions.current.dimen16),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
+        ) {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
+            ) {
+                item {
+                    ProfileHeader(
+                        levelProgress = state.levelProgress,
+                        onLevelsClick = { onAction(ProfileAction.OnLevelsIconClick) },
+                    )
+                }
 
-        item {
-            MemorizationStatusCard(stats = state.memorizationStats)
-        }
+                item {
+                    ProfileBadges(
+                        badges = state.previewBadges,
+                        onViewAllClick = { onAction(ProfileAction.OnViewAllBadgesClick) },
+                    )
+                }
 
-        item {
-            ProfileBadges(
-                badges = state.previewBadges,
-                onViewAllClick = { onAction(ProfileAction.OnViewAllBadgesClick) },
-            )
-        }
+                item {
+                    Text(
+                        text = stringResource(Res.string.profile_version, versionName()),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.fillMaxWidth().padding(top = LocalSarvDimensions.current.dimen8),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
 
-        item {
-            Text(
-                text = stringResource(Res.string.profile_version, versionName()),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxSize().padding(top = 8.dp),
-                textAlign = TextAlign.Center,
-            )
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
+            ) {
+                item {
+                    GameStatusCard(stats = state.gameStats)
+                }
+
+                item {
+                    MemorizationStatusCard(stats = state.memorizationStats)
+                }
+            }
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier.fillMaxSize().padding(LocalSarvDimensions.current.dimen16),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
+        ) {
+            item {
+                ProfileHeader(
+                    levelProgress = state.levelProgress,
+                    onLevelsClick = { onAction(ProfileAction.OnLevelsIconClick) },
+                )
+            }
+
+            item {
+                GameStatusCard(stats = state.gameStats)
+            }
+
+            item {
+                MemorizationStatusCard(stats = state.memorizationStats)
+            }
+
+            item {
+                ProfileBadges(
+                    badges = state.previewBadges,
+                    onViewAllClick = { onAction(ProfileAction.OnViewAllBadgesClick) },
+                )
+            }
+
+            item {
+                Text(
+                    text = stringResource(Res.string.profile_version, versionName()),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxSize().padding(top = LocalSarvDimensions.current.dimen8),
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }

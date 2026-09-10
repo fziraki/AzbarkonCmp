@@ -6,19 +6,19 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
-internal object DailyBeytWorkScheduler {
+internal object DailyDistichWorkScheduler {
     fun schedule(
         context: Context,
         deliveryHour: Int,
         deliveryMinute: Int,
     ) {
         val request =
-            PeriodicWorkRequestBuilder<DailyBeytWorker>(
-                DailyBeytScheduleCalculator.PERIODIC_INTERVAL_HOURS,
+            PeriodicWorkRequestBuilder<DailyDistichWorker>(
+                DailyDistichScheduleCalculator.PERIODIC_INTERVAL_HOURS,
                 TimeUnit.HOURS,
             )
                 .setInitialDelay(
-                    DailyBeytScheduleCalculator.initialDelayMillis(
+                    DailyDistichScheduleCalculator.initialDelayMillis(
                         deliveryHour = deliveryHour,
                         deliveryMinute = deliveryMinute,
                     ),
@@ -27,13 +27,13 @@ internal object DailyBeytWorkScheduler {
                 .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            DailyBeytNotificationPayload.WORK_NAME,
+            DailyDistichNotificationPayload.WORK_NAME,
             ExistingPeriodicWorkPolicy.UPDATE,
             request,
         )
     }
 
     fun cancel(context: Context) {
-        WorkManager.getInstance(context).cancelUniqueWork(DailyBeytNotificationPayload.WORK_NAME)
+        WorkManager.getInstance(context).cancelUniqueWork(DailyDistichNotificationPayload.WORK_NAME)
     }
 }

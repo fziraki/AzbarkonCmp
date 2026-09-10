@@ -1,8 +1,8 @@
 package abkabk.azbarkon.features.tasvirNegar.components
 
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 import abkabk.azbarkon.core.designsystem.secondary
 import abkabk.azbarkon.core.designsystem.surfaceVariant
-import abkabk.azbarkon.core.designsystem.vazirmatnFontFamily
 import abkabk.azbarkon.features.tasvirNegar.TasvirNegarAction
 import abkabk.azbarkon.ui.components.SarvSlider
 import abkabk.azbarkon.ui.theme.SarvTheme
@@ -11,11 +11,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,8 +39,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.arrow_back_right
 import sarv.shared.generated.resources.cd_back
@@ -59,8 +67,6 @@ import sarv.shared.generated.resources.tasvir_sticker
 import sarv.shared.generated.resources.tasvir_text
 import sarv.shared.generated.resources.tasvir_texture
 import sarv.shared.generated.resources.text_fields
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 private const val MIN_TEXT_SIZE = 1f
 private const val MAX_TEXT_SIZE = 32f
@@ -76,7 +82,7 @@ fun EditorHeader(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(54.dp)
+                .height(LocalSarvDimensions.current.dimen56)
                 .background(MaterialTheme.colorScheme.surface),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -85,6 +91,7 @@ fun EditorHeader(
                 painter = painterResource(Res.drawable.arrow_back_right),
                 contentDescription = stringResource(Res.string.cd_back),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
             )
         }
 
@@ -95,12 +102,13 @@ fun EditorHeader(
                 painter = painterResource(Res.drawable.reset_image),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun LabeledIconButton(
     drawable: org.jetbrains.compose.resources.DrawableResource,
@@ -108,13 +116,12 @@ private fun LabeledIconButton(
     onClick: () -> Unit,
 ) {
     Column(
+        modifier = Modifier.clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4)
     ) {
         Icon(
-            modifier = Modifier.clickable{
-                onClick()
-            },
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
             painter = painterResource(drawable),
             contentDescription = label,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -122,7 +129,7 @@ private fun LabeledIconButton(
         Text(
             text = label,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+            style = MaterialTheme.typography.labelSmallEmphasized,
         )
     }
 }
@@ -139,7 +146,7 @@ fun EditorFooter(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(72.dp)
+                .height(LocalSarvDimensions.current.dimen72)
                 .background(MaterialTheme.colorScheme.surface),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -171,41 +178,87 @@ fun EditorFooter(
 fun EditToolbar(
     onAction: (TasvirNegarAction) -> Unit,
     modifier: Modifier = Modifier,
+    isExpanded: Boolean = false,
 ) {
     val tint = MaterialTheme.colorScheme.onSurfaceVariant
-    Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .height(68.dp)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-    ) {
-        ToolbarIcon(Res.drawable.ic_text_format, tint, stringResource(Res.string.tasvir_font)) {
-            onAction(TasvirNegarAction.OnShowFontOptions)
+    if (isExpanded) {
+        LazyColumn(
+            modifier =
+                modifier
+                    .fillMaxHeight()
+                    .width(LocalSarvDimensions.current.dimen72)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            verticalArrangement = Arrangement.spacedBy(
+                space = LocalSarvDimensions.current.dimen16,
+                alignment = Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(LocalSarvDimensions.current.dimen4)
+        ) {
+            item {
+            ToolbarIcon(Res.drawable.ic_text_format, tint, stringResource(Res.string.tasvir_font)) {
+                onAction(TasvirNegarAction.OnShowFontOptions)
+            }}
+            item {
+            ToolbarIcon(Res.drawable.text_fields, tint, stringResource(Res.string.tasvir_text)) {
+                onAction(TasvirNegarAction.OnEnterText)
+            }}
+            item {
+            ToolbarIcon(Res.drawable.ic_sticker, tint, stringResource(Res.string.tasvir_sticker)) {
+                onAction(TasvirNegarAction.OnShowShapeOptions)
+            }}
+            item {
+            ToolbarIcon(Res.drawable.ic_color, tint, stringResource(Res.string.tasvir_color)) {
+                onAction(TasvirNegarAction.OnShowColorOptions)
+            }}
+            item {
+            ToolbarIcon(Res.drawable.ic_texture, tint, stringResource(Res.string.tasvir_texture)) {
+                onAction(TasvirNegarAction.OnLayerSelect(null))
+            }}
+            item {
+            ToolbarIcon(Res.drawable.ic_grid, tint, stringResource(Res.string.tasvir_grid)) {
+                onAction(TasvirNegarAction.OnToggleGrid)
+            }}
+            item {
+            ToolbarIcon(Res.drawable.ic_wallpaper, tint, stringResource(Res.string.tasvir_gallery)) {
+                onAction(TasvirNegarAction.OnGalleryClick)
+            }}
         }
-        ToolbarIcon(Res.drawable.text_fields, tint, stringResource(Res.string.tasvir_text)) {
-            onAction(TasvirNegarAction.OnEnterText)
-        }
-        ToolbarIcon(Res.drawable.ic_sticker, tint, stringResource(Res.string.tasvir_sticker)) {
-            onAction(TasvirNegarAction.OnShowShapeOptions)
-        }
-        ToolbarIcon(Res.drawable.ic_color, tint, stringResource(Res.string.tasvir_color)) {
-            onAction(TasvirNegarAction.OnShowColorOptions)
-        }
-        ToolbarIcon(Res.drawable.ic_texture, tint, stringResource(Res.string.tasvir_texture)) {
-            onAction(TasvirNegarAction.OnLayerSelect(null))
-        }
-        ToolbarIcon(Res.drawable.ic_grid, tint, stringResource(Res.string.tasvir_grid)) {
-            onAction(TasvirNegarAction.OnToggleGrid)
-        }
-        ToolbarIcon(Res.drawable.ic_wallpaper, tint, stringResource(Res.string.tasvir_gallery)) {
-            onAction(TasvirNegarAction.OnGalleryClick)
+    } else {
+        Row(
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .height(LocalSarvDimensions.current.dimen72)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            ToolbarIcon(Res.drawable.ic_text_format, tint, stringResource(Res.string.tasvir_font)) {
+                onAction(TasvirNegarAction.OnShowFontOptions)
+            }
+            ToolbarIcon(Res.drawable.text_fields, tint, stringResource(Res.string.tasvir_text)) {
+                onAction(TasvirNegarAction.OnEnterText)
+            }
+            ToolbarIcon(Res.drawable.ic_sticker, tint, stringResource(Res.string.tasvir_sticker)) {
+                onAction(TasvirNegarAction.OnShowShapeOptions)
+            }
+            ToolbarIcon(Res.drawable.ic_color, tint, stringResource(Res.string.tasvir_color)) {
+                onAction(TasvirNegarAction.OnShowColorOptions)
+            }
+            ToolbarIcon(Res.drawable.ic_texture, tint, stringResource(Res.string.tasvir_texture)) {
+                onAction(TasvirNegarAction.OnLayerSelect(null))
+            }
+            ToolbarIcon(Res.drawable.ic_grid, tint, stringResource(Res.string.tasvir_grid)) {
+                onAction(TasvirNegarAction.OnToggleGrid)
+            }
+            ToolbarIcon(Res.drawable.ic_wallpaper, tint, stringResource(Res.string.tasvir_gallery)) {
+                onAction(TasvirNegarAction.OnGalleryClick)
+            }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun ToolbarIcon(
     drawable: org.jetbrains.compose.resources.DrawableResource,
@@ -214,12 +267,13 @@ private fun ToolbarIcon(
     onClick: () -> Unit,
 ) {
     Column(
+        modifier = Modifier.wrapContentSize()
+            .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen2)
     ) {
         Icon(
-            modifier = Modifier.clickable{
-                onClick()
-            },
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
             painter = painterResource(drawable),
             contentDescription = label,
             tint = tint,
@@ -227,13 +281,13 @@ private fun ToolbarIcon(
         Text(
             text = label,
             color = tint,
-            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-            modifier = Modifier.padding(top = 2.dp),
+            style = MaterialTheme.typography.labelSmallEmphasized,
         )
     }
 }
 
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun VerticalSizeSlider(
     progress: Float,
@@ -249,14 +303,11 @@ fun VerticalSizeSlider(
     ) {
         Text(
             text = sliderValue.toInt().toString(),
-            style =
-                androidx.compose.ui.text.TextStyle(
-                    fontFamily = vazirmatnFontFamily(),
-                    fontSize = 12.sp,
-                    color = Color.White,
-                    shadow = Shadow(Color.Black.copy(alpha = 0.6f), offset = Offset(0f, 1f), blurRadius = 2f),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                ),
+            style = MaterialTheme.typography.labelSmallEmphasized.copy(
+                color = Color.White,
+                shadow = Shadow(Color.Black.copy(alpha = 0.6f), offset = Offset(0f, 1f), blurRadius = 2f),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            ),
         )
 
         SarvSlider(

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 class FakeUserPreferencesRepository : UserPreferencesRepository {
-    private var dailyBeytEnabled: Boolean = false
+    private var dailyDistichEnabled: Boolean = false
     private var memorizationReminderEnabled: Boolean = true
     private var notificationPermissionDeclineCount: Int = 0
     private var themeMode: ThemeMode = ThemeMode.System
@@ -35,10 +35,10 @@ class FakeUserPreferencesRepository : UserPreferencesRepository {
     private val themeModeState = MutableStateFlow(themeMode)
     private val fontSizeScaleState = MutableStateFlow(fontSizeScale)
 
-    override fun isDailyBeytNotificationEnabled(): Boolean = dailyBeytEnabled
+    override fun isDailyDistichNotificationEnabled(): Boolean = dailyDistichEnabled
 
-    override fun setDailyBeytNotificationEnabled(enabled: Boolean) {
-        dailyBeytEnabled = enabled
+    override fun setDailyDistichNotificationEnabled(enabled: Boolean) {
+        dailyDistichEnabled = enabled
     }
 
     override fun isMemorizationReminderEnabled(): Boolean = memorizationReminderEnabled

@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Composable
@@ -36,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 @Composable
 fun GameSessionRoot(
@@ -115,17 +118,19 @@ fun GameSessionScreen(
             SarvSnackbarHost(hostState = LocalSnackbarHostState.current)
         },
     ) { paddingValues ->
+        val needsScroll = state.gameType != GameType.ORGANIZE_POEM
         Column(
             modifier =
                 Modifier
                     .fillMaxSize()
+                    .then(if (needsScroll) Modifier.verticalScroll(rememberScrollState()) else Modifier)
                     .padding(
-                        top = paddingValues.calculateTopPadding() + 16.dp,
+                        top = paddingValues.calculateTopPadding() + LocalSarvDimensions.current.dimen16,
                         bottom = paddingValues.calculateBottomPadding(),
-                        start = 16.dp,
-                        end = 16.dp
+                        start = LocalSarvDimensions.current.dimen16,
+                        end = LocalSarvDimensions.current.dimen16
                         ),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
         ) {
             when (val question = state.currentQuestion) {
                 is GameQuestion.NextVerse ->

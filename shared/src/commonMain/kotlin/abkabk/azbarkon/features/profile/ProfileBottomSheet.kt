@@ -1,5 +1,6 @@
 package abkabk.azbarkon.features.profile
 
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 import abkabk.azbarkon.domain.model.ThemeMode
 import abkabk.azbarkon.domain.model.profile.BadgeUi
 import abkabk.azbarkon.domain.model.profile.GameLevelCatalog
@@ -41,6 +42,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.add_box_24px
 import sarv.shared.generated.resources.check_circle
@@ -51,8 +54,8 @@ import sarv.shared.generated.resources.notifications_outlined
 import sarv.shared.generated.resources.profile_add_widget
 import sarv.shared.generated.resources.profile_add_widget_subtitle
 import sarv.shared.generated.resources.profile_badges_title
-import sarv.shared.generated.resources.profile_daily_beyt_subtitle
-import sarv.shared.generated.resources.profile_daily_beyt_title
+import sarv.shared.generated.resources.profile_daily_distich_subtitle
+import sarv.shared.generated.resources.profile_daily_distich_title
 import sarv.shared.generated.resources.profile_export_data
 import sarv.shared.generated.resources.profile_export_data_subtitle
 import sarv.shared.generated.resources.profile_font_size_big
@@ -75,12 +78,10 @@ import sarv.shared.generated.resources.profile_theme_light
 import sarv.shared.generated.resources.profile_theme_system
 import sarv.shared.generated.resources.profile_theme_title
 import sarv.shared.generated.resources.upload
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 private const val FONT_SIZE_DEFAULT = 1f
-private const val FONT_SIZE_BIG = 1.05f
-private const val FONT_SIZE_BIGGER = 1.1f
+private const val FONT_SIZE_BIG = 1.1f
+private const val FONT_SIZE_BIGGER = 1.2f
 
 @Composable
 fun ProfileSheets(
@@ -104,12 +105,12 @@ fun ProfileSheets(
         when (sheet) {
             ProfileSheet.Settings ->
                 ProfileSettingsSheetContent(
-                    isDailyBeytEnabled = state.isDailyBeytNotificationEnabled,
+                    isDailyDistichEnabled = state.isDailyDistichNotificationEnabled,
                     isMemorizationReminderEnabled = state.isMemorizationReminderEnabled,
                     isRemoteNotificationGranted = state.isRemoteNotificationGranted,
                     themeMode = state.themeMode,
                     fontSizeScale = state.fontSizeScale,
-                    onDailyBeytToggle = { onAction(ProfileAction.OnDailyBeytNotificationToggle(it)) },
+                    onDailyDistichToggle = { onAction(ProfileAction.OnDailyDistichNotificationToggle(it)) },
                     onMemorizationReminderToggle = { onAction(ProfileAction.OnMemorizationReminderToggle(it)) },
                     onRemoteNotificationClick = { onAction(ProfileAction.OnRemoteNotificationClick) },
                     onThemeModeSelect = { onAction(ProfileAction.OnThemeModeSelected(it)) },
@@ -131,12 +132,12 @@ fun ProfileSheets(
 @Suppress("LongParameterList")
 @Composable
 private fun ProfileSettingsSheetContent(
-    isDailyBeytEnabled: Boolean,
+    isDailyDistichEnabled: Boolean,
     isMemorizationReminderEnabled: Boolean,
     isRemoteNotificationGranted: Boolean,
     themeMode: ThemeMode,
     fontSizeScale: Float,
-    onDailyBeytToggle: (Boolean) -> Unit,
+    onDailyDistichToggle: (Boolean) -> Unit,
     onMemorizationReminderToggle: (Boolean) -> Unit,
     onRemoteNotificationClick: () -> Unit,
     onThemeModeSelect: (ThemeMode) -> Unit,
@@ -151,9 +152,9 @@ private fun ProfileSettingsSheetContent(
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen16)
+                .padding(bottom = LocalSarvDimensions.current.dimen24),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
         horizontalAlignment = Alignment.Start
     ) {
 
@@ -165,10 +166,10 @@ private fun ProfileSettingsSheetContent(
         )
 
         ProfileSettingToggleRow(
-            title = stringResource(Res.string.profile_daily_beyt_title),
-            subtitle = stringResource(Res.string.profile_daily_beyt_subtitle),
-            checked = isDailyBeytEnabled,
-            onCheckedChange = onDailyBeytToggle,
+            title = stringResource(Res.string.profile_daily_distich_title),
+            subtitle = stringResource(Res.string.profile_daily_distich_subtitle),
+            checked = isDailyDistichEnabled,
+            onCheckedChange = onDailyDistichToggle,
         )
 
 
@@ -222,17 +223,17 @@ private fun ProfileThemeSelector(
     themeMode: ThemeMode,
     onThemeModeSelect: (ThemeMode) -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp),
+    Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         horizontalAlignment = Alignment.Start) {
         Text(
             text = stringResource(Res.string.profile_theme_title),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         ) {
             ProfileSegmentedOption(
                 label = stringResource(Res.string.profile_theme_system),
@@ -261,17 +262,17 @@ private fun ProfileFontSizeSelector(
     fontSizeScale: Float,
     onFontSizeScaleSelect: (Float) -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp),
+    Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         horizontalAlignment = Alignment.Start) {
         Text(
             text = stringResource(Res.string.profile_font_size_title),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         ) {
             ProfileSegmentedOption(
                 label = stringResource(Res.string.profile_font_size_default),
@@ -305,10 +306,10 @@ private fun ProfileSettingToggleRow(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen16, vertical = LocalSarvDimensions.current.dimen12),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
@@ -329,11 +330,11 @@ private fun ProfileSettingToggleRow(
 
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4),
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start,
             )
@@ -361,14 +362,15 @@ private fun ProfileDataActionRow(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable(onClick = onClick)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen16, vertical = LocalSarvDimensions.current.dimen12),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
             painter = if (filled) iconFilled else icon,
             contentDescription = null,
             tint =
@@ -380,11 +382,11 @@ private fun ProfileDataActionRow(
         )
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4),
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start,
             )
@@ -409,7 +411,7 @@ private fun ProfileSegmentedOption(
     Row(
         modifier =
             modifier
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen8))
                 .background(
                     if (selected) {
                         MaterialTheme.colorScheme.primary
@@ -417,7 +419,7 @@ private fun ProfileSegmentedOption(
                         MaterialTheme.colorScheme.surfaceVariant
                     },
                 ).clickable(onClick = onClick)
-                .padding(horizontal = 8.dp, vertical = 8.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen8, vertical = LocalSarvDimensions.current.dimen8),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -441,9 +443,9 @@ private fun ProfileBadgesSheetContent(badges: List<BadgeUi>) {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen16)
+                .padding(bottom = LocalSarvDimensions.current.dimen24),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
     ) {
         Text(
             text = stringResource(Res.string.profile_badges_title),
@@ -457,7 +459,7 @@ private fun ProfileBadgesSheetContent(badges: List<BadgeUi>) {
             items(badges, key = { it.id }) { badge ->
                 BadgeListRow(
                     item = badge,
-                    modifier = Modifier.padding(vertical = 12.dp),
+                    modifier = Modifier.padding(vertical = LocalSarvDimensions.current.dimen12),
                 )
                 if (badge.id != badges.lastOrNull()?.id) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -474,9 +476,9 @@ private fun ProfileLevelsSheetContent(levels: List<LevelListItemUi>) {
             Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen16)
+                .padding(bottom = LocalSarvDimensions.current.dimen24),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
         Text(
             text = stringResource(Res.string.profile_levels_title),
@@ -484,7 +486,7 @@ private fun ProfileLevelsSheetContent(levels: List<LevelListItemUi>) {
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
         )
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
             items(levels, key = { it.level.id }) { item ->
                 ProfileLevelRow(item = item)
             }
@@ -513,11 +515,12 @@ private fun ProfileLevelRow(item: LevelListItemUi) {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .background(backgroundColor)
-                .padding(horizontal = 12.dp, vertical = 14.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen12,
+                    vertical = LocalSarvDimensions.current.dimen16),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
     ) {
 
         Text(
@@ -549,7 +552,7 @@ private fun ProfileLevelRow(item: LevelListItemUi) {
             Image(
                 painter = painterResource(drawable),
                 contentDescription = null,
-                modifier = Modifier.size(40.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen40),
                 colorFilter =
                     if (isLocked) {
                         ColorFilter.colorMatrix(
@@ -567,7 +570,7 @@ private fun ProfileLevelRow(item: LevelListItemUi) {
                 Icon(
                     painter = painterResource(Res.drawable.lock),
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen20),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
@@ -577,7 +580,7 @@ private fun ProfileLevelRow(item: LevelListItemUi) {
                 Icon(
                     painter = painterResource(Res.drawable.check_circle),
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen20),
                     tint = MaterialTheme.colorScheme.primary,
                 )
         }

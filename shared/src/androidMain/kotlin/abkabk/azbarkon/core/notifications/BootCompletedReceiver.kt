@@ -3,7 +3,7 @@ package abkabk.azbarkon.core.notifications
 import abkabk.azbarkon.SarvApp
 import abkabk.azbarkon.core.di.initKoin
 import abkabk.azbarkon.core.widget.RandomDistichWidgetRefresher
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
 import abkabk.azbarkon.domain.platform.MemorizationReviewNotificationScheduler
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -22,7 +22,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
             initKoin(application)
         }
 
-        val scheduler = GlobalContext.get().get<DailyBeytNotificationScheduler>()
+        val scheduler = GlobalContext.get().get<DailyDistichNotificationScheduler>()
         scheduler.rescheduleIfEnabled()
 
         val reviewScheduler = GlobalContext.get().get<MemorizationReviewNotificationScheduler>()

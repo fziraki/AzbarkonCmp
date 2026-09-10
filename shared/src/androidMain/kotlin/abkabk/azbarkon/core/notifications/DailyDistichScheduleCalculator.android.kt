@@ -3,7 +3,7 @@ package abkabk.azbarkon.core.notifications
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-internal object DailyBeytScheduleCalculator {
+internal object DailyDistichScheduleCalculator {
     fun initialDelayMillis(
         deliveryHour: Int,
         deliveryMinute: Int,

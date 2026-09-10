@@ -16,7 +16,7 @@ data class ProfileState(
     val activeSheet: ProfileSheet? = null,
     val themeMode: ThemeMode = ThemeMode.System,
     val fontSizeScale: Float = 1f,
-    val isDailyBeytNotificationEnabled: Boolean = false,
+    val isDailyDistichNotificationEnabled: Boolean = false,
     val isMemorizationReminderEnabled: Boolean = true,
     val isRemoteNotificationGranted: Boolean = false,
     val levelProgress: ProfileLevelProgress = ProfileLevelProgress(levelId = 1, levelName = "", currentXp = 0, targetXp = 900),
@@ -41,7 +41,7 @@ sealed interface ProfileAction {
 
     data object OnLevelsIconClick : ProfileAction
 
-    data class OnDailyBeytNotificationToggle(
+    data class OnDailyDistichNotificationToggle(
         val enabled: Boolean,
     ) : ProfileAction
 
@@ -88,6 +88,6 @@ sealed interface ProfileEvent {
 }
 
 enum class NotificationPermissionTarget {
-    DailyBeyt,
+    DailyDistich,
     Remote,
 }

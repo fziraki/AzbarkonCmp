@@ -11,11 +11,11 @@ import abkabk.azbarkon.core.platform.ShareManager
 import abkabk.azbarkon.core.player.AudioPlayer
 import abkabk.azbarkon.core.player.AvAudioPlayer
 import abkabk.azbarkon.data.cache.CoilPoetImagePrefetcher
-import abkabk.azbarkon.data.platform.IosDailyBeytNotificationScheduler
+import abkabk.azbarkon.data.platform.IosDailyDistichNotificationScheduler
 import abkabk.azbarkon.domain.datasource.PoetImagePrefetcher
 import abkabk.azbarkon.data.platform.IosMemorizationReviewNotificationScheduler
 import abkabk.azbarkon.data.platform.IosNotificationPermissionGateway
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
 import abkabk.azbarkon.domain.platform.MemorizationReviewNotificationScheduler
 import abkabk.azbarkon.domain.platform.NotificationPermissionGateway
 import com.sarv.db.SarvDatabase
@@ -77,9 +77,9 @@ val iosPlatformModule =
             ImageExportManager()
         }
 
-        single<DailyBeytNotificationScheduler> {
-            IosDailyBeytNotificationScheduler(
-                dailyBeytRepository = get(),
+        single<DailyDistichNotificationScheduler> {
+            IosDailyDistichNotificationScheduler(
+                dailyDistichRepository = get(),
                 userPreferencesRepository = get(),
             )
         }

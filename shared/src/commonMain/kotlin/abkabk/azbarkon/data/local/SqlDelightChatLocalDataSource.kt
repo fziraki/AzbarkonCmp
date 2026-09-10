@@ -16,33 +16,33 @@ class SqlDelightChatLocalDataSource(
         prefix: String,
     ): Result<ChatDistich, DataError.Local> =
         dbQuery {
-            val firstLine =
+            val firstHemistich =
                 verseQueries
                     .selectChatDistichByPoetAndPrefix(
                         poet_id = poetId.toLong(),
                         prefix = prefix,
                     ).executeAsOneOrNull()
 
-            if (firstLine == null) {
+            if (firstHemistich == null) {
                 ChatDistich(
                     poemId = ChatDistichFallback.POEM_ID,
                     rightText = ChatDistichFallback.RIGHT_TEXT,
                     leftText = ChatDistichFallback.LEFT_TEXT,
                 )
             } else {
-                val secondLine =
+                val secondHemistich =
                     verseQueries
                         .selectVerseTextByPoemVorderPosition(
-                            poem_id = firstLine.poem_id,
-                            vorder = firstLine.vorder + 1,
+                            poem_id = firstHemistich.poem_id,
+                            vorder = firstHemistich.vorder + 1,
                             position = 1,
                         ).executeAsOneOrNull()
                         ?: return Result.Error(DataError.Local.NOT_FOUND)
 
                 ChatDistich(
-                    poemId = firstLine.poem_id.toInt(),
-                    rightText = firstLine.right_text,
-                    leftText = secondLine,
+                    poemId = firstHemistich.poem_id.toInt(),
+                    rightText = firstHemistich.right_text,
+                    leftText = secondHemistich,
                 )
             }
         }

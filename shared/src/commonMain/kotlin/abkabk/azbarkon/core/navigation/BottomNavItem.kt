@@ -11,7 +11,6 @@ import sarv.shared.generated.resources.games_subtitle
 import sarv.shared.generated.resources.home
 import sarv.shared.generated.resources.treasure
 import sarv.shared.generated.resources.profile
-import sarv.shared.generated.resources.profile_title
 import sarv.shared.generated.resources.treasure_subtitle
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -51,6 +50,6 @@ sealed class BottomNavItem(
         route = ProfileRoute::class,
         title = Res.string.profile,
         icon = Res.drawable.profile,
-        headerTitle = Res.string.profile_title,
+        headerTitle = Res.string.profile,
     )
 }

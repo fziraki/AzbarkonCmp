@@ -81,55 +81,67 @@ class MemorizationReviewNotificationCoordinatorTest {
 
         override suspend fun isPoemActive(poemId: Int): Boolean = false
 
-        override suspend fun insertActivePoem(
+        override suspend fun insertPoem(
             poemId: Int,
             addedAtMillis: Long,
             status: String,
+            interval: Int,
+            dueDateMillis: Long,
+            consecutiveCorrect: Int,
+            totalCard: Int,
         ) = Unit
 
-        override suspend fun deleteActivePoem(poemId: Int) = Unit
+        override suspend fun deletePoem(poemId: Int) = Unit
 
-        override suspend fun getActivePoemIds(): List<Int> = emptyList()
+        override suspend fun getPoemIdsByStatus(status: String): List<Int> = emptyList()
 
-        override suspend fun getActivePoemAddedAt(poemId: Int): Long? = null
+        override suspend fun getPoemAddedAt(poemId: Int): Long? = null
+
+        override suspend fun getMemorizationPoem(poemId: Int): abkabk.azbarkon.domain.model.memorization.StoredPoem? = null
 
         override suspend fun insertCards(cards: List<SrsCard>) = Unit
 
         override suspend fun getCardById(cardId: Long): SrsCard? = null
 
-        override suspend fun getDueCards(
-            nowMillis: Long,
-            poemId: Int?,
-        ): List<SrsCard> = emptyList()
+        override suspend fun getDueCards(poemId: Int): List<SrsCard> = emptyList()
 
-        override suspend fun countDueCards(
-            nowMillis: Long,
-            poemId: Int?,
-        ): Int = 0
+        override suspend fun getCardsByPoemId(poemId: Int): List<SrsCard> = emptyList()
 
-        override suspend fun updateCard(card: SrsCard) = Unit
+        override suspend fun countDueCards(poemId: Int): Int = 0
+
+        override suspend fun updatePoemSchedule(
+            poemId: Int,
+            status: String,
+            interval: Int,
+            dueDateMillis: Long,
+            consecutiveCorrect: Int,
+        ) = Unit
 
         override suspend fun countCardsByPoemId(poemId: Int): Int = 0
 
-        override suspend fun countReviewedCardsByPoemId(poemId: Int): Int = 0
-
-        override suspend fun getAverageInterval(poemId: Int): Int = 0
-
-        override suspend fun getMaxConsecutiveCorrect(poemId: Int): Int = 0
+        override suspend fun getLastReviewLogByPoemId(poemId: Int): abkabk.azbarkon.domain.model.memorization.StoredReviewLog =
+            abkabk.azbarkon.domain.model.memorization.StoredReviewLog(
+                id = -1, poemId = poemId, reviewRound = 0, minTotalScore = 0.0,
+                userTotalScore = 0.0, cardIndex = 0, sessionReviewed = 0,
+                sessionMistakes = 0, sessionLearned = 0,
+            )
 
         override suspend fun insertReviewLog(
-            cardId: Long,
-            grade: SrsGrade,
-            previousInterval: Int,
-            newInterval: Int,
-            reviewTimeMillis: Long,
+            poemId: Int,
+            reviewRound: Int,
+            minTotalScore: Double,
+            userTotalScore: Double,
+            cardIndex: Int,
+            sessionReviewed: Int,
+            sessionMistakes: Int,
+            sessionLearned: Int,
         ) = Unit
 
         override suspend fun getReviewDayKeys(): List<Int> = emptyList()
 
         override suspend fun countReviewedVerses(): Int = 0
 
-        override suspend fun dumpActivePoems(): List<abkabk.azbarkon.domain.model.memorization.StoredActivePoem> =
+        override suspend fun dumpActivePoems(): List<abkabk.azbarkon.domain.model.memorization.StoredPoem> =
             emptyList()
 
         override suspend fun dumpCards(): List<SrsCard> = emptyList()
@@ -138,7 +150,7 @@ class MemorizationReviewNotificationCoordinatorTest {
             emptyList()
 
         override suspend fun replaceAll(
-            activePoems: List<abkabk.azbarkon.domain.model.memorization.StoredActivePoem>,
+            activePoems: List<abkabk.azbarkon.domain.model.memorization.StoredPoem>,
             cards: List<SrsCard>,
             reviewLogs: List<abkabk.azbarkon.domain.model.memorization.StoredReviewLog>,
         ) = Unit

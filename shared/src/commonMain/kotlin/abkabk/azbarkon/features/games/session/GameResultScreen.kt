@@ -59,6 +59,8 @@ import sarv.shared.generated.resources.replay
 import sarv.shared.generated.resources.whois_poet_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+import androidx.compose.foundation.layout.offset
 
 private const val PERCENT_MULTIPLIER = 100
 
@@ -102,8 +104,8 @@ fun GameResultScreen(
         modifier =
             modifier
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(LocalSarvDimensions.current.dimen16),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
     ) {
         Header(
             title = stringResource(Res.string.game_result_title),
@@ -144,9 +146,9 @@ private fun GameResultScoreCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .background(MaterialTheme.colorScheme.primary)
-                .padding(20.dp),
+                .padding(LocalSarvDimensions.current.dimen20),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -154,7 +156,7 @@ private fun GameResultScoreCard(
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4),
         ) {
             Text(
                 text = scoreDelta.toString(),
@@ -162,7 +164,7 @@ private fun GameResultScoreCard(
                 color = MaterialTheme.colorScheme.onPrimary,
             )
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -195,7 +197,7 @@ private fun GameResultStatsRow(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
         GameResultStatCard(
             value = noAnswerCount.toString(),
@@ -230,15 +232,15 @@ private fun GameResultStatCard(
     Column(
         modifier =
             modifier
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(vertical = 16.dp, horizontal = 8.dp),
+                .padding(vertical = LocalSarvDimensions.current.dimen16, horizontal = LocalSarvDimensions.current.dimen8),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
     ) {
         Text(
             text = value,
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.titleLarge,
             color = valueColor,
             textAlign = TextAlign.Center,
         )
@@ -264,19 +266,19 @@ private fun GameResultProgressCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .border(
-                    width = 1.dp,
+                    width = LocalSarvDimensions.current.dimen1,
                     color = MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
                 ).background(MaterialTheme.colorScheme.surface)
-                .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(LocalSarvDimensions.current.dimen16),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen16),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         ) {
             Text(
                 text = stringResource(Res.string.game_result_progress_question_count_label),
@@ -324,32 +326,33 @@ private fun GameResultCircularProgress(
 ) {
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
     val progressColor = MaterialTheme.colorScheme.primary
+    val strokeWidth = LocalSarvDimensions.current.dimen6
 
     Box(
-        modifier = modifier.size(88.dp),
+        modifier = modifier.size(LocalSarvDimensions.current.dimen88),
         contentAlignment = Alignment.Center,
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val strokeWidth = 6.dp.toPx()
+            val strokeWidthPx = strokeWidth.toPx()
             drawArc(
                 color = trackColor,
                 startAngle = -90f,
                 sweepAngle = 360f,
                 useCenter = false,
-                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
             )
             drawArc(
                 color = progressColor,
                 startAngle = -90f,
                 sweepAngle = 360f * (percent / 100f),
                 useCenter = false,
-                style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
             )
         }
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen2),
         ) {
             Text(
                 text =
@@ -376,15 +379,15 @@ private fun GameResultSegmentedBar(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen4),
     ) {
         repeat(total) { index ->
             Box(
                 modifier =
                     Modifier
                         .weight(1f)
-                        .height(10.dp)
-                        .clip(RoundedCornerShape(4.dp))
+                        .height(LocalSarvDimensions.current.dimen10)
+                        .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen4))
                         .background(
                             if (index < filledCount) {
                                 MaterialTheme.colorScheme.primary
@@ -404,7 +407,7 @@ private fun GameResultReplayButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(52.dp),
+        modifier = modifier.fillMaxWidth(),
         shape = SarvButtonDefaults.Shape,
         colors =
             ButtonDefaults.buttonColors(
@@ -413,7 +416,11 @@ private fun GameResultReplayButton(
             ),
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(
+                vertical = LocalSarvDimensions.current.dimen8),
+            horizontalArrangement = Arrangement.spacedBy(
+                space = LocalSarvDimensions.current.dimen8,
+                alignment = Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
@@ -424,7 +431,7 @@ private fun GameResultReplayButton(
             Icon(
                 painter = painterResource(Res.drawable.replay),
                 contentDescription = null,
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen20),
             )
 
         }
@@ -438,9 +445,9 @@ private fun GameResultBackToListButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = modifier.height(52.dp),
+        modifier = modifier.fillMaxWidth(),
         shape = SarvButtonDefaults.Shape,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        border = BorderStroke(LocalSarvDimensions.current.dimen1, MaterialTheme.colorScheme.outline),
         colors =
             ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -448,8 +455,13 @@ private fun GameResultBackToListButton(
             ),
     ) {
         Text(
+            modifier = Modifier.fillMaxWidth()
+                .padding(
+                    vertical = LocalSarvDimensions.current.dimen8
+                ),
             text = stringResource(Res.string.game_back_to_list),
             style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.Center
         )
     }
 }

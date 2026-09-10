@@ -23,11 +23,11 @@ class FakeUserBackupManager(
         } else {
             val prefs =
                 UserBackupFile().prefs.copy(
-                    dailyBeytNotificationsEnabled = true,
+                    dailyDistichNotificationsEnabled = true,
                     memorizationReminderEnabled = true,
                 )
             preferences?.apply {
-                setDailyBeytNotificationEnabled(prefs.dailyBeytNotificationsEnabled)
+                setDailyDistichNotificationEnabled(prefs.dailyDistichNotificationsEnabled)
                 setMemorizationReminderEnabled(prefs.memorizationReminderEnabled)
             }
             Result.Success(UserBackupFile(prefs = prefs))

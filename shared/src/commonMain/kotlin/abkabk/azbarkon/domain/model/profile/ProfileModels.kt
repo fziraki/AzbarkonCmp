@@ -3,7 +3,7 @@ package abkabk.azbarkon.domain.model.profile
 import abkabk.azbarkon.domain.model.GameLevel
 
 data class MemorizationProfileStats(
-    val practiceStreak: Int = 0,
+    val activePoemCount: Int = 0,
     val completedPoemCount: Int = 0,
 )
 

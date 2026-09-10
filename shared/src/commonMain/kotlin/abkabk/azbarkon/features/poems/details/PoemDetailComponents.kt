@@ -48,6 +48,9 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
 
 @Composable
 fun PoemVerseItem(
@@ -118,10 +121,10 @@ private fun CommentVerseItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .padding(vertical = LocalSarvDimensions.current.dimen8)
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen8))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(horizontal = 12.dp, vertical = 10.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen12, vertical = LocalSarvDimensions.current.dimen10),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         textAlign = TextAlign.Center,
@@ -140,7 +143,7 @@ private fun RightVerseItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = LocalSarvDimensions.current.dimen16),
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Start,
@@ -159,7 +162,7 @@ private fun LeftVerseItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(bottom = 12.dp),
+                .padding(bottom = LocalSarvDimensions.current.dimen12),
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.End,
@@ -178,7 +181,7 @@ private fun CenterVerseItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp),
+                .padding(top = LocalSarvDimensions.current.dimen12),
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Center,
@@ -197,7 +200,7 @@ private fun ParagraphVerseItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),
+                .padding(bottom = LocalSarvDimensions.current.dimen8),
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Center,
@@ -216,7 +219,7 @@ private fun SingleVerseItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .padding(vertical = LocalSarvDimensions.current.dimen16),
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Center,
@@ -229,20 +232,20 @@ fun PoemOrnamentalDivider(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(
-            4.dp, Alignment.CenterHorizontally),
+            LocalSarvDimensions.current.dimen4, Alignment.CenterHorizontally),
     ) {
         Image(
-            modifier = Modifier.size(32.dp),
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen32),
             painter = painterResource(Res.drawable.ornoment230r),
             contentDescription = null,
         )
         Image(
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen48),
             painter = painterResource(Res.drawable.ornoment30),
             contentDescription = null,
         )
         Image(
-            modifier = Modifier.size(32.dp),
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen32),
             painter = painterResource(Res.drawable.ornoment230l),
             contentDescription = null,
         )
@@ -267,64 +270,131 @@ fun PoemActionBar(
     onImageCreatorClick: () -> Unit,
     onMemorizeClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isExpanded: Boolean = false,
 ) {
-    Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(16.dp),
-                ).padding(vertical = 8.dp, horizontal = 6.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-
-        PoemActionItem(
-            icon = if (isLiked) Res.drawable.heart_filled else Res.drawable.heart,
-            label = Res.string.poem_liked,
-            contentDescription = Res.string.cd_like,
-            tint = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-            labelColor = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-            onClick = onLikeClick,
-        )
-
-
-        PoemActionItem(
-            icon = Res.drawable.palette,
-            label = Res.string.poem_image_creator,
-            contentDescription = Res.string.cd_image_creator,
-            onClick = onImageCreatorClick,
-        )
-
-
-        if (!isProse) {
+    if (isExpanded) {
+        LazyColumn(
+            modifier =
+                modifier
+                    .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .border(
+                        width = LocalSarvDimensions.current.dimen1,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
+                    ).padding(vertical = LocalSarvDimensions.current.dimen8, horizontal = LocalSarvDimensions.current.dimen6),
+            verticalArrangement = Arrangement.spacedBy(
+                space = LocalSarvDimensions.current.dimen16,
+                alignment = Alignment.CenterVertically
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(LocalSarvDimensions.current.dimen4)
+        ) {
+            item {
             PoemActionItem(
-                icon = Res.drawable.add_box_24px,
-                label = Res.string.poem_memorize,
-                contentDescription = Res.string.cd_add_poem,
-                onClick = onMemorizeClick,
-                tint = MaterialTheme.colorScheme.primary,
-                labelColor = MaterialTheme.colorScheme.primary,
+                icon = if (isLiked) Res.drawable.heart_filled else Res.drawable.heart,
+                label = Res.string.poem_liked,
+                contentDescription = Res.string.cd_like,
+                tint = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                labelColor = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                onClick = onLikeClick,
+            )}
+
+            item {
+            PoemActionItem(
+                icon = Res.drawable.palette,
+                label = Res.string.poem_image_creator,
+                contentDescription = Res.string.cd_image_creator,
+                onClick = onImageCreatorClick,
+            )}
+
+            if (!isProse) {
+                item {
+                PoemActionItem(
+                    icon = Res.drawable.add_box_24px,
+                    label = Res.string.poem_memorize,
+                    contentDescription = Res.string.cd_add_poem,
+                    onClick = onMemorizeClick,
+                    tint = MaterialTheme.colorScheme.primary,
+                    labelColor = MaterialTheme.colorScheme.primary,
+                )}
+            }
+
+            item {
+            PoemActionItem(
+                icon = Res.drawable.share,
+                label = Res.string.poem_share,
+                contentDescription = Res.string.cd_share,
+                onClick = onShareClick,
+            )}
+
+            item {
+            PoemActionItem(
+                icon = Res.drawable.search,
+                label = Res.string.search,
+                contentDescription = Res.string.cd_context_search,
+                onClick = onSearchClick,
+            )}
+        }
+    } else {
+        Row(
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .border(
+                        width = LocalSarvDimensions.current.dimen1,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
+                    ).padding(vertical = LocalSarvDimensions.current.dimen8, horizontal = LocalSarvDimensions.current.dimen6),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            PoemActionItem(
+                icon = if (isLiked) Res.drawable.heart_filled else Res.drawable.heart,
+                label = Res.string.poem_liked,
+                contentDescription = Res.string.cd_like,
+                tint = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                labelColor = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                onClick = onLikeClick,
+            )
+
+
+            PoemActionItem(
+                icon = Res.drawable.palette,
+                label = Res.string.poem_image_creator,
+                contentDescription = Res.string.cd_image_creator,
+                onClick = onImageCreatorClick,
+            )
+
+
+            if (!isProse) {
+                PoemActionItem(
+                    icon = Res.drawable.add_box_24px,
+                    label = Res.string.poem_memorize,
+                    contentDescription = Res.string.cd_add_poem,
+                    onClick = onMemorizeClick,
+                    tint = MaterialTheme.colorScheme.primary,
+                    labelColor = MaterialTheme.colorScheme.primary,
+                )
+            }
+
+            PoemActionItem(
+                icon = Res.drawable.share,
+                label = Res.string.poem_share,
+                contentDescription = Res.string.cd_share,
+                onClick = onShareClick,
+            )
+
+            PoemActionItem(
+                icon = Res.drawable.search,
+                label = Res.string.search,
+                contentDescription = Res.string.cd_context_search,
+                onClick = onSearchClick,
             )
         }
-
-        PoemActionItem(
-            icon = Res.drawable.share,
-            label = Res.string.poem_share,
-            contentDescription = Res.string.cd_share,
-            onClick = onShareClick,
-        )
-
-        PoemActionItem(
-            icon = Res.drawable.search,
-            label = Res.string.search,
-            contentDescription = Res.string.cd_context_search,
-            onClick = onSearchClick,
-        )
     }
 }
 
@@ -341,18 +411,17 @@ private fun PoemActionItem(
     Column(
         modifier =
             modifier
-                .width(64.dp)
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen12))
                 .clickable(onClick = onClick)
-                .padding(vertical = 4.dp),
+                .padding(vertical = LocalSarvDimensions.current.dimen4),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen6),
     ) {
         Icon(
             painter = painterResource(icon),
             contentDescription = stringResource(contentDescription),
             tint = tint,
-            modifier = Modifier.size(22.dp),
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen22),
         )
         Text(
             text = stringResource(label),

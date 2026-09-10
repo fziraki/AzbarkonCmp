@@ -30,6 +30,7 @@ import sarv.shared.generated.resources.search
 import sarv.shared.generated.resources.unknown
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 
 @Composable
@@ -43,21 +44,21 @@ fun FilterField(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .border(
-                    width = 1.dp,
+                    width = LocalSarvDimensions.current.dimen1,
                     color = MaterialTheme.colorScheme.outlineVariant,
-                    shape = RoundedCornerShape(14.dp),
-                ).padding(horizontal = 14.dp, vertical = 12.dp),
+                    shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
+                ).padding(horizontal = LocalSarvDimensions.current.dimen16, vertical = LocalSarvDimensions.current.dimen12),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen10),
     ) {
         Icon(
             painter = painterResource(Res.drawable.filter),
             contentDescription = stringResource(Res.string.search),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(20.dp),
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen20),
         )
 
         BasicTextField(
@@ -102,7 +103,7 @@ fun PoetAvatar(
             modifier =
                 modifier.clip(CircleShape)
                     .background(color = MaterialTheme.colorScheme.primary)
-                    .padding(8.dp),
+                    .padding(LocalSarvDimensions.current.dimen8),
             painter = painterResource(Res.drawable.unknown),
             contentDescription = null,
             colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surface)
@@ -118,7 +119,7 @@ fun PoetsSectionTitle(
     Text(
         modifier = modifier.fillMaxWidth(),
         text = title,
-        style = MaterialTheme.typography.headlineMedium,
+        style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Start,
     )

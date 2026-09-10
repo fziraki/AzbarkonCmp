@@ -32,6 +32,7 @@ import sarv.shared.generated.resources.notifications
 import sarv.shared.generated.resources.search
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 
 @Composable
 fun Header(
@@ -46,36 +47,37 @@ fun Header(
             modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 8.dp, vertical = 12.dp),
+                .padding(horizontal = LocalSarvDimensions.current.dimen8, vertical = LocalSarvDimensions.current.dimen12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (onBackClick != null) {
             Box(
                 modifier =
                     Modifier
-                        .size(40.dp)
+                        .size(LocalSarvDimensions.current.dimen40)
                         .clip(CircleShape)
                         .clickable(onClick = onBackClick),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
                     painter = painterResource(Res.drawable.arrow_back_right),
                     contentDescription = stringResource(Res.string.cd_back),
                     tint = MaterialTheme.colorScheme.onBackground,
                 )
             }
         } else {
-            Box(modifier = Modifier.size(40.dp))
+            Box(modifier = Modifier.size(LocalSarvDimensions.current.dimen40))
         }
 
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen2),
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground,
             )
             if (subtitle != null) {
@@ -90,7 +92,7 @@ fun Header(
         if (action != null) {
             HeaderActionButton(action)
         } else {
-            Box(modifier = Modifier.size(40.dp))
+            Box(modifier = Modifier.size(LocalSarvDimensions.current.dimen40))
         }
     }
 }
@@ -104,9 +106,9 @@ private fun HeaderActionButton(action: HeaderAction) {
             color = MaterialTheme.colorScheme.primary,
             modifier =
                 Modifier
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen8))
                     .clickable(onClick = action.onClick)
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                    .padding(horizontal = LocalSarvDimensions.current.dimen8, vertical = LocalSarvDimensions.current.dimen8),
         )
         return
     }
@@ -114,7 +116,7 @@ private fun HeaderActionButton(action: HeaderAction) {
     Box(
         modifier =
             Modifier
-                .size(40.dp)
+                .size(LocalSarvDimensions.current.dimen40)
                 .clip(CircleShape)
                 .clickable(onClick = action.onClick),
         contentAlignment = Alignment.Center,
@@ -122,6 +124,7 @@ private fun HeaderActionButton(action: HeaderAction) {
         when (action) {
             is HeaderAction.Search -> {
                 Icon(
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
                     painter = painterResource(Res.drawable.search),
                     contentDescription = stringResource(Res.string.cd_search),
                 )
@@ -129,6 +132,7 @@ private fun HeaderActionButton(action: HeaderAction) {
 
             is HeaderAction.Bookmark -> {
                 Icon(
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
                     painter =
                         painterResource(
                             if (action.isBookmarked) {
@@ -149,6 +153,7 @@ private fun HeaderActionButton(action: HeaderAction) {
 
             is HeaderAction.Alarm -> {
                 Icon(
+                    modifier = Modifier.size(LocalSarvDimensions.current.dimen24),
                     painter = painterResource(Res.drawable.notifications),
                     contentDescription = stringResource(Res.string.cd_memorization_review_alarm),
                     tint =

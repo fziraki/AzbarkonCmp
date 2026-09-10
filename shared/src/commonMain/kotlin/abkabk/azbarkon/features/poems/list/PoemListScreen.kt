@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,6 +40,11 @@ import sarv.shared.generated.resources.list_load_error
 import kotlinx.coroutines.flow.flowOf
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+import abkabk.azbarkon.core.ui.LocalWindowSizeClass
+import abkabk.azbarkon.core.ui.WindowWidthSizeClass
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 
 @Composable
 fun PoemListRoot(
@@ -107,10 +111,21 @@ fun PoemListScreen(
             action = HeaderAction.Search(onSearchClick),
         )
 
-        LazyColumn(
+        val columns =
+            when (LocalWindowSizeClass.current.widthSizeClass) {
+                WindowWidthSizeClass.Expanded -> GridCells.Fixed(2)
+                else -> GridCells.Fixed(1)
+            }
+
+        LazyVerticalGrid(
+            columns = columns,
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(
+                horizontal = LocalSarvDimensions.current.dimen16,
+                vertical = LocalSarvDimensions.current.dimen24,
+            ),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
         ) {
             items(
                 count = poems.itemCount,
@@ -121,16 +136,16 @@ fun PoemListScreen(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
+                                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16))
                                 .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .border(
-                                    width = 1.dp,
+                                    width = LocalSarvDimensions.current.dimen1,
                                     color = MaterialTheme.colorScheme.outlineVariant,
-                                    shape = RoundedCornerShape(16.dp),
+                                    shape = RoundedCornerShape(LocalSarvDimensions.current.dimen16),
                                 ).clickable { onPoemClick(poem.id) }
-                                .padding(14.dp),
+                                .padding(LocalSarvDimensions.current.dimen16),
                         text = poem.title,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Start,
                     )
@@ -143,8 +158,8 @@ fun PoemListScreen(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .height(56.dp)
-                                .clip(RoundedCornerShape(16.dp)),
+                                .height(LocalSarvDimensions.current.dimen56)
+                                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen16)),
                     )
                 }
             }

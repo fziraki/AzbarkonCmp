@@ -27,7 +27,8 @@ class MemorizationReviewWorker(
                 return Result.success()
             }
 
-            val dueCount = localDataSource.countDueCards(currentTimeMillis())
+            val poemIds = localDataSource.getPoemIdsByStatus("ACTIVE")
+            val dueCount = poemIds.sumOf { localDataSource.countDueCards(it) }
             if (dueCount > 0) {
                 notificationPresenter.show(dueCount)
             }

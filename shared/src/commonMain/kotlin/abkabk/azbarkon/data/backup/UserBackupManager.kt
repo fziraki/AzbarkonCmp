@@ -9,7 +9,7 @@ import abkabk.azbarkon.data.repository.LocalSavedPoemRepository
 import abkabk.azbarkon.data.repository.LocalUserPreferencesRepository
 import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.model.memorization.SrsCard
-import abkabk.azbarkon.domain.model.memorization.StoredActivePoem
+import abkabk.azbarkon.domain.model.memorization.StoredPoem
 import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import io.github.aakira.napier.Napier
 import kotlinx.serialization.Serializable
@@ -38,14 +38,14 @@ data class UserBackupPrefs(
     val gamePerfectSessions: Int = 0,
     val likedPoemIds: Set<Int> = emptySet(),
     val bookmarkedPoemIds: Set<Int> = emptySet(),
-    val dailyBeytNotificationsEnabled: Boolean = false,
+    val dailyDistichNotificationsEnabled: Boolean = false,
     val memorizationReminderEnabled: Boolean = false,
     val fontSizeScale: Float = 1f,
 )
 
 @Serializable
 data class UserBackupMemorization(
-    val activePoems: List<StoredActivePoem> = emptyList(),
+    val activePoems: List<StoredPoem> = emptyList(),
     val cards: List<SrsCard> = emptyList(),
     val reviewLogs: List<StoredReviewLog> = emptyList(),
 )
@@ -124,8 +124,8 @@ class LocalUserBackupManager(
             gamePerfectSessions = keyValueStore.getInt(LocalUserPreferencesRepository.KEY_GAME_PERFECT_SESSIONS),
             likedPoemIds = keyValueStore.getIntSet(LocalSavedPoemRepository.KEY_LIKED),
             bookmarkedPoemIds = keyValueStore.getIntSet(LocalSavedPoemRepository.KEY_BOOKMARKED),
-            dailyBeytNotificationsEnabled =
-                keyValueStore.getBoolean(LocalUserPreferencesRepository.KEY_DAILY_BEYT_NOTIFICATIONS_ENABLED),
+            dailyDistichNotificationsEnabled =
+                keyValueStore.getBoolean(LocalUserPreferencesRepository.KEY_DAILY_DISTICH_NOTIFICATIONS_ENABLED),
             memorizationReminderEnabled =
                 keyValueStore.getBoolean(LocalUserPreferencesRepository.KEY_MEMORIZATION_REMINDER_ENABLED, default = true),
             fontSizeScale = readFontSizeScale(),
@@ -147,8 +147,8 @@ class LocalUserBackupManager(
         keyValueStore.putIntSet(LocalSavedPoemRepository.KEY_LIKED, prefs.likedPoemIds)
         keyValueStore.putIntSet(LocalSavedPoemRepository.KEY_BOOKMARKED, prefs.bookmarkedPoemIds)
         keyValueStore.putBoolean(
-            LocalUserPreferencesRepository.KEY_DAILY_BEYT_NOTIFICATIONS_ENABLED,
-            prefs.dailyBeytNotificationsEnabled,
+            LocalUserPreferencesRepository.KEY_DAILY_DISTICH_NOTIFICATIONS_ENABLED,
+            prefs.dailyDistichNotificationsEnabled,
         )
         keyValueStore.putBoolean(
             LocalUserPreferencesRepository.KEY_MEMORIZATION_REMINDER_ENABLED,

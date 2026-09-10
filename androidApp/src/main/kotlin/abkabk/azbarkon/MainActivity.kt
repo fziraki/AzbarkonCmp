@@ -1,6 +1,6 @@
 package abkabk.azbarkon
 
-import abkabk.azbarkon.core.notifications.DailyBeytNotificationPayload
+import abkabk.azbarkon.core.notifications.DailyDistichNotificationPayload
 import abkabk.azbarkon.core.notifications.MemorizationReviewNotificationPayload
 import android.content.Intent
 import android.os.Bundle
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun readNavigationIntent(intent: Intent?) {
-        initialPoemId = intent?.getIntExtra(DailyBeytNotificationPayload.KEY_POEM_ID, -1) ?: -1
+        initialPoemId = intent?.getIntExtra(DailyDistichNotificationPayload.KEY_POEM_ID, -1) ?: -1
         openMemorizationPractice =
             intent?.getBooleanExtra(
                 MemorizationReviewNotificationPayload.KEY_OPEN_MEMORIZATION_PRACTICE,

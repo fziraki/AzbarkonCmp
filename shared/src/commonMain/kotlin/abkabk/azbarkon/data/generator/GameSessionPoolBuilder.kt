@@ -18,15 +18,17 @@ internal data class PoemPoolExtraction(
 )
 
 internal object GameSessionPoolBuilder {
-    private const val ORGANIZE_WINDOW_SIZE = 4
+    // Ganjoor DB stores each verse line as a separate row with a unique vorder.
+    // Position 0 = right/first hemistich, position 1 = left/second hemistich.
+    // A distich (بیت) = two consecutive vorders: (N position=0, N+1 position=1).
 
     fun isPoemAcceptable(
         gameType: GameType,
         distichCount: Int,
         organizeCount: Int,
-        totalVerseGroups: Int,
+        totalVerses: Int,
     ): Boolean {
-        if (totalVerseGroups > 0 && distichCount * 2 < totalVerseGroups) return false
+        if (totalVerses > 0 && distichCount * 2 < totalVerses) return false
         return when (gameType) {
             GameType.ORGANIZE_POEM -> organizeCount > 0
             GameType.NEXT_VERSE,
@@ -67,7 +69,7 @@ internal object GameSessionPoolBuilder {
         versesByVorder.keys
             .sorted()
             .mapNotNull { vorder ->
-                val lines = distichLinesAt(versesByVorder, vorder) ?: return@mapNotNull null
+                val lines = extractHemistichs(versesByVorder, vorder) ?: return@mapNotNull null
                 GameDistichCandidate(
                     poemId = poemId,
                     vorder = vorder,
@@ -78,127 +80,47 @@ internal object GameSessionPoolBuilder {
                 )
             }
 
+    /** Extracts windows of 2 consecutive distichs (4 hemistichs) for the organize-poem game. */
     private fun extractOrganizeWindows(
         poemId: Long,
         versesByVorder: Map<Long, List<VerseRow>>,
-    ): List<GameOrganizeWindow> {
-        val coupletWindows =
-            versesByVorder.keys
-                .sorted()
-                .mapNotNull { startVorder ->
-                    val firstDistich = sameVorderDistichLines(versesByVorder, startVorder) ?: return@mapNotNull null
-                    val secondDistich =
-                        sameVorderDistichLines(versesByVorder, startVorder + 1) ?: return@mapNotNull null
-                    GameOrganizeWindow(
-                        poemId = poemId.toInt(),
-                        startVorder = startVorder.toInt(),
-                        lines = firstDistich + secondDistich,
-                    )
-                }
-        if (coupletWindows.isNotEmpty()) return coupletWindows
-
-        val ganjoorWindows =
-            versesByVorder.keys
-                .sorted()
-                .mapNotNull { startVorder ->
-                    val firstDistich = ganjoorAlternatingDistichLines(versesByVorder, startVorder)
-                        ?: return@mapNotNull null
-                    val secondDistich =
-                        ganjoorAlternatingDistichLines(versesByVorder, startVorder + 2)
-                            ?: return@mapNotNull null
-                    GameOrganizeWindow(
-                        poemId = poemId.toInt(),
-                        startVorder = startVorder.toInt(),
-                        lines = firstDistich + secondDistich,
-                    )
-                }
-        if (ganjoorWindows.isNotEmpty()) return ganjoorWindows
-
-        val lineByVorder =
-            versesByVorder
-                .mapNotNull { (vorder, rows) ->
-                    val text =
-                        rows.find { it.position == 0L }?.text
-                            ?: return@mapNotNull null
-                    if (text.length > GameConstants.MAX_HEMISTICH_LENGTH) return@mapNotNull null
-                    vorder to text
-                }.toMap()
-
-        return lineByVorder.keys
+    ): List<GameOrganizeWindow> =
+        versesByVorder.keys
             .sorted()
             .mapNotNull { startVorder ->
-                val lines =
-                    (0L until ORGANIZE_WINDOW_SIZE.toLong()).mapNotNull { offset ->
-                        lineByVorder[startVorder + offset]
-                    }
-                if (lines.size != ORGANIZE_WINDOW_SIZE) return@mapNotNull null
+                val firstDistich = extractHemistichs(versesByVorder, startVorder)
+                    ?: return@mapNotNull null
+                val secondDistich = extractHemistichs(versesByVorder, startVorder + 2)
+                    ?: return@mapNotNull null
                 GameOrganizeWindow(
                     poemId = poemId.toInt(),
                     startVorder = startVorder.toInt(),
-                    lines = lines,
+                    lines = firstDistich + secondDistich,
                 )
             }
-    }
 
-    private fun distichLinesAt(
+    /**
+     * Returns the two hemistichs (right + left) of the distich starting at [vorder],
+     * or null if the verse at [vorder] is the left hemistich of a previous distich.
+     */
+    private fun extractHemistichs(
         versesByVorder: Map<Long, List<VerseRow>>,
         vorder: Long,
     ): List<String>? {
-        sameVorderDistichLines(versesByVorder, vorder)?.let { return it }
-        ganjoorAlternatingDistichLines(versesByVorder, vorder)?.let { return it }
-        return legacyFallbackDistichLines(versesByVorder, vorder)
+        if (isSecondHemistich(versesByVorder, vorder)) return null
+        val first = versesByVorder[vorder]?.find { it.position == 0L }?.text
+        val second = versesByVorder[vorder + 1]?.find { it.position == 1L }?.text
+        val isValid = first != null && second != null &&
+            first.length <= GameConstants.MAX_HEMISTICH_LENGTH &&
+            second.length <= GameConstants.MAX_HEMISTICH_LENGTH
+        return if (isValid) listOf(first!!, second!!) else null
     }
 
-    private fun legacyFallbackDistichLines(
-        versesByVorder: Map<Long, List<VerseRow>>,
-        vorder: Long,
-    ): List<String>? {
-        if (isLegacySecondHemistich(versesByVorder, vorder)) return null
-        return distichPair(versesByVorder, vorder, secondPosition = 0L)
-    }
-
-    private fun distichPair(
-        versesByVorder: Map<Long, List<VerseRow>>,
-        vorder: Long,
-        secondPosition: Long,
-    ): List<String>? {
-        val first = versesByVorder[vorder]?.find { it.position == 0L }?.text ?: return null
-        val second =
-            versesByVorder[vorder + 1]?.find { it.position == secondPosition }?.text
-                ?: return null
-        if (first.length > GameConstants.MAX_HEMISTICH_LENGTH ||
-            second.length > GameConstants.MAX_HEMISTICH_LENGTH
-        ) {
-            return null
-        }
-        return listOf(first, second)
-    }
-
-    private fun sameVorderDistichLines(
-        versesByVorder: Map<Long, List<VerseRow>>,
-        vorder: Long,
-    ): List<String>? {
-        val rows = versesByVorder[vorder] ?: return null
-        val first = rows.find { it.position == 0L }?.text ?: return null
-        val second = rows.find { it.position == 1L }?.text ?: return null
-        return if (first.length > GameConstants.MAX_HEMISTICH_LENGTH ||
-            second.length > GameConstants.MAX_HEMISTICH_LENGTH
-        ) {
-            null
-        } else {
-            listOf(first, second)
-        }
-    }
-
-    private fun ganjoorAlternatingDistichLines(
-        versesByVorder: Map<Long, List<VerseRow>>,
-        vorder: Long,
-    ): List<String>? {
-        if (isGanjoorAlternatingSecondHemistich(versesByVorder, vorder)) return null
-        return distichPair(versesByVorder, vorder, secondPosition = 1L)
-    }
-
-    private fun isGanjoorAlternatingSecondHemistich(
+    /**
+     * True if [vorder] is the left hemistich (position=1) of a distich
+     * whose right hemistich is at vorder-1. These verses should not start a new distich.
+     */
+    private fun isSecondHemistich(
         versesByVorder: Map<Long, List<VerseRow>>,
         vorder: Long,
     ): Boolean {
@@ -207,18 +129,5 @@ internal object GameSessionPoolBuilder {
         return currentRows.none { it.position == 0L } &&
             currentRows.any { it.position == 1L } &&
             previousRows.any { it.position == 0L }
-    }
-
-    private fun isLegacySecondHemistich(
-        versesByVorder: Map<Long, List<VerseRow>>,
-        vorder: Long,
-    ): Boolean {
-        if (vorder <= 0L) return false
-        val previousRows = versesByVorder[vorder - 1] ?: return false
-        val currentRows = versesByVorder[vorder] ?: return false
-        return previousRows.any { it.position == 0L } &&
-            previousRows.none { it.position == 1L } &&
-            currentRows.any { it.position == 0L } &&
-            currentRows.none { it.position == 1L }
     }
 }

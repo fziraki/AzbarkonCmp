@@ -4,13 +4,13 @@ import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.data.backup.UserBackupManager
 import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordinator
 import abkabk.azbarkon.domain.model.ThemeMode
-import abkabk.azbarkon.domain.platform.DailyBeytNotificationScheduler
+import abkabk.azbarkon.domain.platform.DailyDistichNotificationScheduler
 import abkabk.azbarkon.domain.repository.UserPreferencesRepository
 
 class ImportUserDataUseCase(
     private val userBackupManager: UserBackupManager,
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val dailyBeytNotificationScheduler: DailyBeytNotificationScheduler,
+    private val dailyDistichNotificationScheduler: DailyDistichNotificationScheduler,
     private val memorizationReviewNotificationCoordinator: MemorizationReviewNotificationCoordinator,
 ) {
     sealed interface ImportResult {
@@ -28,10 +28,10 @@ class ImportUserDataUseCase(
                 userPreferencesRepository.setFontSizeScale(prefs.fontSizeScale)
                 userPreferencesRepository.adjustCoinBalance(0)
                 memorizationReviewNotificationCoordinator.sync()
-                if (prefs.dailyBeytNotificationsEnabled) {
-                    dailyBeytNotificationScheduler.enable(showImmediately = false)
+                if (prefs.dailyDistichNotificationsEnabled) {
+                    dailyDistichNotificationScheduler.enable(showImmediately = false)
                 } else {
-                    dailyBeytNotificationScheduler.disable()
+                    dailyDistichNotificationScheduler.disable()
                 }
                 ImportResult.Success
             }

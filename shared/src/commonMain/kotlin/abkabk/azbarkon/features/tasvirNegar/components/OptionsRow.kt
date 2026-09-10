@@ -18,11 +18,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,6 +42,8 @@ import sarv.shared.generated.resources.tasvir_font_2
 import sarv.shared.generated.resources.tasvir_font_3
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+import androidx.compose.foundation.layout.fillMaxHeight
 
 @Composable
 fun OptionsRow(
@@ -48,19 +52,20 @@ fun OptionsRow(
     onShapeClick: (Int) -> Unit,
     onFontClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    isExpanded: Boolean = false,
 ) {
     if (mode == OptionPanelMode.None) return
 
     Box(
         modifier =
             modifier
-                .fillMaxWidth()
+                .then(if (isExpanded) Modifier.fillMaxHeight() else Modifier.fillMaxWidth())
                 .background(MaterialTheme.colorScheme.surfaceVariant),
     ) {
         when (mode) {
-            OptionPanelMode.Color -> ColorOptionsRow(onColorClick = onColorClick)
-            OptionPanelMode.Shape -> ShapeOptionsRow(onShapeClick = onShapeClick)
-            OptionPanelMode.Font -> FontOptionsRow(onFontClick = onFontClick)
+            OptionPanelMode.Color -> ColorOptionsRow(onColorClick = onColorClick, isExpanded = isExpanded)
+            OptionPanelMode.Shape -> ShapeOptionsRow(onShapeClick = onShapeClick, isExpanded = isExpanded)
+            OptionPanelMode.Font -> FontOptionsRow(onFontClick = onFontClick, isExpanded = isExpanded)
             OptionPanelMode.None -> Unit
         }
     }
@@ -69,13 +74,35 @@ fun OptionsRow(
 @Composable
 private fun ColorOptionsRow(
     onColorClick: (Int) -> Unit,
+    isExpanded: Boolean = false,
 ) {
-    LazyRow(
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        itemsIndexed(TasvirNegarCatalog.colorOptions) { index, option ->
-            ColorOptionItem(option = option, onClick = { onColorClick(index) })
+    if (isExpanded) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(
+                    horizontal = LocalSarvDimensions.current.dimen8,
+                    vertical = LocalSarvDimensions.current.dimen8,
+                ),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+        ) {
+            itemsIndexed(TasvirNegarCatalog.colorOptions) { index, option ->
+                ColorOptionItem(option = option, onClick = { onColorClick(index) })
+            }
+        }
+    } else {
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = LocalSarvDimensions.current.dimen8,
+                    vertical = LocalSarvDimensions.current.dimen8,
+                ),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+        ) {
+            itemsIndexed(TasvirNegarCatalog.colorOptions) { index, option ->
+                ColorOptionItem(option = option, onClick = { onColorClick(index) })
+            }
         }
     }
 }
@@ -88,9 +115,9 @@ private fun ColorOptionItem(
     Box(
         modifier =
             Modifier
-                .size(40.dp)
+                .size(LocalSarvDimensions.current.dimen40)
                 .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                .border(LocalSarvDimensions.current.dimen1, MaterialTheme.colorScheme.outlineVariant, CircleShape)
                 .then(
                     if (option.color != null) {
                         Modifier.background(option.color)
@@ -105,7 +132,7 @@ private fun ColorOptionItem(
     ) {
         if (option.isCustomPicker) {
             Icon(
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier.size(LocalSarvDimensions.current.dimen36),
                 painter = painterResource(Res.drawable.add_box_24px),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -116,13 +143,25 @@ private fun ColorOptionItem(
 @Composable
 private fun ShapeOptionsRow(
     onShapeClick: (Int) -> Unit,
+    isExpanded: Boolean = false,
 ) {
-    LazyRow(
-        modifier = Modifier.padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        itemsIndexed(TasvirNegarCatalog.shapeOptions) { index, item ->
-            ShapeOptionItem(item = item, onClick = { onShapeClick(index) })
+    if (isExpanded) {
+        LazyColumn(
+            modifier = Modifier.fillMaxHeight().padding(vertical = LocalSarvDimensions.current.dimen8),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+        ) {
+            itemsIndexed(TasvirNegarCatalog.shapeOptions) { index, item ->
+                ShapeOptionItem(item = item, onClick = { onShapeClick(index) })
+            }
+        }
+    } else {
+        LazyRow(
+            modifier = Modifier.fillMaxWidth().padding(vertical = LocalSarvDimensions.current.dimen8),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+        ) {
+            itemsIndexed(TasvirNegarCatalog.shapeOptions) { index, item ->
+                ShapeOptionItem(item = item, onClick = { onShapeClick(index) })
+            }
         }
     }
 }
@@ -135,18 +174,22 @@ private fun ShapeOptionItem(
     Box(
         modifier =
             Modifier
-                .size(56.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .size(LocalSarvDimensions.current.dimen56)
+                .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen8))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
+                .border(
+                    LocalSarvDimensions.current.dimen1,
+                    MaterialTheme.colorScheme.outlineVariant,
+                    RoundedCornerShape(LocalSarvDimensions.current.dimen8),
+                )
                 .clickable(onClick = onClick)
-                .padding(8.dp),
+                .padding(LocalSarvDimensions.current.dimen8),
         contentAlignment = Alignment.Center,
     ) {
         Image(
             painter = tasvirNegarPainter(item.id),
             contentDescription = null,
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(LocalSarvDimensions.current.dimen40),
             contentScale = ContentScale.Fit,
         )
     }
@@ -155,6 +198,7 @@ private fun ShapeOptionItem(
 @Composable
 private fun FontOptionsRow(
     onFontClick: (Int) -> Unit,
+    isExpanded: Boolean = false,
 ) {
     val labels =
         listOf(
@@ -162,30 +206,67 @@ private fun FontOptionsRow(
             stringResource(Res.string.tasvir_font_2) to EditorFontPreset.Yekan,
             stringResource(Res.string.tasvir_font_3) to EditorFontPreset.Tanha,
         )
-    Row(
-        modifier =
-            Modifier
-                .horizontalScroll(rememberScrollState())
-                .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        labels.forEachIndexed { index, (label, preset) ->
-            Box(
-                modifier =
-                    Modifier
-                        .size(56.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
-                        .clickable { onFontClick(index) }
-                        .padding(8.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.titleMedium.copy(fontFamily = editorFontFamily(preset)),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+    if (isExpanded) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(vertical = LocalSarvDimensions.current.dimen8),
+            verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
+        ) {
+            labels.forEachIndexed { index, (label, preset) ->
+                Box(
+                    modifier =
+                        Modifier
+                            .size(LocalSarvDimensions.current.dimen56)
+                            .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen8))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(
+                                LocalSarvDimensions.current.dimen1,
+                                MaterialTheme.colorScheme.outlineVariant,
+                                RoundedCornerShape(LocalSarvDimensions.current.dimen8),
+                            )
+                            .clickable { onFontClick(index) }
+                            .padding(LocalSarvDimensions.current.dimen8),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.titleMedium.copy(fontFamily = editorFontFamily(preset)),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    } else {
+        Row(
+            modifier =
+                Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(vertical = LocalSarvDimensions.current.dimen8),
+            horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen12),
+        ) {
+            labels.forEachIndexed { index, (label, preset) ->
+                Box(
+                    modifier =
+                        Modifier
+                            .size(LocalSarvDimensions.current.dimen56)
+                            .clip(RoundedCornerShape(LocalSarvDimensions.current.dimen8))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(
+                                LocalSarvDimensions.current.dimen1,
+                                MaterialTheme.colorScheme.outlineVariant,
+                                RoundedCornerShape(LocalSarvDimensions.current.dimen8),
+                            )
+                            .clickable { onFontClick(index) }
+                            .padding(LocalSarvDimensions.current.dimen8),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.titleMedium.copy(fontFamily = editorFontFamily(preset)),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }

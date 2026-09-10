@@ -8,10 +8,10 @@ import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordin
 import abkabk.azbarkon.domain.model.ThemeMode
 import abkabk.azbarkon.domain.model.memorization.SrsCard
 import abkabk.azbarkon.domain.model.memorization.SrsGrade
-import abkabk.azbarkon.domain.model.memorization.StoredActivePoem
+import abkabk.azbarkon.domain.model.memorization.StoredPoem
 import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import abkabk.azbarkon.domain.model.profile.ProfileSheet
-import abkabk.azbarkon.testing.FakeDailyBeytNotificationScheduler
+import abkabk.azbarkon.testing.FakeDailyDistichNotificationScheduler
 import abkabk.azbarkon.testing.FakeMemorizationRepository
 import abkabk.azbarkon.testing.FakeMemorizationReviewNotificationScheduler
 import abkabk.azbarkon.testing.FakeNotificationPermissionGateway
@@ -33,26 +33,26 @@ import kotlin.test.Test
 class ProfileViewModelTest {
 
     @Test
-    fun `enabling daily beyt schedules notification when permission granted`() =
+    fun `enabling daily distich schedules notification when permission granted`() =
         runViewModelTest {
-            val scheduler = FakeDailyBeytNotificationScheduler()
+            val scheduler = FakeDailyDistichNotificationScheduler()
             val preferences = FakeUserPreferencesRepository()
             val permissionGateway = FakeNotificationPermissionGateway(granted = true)
             val viewModel = createViewModel(preferences, scheduler, permissionGateway)
 
-            viewModel.onAction(ProfileAction.OnDailyBeytNotificationToggle(enabled = true))
+            viewModel.onAction(ProfileAction.OnDailyDistichNotificationToggle(enabled = true))
 
-            assertThat(viewModel.state.value.isDailyBeytNotificationEnabled).isTrue()
-            assertThat(preferences.isDailyBeytNotificationEnabled()).isTrue()
+            assertThat(viewModel.state.value.isDailyDistichNotificationEnabled).isTrue()
+            assertThat(preferences.isDailyDistichNotificationEnabled()).isTrue()
             assertThat(scheduler.enableCallCount).isEqualTo(1)
             assertThat(scheduler.lastDeliveryHour).isEqualTo(8)
             assertThat(scheduler.lastShowImmediately).isEqualTo(true)
         }
 
     @Test
-    fun `disabling daily beyt cancels notification`() =
+    fun `disabling daily distich cancels notification`() =
         runViewModelTest {
-            val scheduler = FakeDailyBeytNotificationScheduler()
+            val scheduler = FakeDailyDistichNotificationScheduler()
             val preferences = FakeUserPreferencesRepository()
             val viewModel =
                 createViewModel(
@@ -61,18 +61,18 @@ class ProfileViewModelTest {
                     FakeNotificationPermissionGateway(granted = true),
                 )
 
-            viewModel.onAction(ProfileAction.OnDailyBeytNotificationToggle(enabled = true))
-            viewModel.onAction(ProfileAction.OnDailyBeytNotificationToggle(enabled = false))
+            viewModel.onAction(ProfileAction.OnDailyDistichNotificationToggle(enabled = true))
+            viewModel.onAction(ProfileAction.OnDailyDistichNotificationToggle(enabled = false))
 
-            assertThat(viewModel.state.value.isDailyBeytNotificationEnabled).isFalse()
-            assertThat(preferences.isDailyBeytNotificationEnabled()).isFalse()
+            assertThat(viewModel.state.value.isDailyDistichNotificationEnabled).isFalse()
+            assertThat(preferences.isDailyDistichNotificationEnabled()).isFalse()
             assertThat(scheduler.disableCallCount).isEqualTo(1)
         }
 
     @Test
-    fun `permission denial reverts daily beyt toggle`() =
+    fun `permission denial reverts daily distich toggle`() =
         runViewModelTest {
-            val scheduler = FakeDailyBeytNotificationScheduler()
+            val scheduler = FakeDailyDistichNotificationScheduler()
             val preferences = FakeUserPreferencesRepository()
             val viewModel =
                 createViewModel(
@@ -81,16 +81,16 @@ class ProfileViewModelTest {
                     FakeNotificationPermissionGateway(granted = false),
                 )
 
-            viewModel.onAction(ProfileAction.OnDailyBeytNotificationToggle(enabled = true))
+            viewModel.onAction(ProfileAction.OnDailyDistichNotificationToggle(enabled = true))
             viewModel.onAction(
                 ProfileAction.OnNotificationPermissionResult(
                     granted = false,
-                    target = NotificationPermissionTarget.DailyBeyt,
+                    target = NotificationPermissionTarget.DailyDistich,
                 ),
             )
 
-            assertThat(viewModel.state.value.isDailyBeytNotificationEnabled).isFalse()
-            assertThat(preferences.isDailyBeytNotificationEnabled()).isFalse()
+            assertThat(viewModel.state.value.isDailyDistichNotificationEnabled).isFalse()
+            assertThat(preferences.isDailyDistichNotificationEnabled()).isFalse()
             assertThat(scheduler.disableCallCount).isEqualTo(1)
         }
 
@@ -196,8 +196,8 @@ class ProfileViewModelTest {
             viewModel.onAction(ProfileAction.OnImportDataSelected(json))
             viewModel.onAction(ProfileAction.OnConfirmImport)
 
-            assertThat(viewModel.state.value.isDailyBeytNotificationEnabled).isTrue()
-            assertThat(preferences.isDailyBeytNotificationEnabled()).isTrue()
+            assertThat(viewModel.state.value.isDailyDistichNotificationEnabled).isTrue()
+            assertThat(preferences.isDailyDistichNotificationEnabled()).isTrue()
         }
 
     @Test
@@ -212,13 +212,13 @@ class ProfileViewModelTest {
             viewModel.onAction(ProfileAction.OnConfirmImport)
 
             assertThat(viewModel.state.value.pendingImportJson).isNull()
-            assertThat(preferences.isDailyBeytNotificationEnabled()).isFalse()
+            assertThat(preferences.isDailyDistichNotificationEnabled()).isFalse()
             assertThat(backupManager.lastImportedJson).isEqualTo(json)
         }
 
     private fun createViewModel(
         preferences: FakeUserPreferencesRepository = FakeUserPreferencesRepository(),
-        dailyBeytScheduler: FakeDailyBeytNotificationScheduler = FakeDailyBeytNotificationScheduler(),
+        dailyDistichScheduler: FakeDailyDistichNotificationScheduler = FakeDailyDistichNotificationScheduler(),
         permissionGateway: FakeNotificationPermissionGateway = FakeNotificationPermissionGateway(granted = true),
         backupManager: UserBackupManager = FakeUserBackupManager(),
         shareService: abkabk.azbarkon.domain.platform.ShareService = FakeShareService(),
@@ -234,12 +234,12 @@ class ProfileViewModelTest {
         return ProfileViewModel(
             memorizationRepository = memorizationRepository,
             userPreferencesRepository = preferences,
-            dailyBeytNotificationScheduler = dailyBeytScheduler,
+            dailyDistichNotificationScheduler = dailyDistichScheduler,
             notificationPermissionGateway = permissionGateway,
             memorizationReviewNotificationCoordinator = coordinator,
             buildProfileStats = BuildProfileStatsUseCase(memorizationRepository),
             exportUserData = ExportUserDataUseCase(backupManager, shareService),
-            importUserData = ImportUserDataUseCase(backupManager, preferences, dailyBeytScheduler, coordinator),
+            importUserData = ImportUserDataUseCase(backupManager, preferences, dailyDistichScheduler, coordinator),
         )
     }
 
@@ -248,62 +248,74 @@ class ProfileViewModelTest {
 
         override suspend fun isPoemActive(poemId: Int): Boolean = false
 
-        override suspend fun insertActivePoem(
+        override suspend fun insertPoem(
             poemId: Int,
             addedAtMillis: Long,
             status: String,
+            interval: Int,
+            dueDateMillis: Long,
+            consecutiveCorrect: Int,
+            totalCard: Int,
         ) = Unit
 
-        override suspend fun deleteActivePoem(poemId: Int) = Unit
+        override suspend fun deletePoem(poemId: Int) = Unit
 
-        override suspend fun getActivePoemIds(): List<Int> = emptyList()
+        override suspend fun getPoemIdsByStatus(status: String): List<Int> = emptyList()
 
-        override suspend fun getActivePoemAddedAt(poemId: Int): Long? = null
+        override suspend fun getPoemAddedAt(poemId: Int): Long? = null
+
+        override suspend fun getMemorizationPoem(poemId: Int): StoredPoem? = null
 
         override suspend fun insertCards(cards: List<SrsCard>) = Unit
 
         override suspend fun getCardById(cardId: Long): SrsCard? = null
 
-        override suspend fun getDueCards(
-            nowMillis: Long,
-            poemId: Int?,
-        ): List<SrsCard> = emptyList()
+        override suspend fun getDueCards(poemId: Int): List<SrsCard> = emptyList()
 
-        override suspend fun countDueCards(
-            nowMillis: Long,
-            poemId: Int?,
-        ): Int = 0
+        override suspend fun getCardsByPoemId(poemId: Int): List<SrsCard> = emptyList()
 
-        override suspend fun updateCard(card: SrsCard) = Unit
+        override suspend fun countDueCards(poemId: Int): Int = 0
+
+        override suspend fun updatePoemSchedule(
+            poemId: Int,
+            status: String,
+            interval: Int,
+            dueDateMillis: Long,
+            consecutiveCorrect: Int,
+        ) = Unit
 
         override suspend fun countCardsByPoemId(poemId: Int): Int = 0
 
-        override suspend fun countReviewedCardsByPoemId(poemId: Int): Int = 0
-
-        override suspend fun getAverageInterval(poemId: Int): Int = 0
-
-        override suspend fun getMaxConsecutiveCorrect(poemId: Int): Int = 0
+        override suspend fun getLastReviewLogByPoemId(poemId: Int): StoredReviewLog =
+            StoredReviewLog(
+                id = -1, poemId = poemId, reviewRound = 0, minTotalScore = 0.0,
+                userTotalScore = 0.0, cardIndex = 0, sessionReviewed = 0,
+                sessionMistakes = 0, sessionLearned = 0,
+            )
 
         override suspend fun insertReviewLog(
-            cardId: Long,
-            grade: SrsGrade,
-            previousInterval: Int,
-            newInterval: Int,
-            reviewTimeMillis: Long,
+            poemId: Int,
+            reviewRound: Int,
+            minTotalScore: Double,
+            userTotalScore: Double,
+            cardIndex: Int,
+            sessionReviewed: Int,
+            sessionMistakes: Int,
+            sessionLearned: Int,
         ) = Unit
 
         override suspend fun getReviewDayKeys(): List<Int> = emptyList()
 
         override suspend fun countReviewedVerses(): Int = 0
 
-        override suspend fun dumpActivePoems(): List<StoredActivePoem> = emptyList()
+        override suspend fun dumpActivePoems(): List<StoredPoem> = emptyList()
 
         override suspend fun dumpCards(): List<SrsCard> = emptyList()
 
         override suspend fun dumpReviewLogs(): List<StoredReviewLog> = emptyList()
 
         override suspend fun replaceAll(
-            activePoems: List<StoredActivePoem>,
+            activePoems: List<StoredPoem>,
             cards: List<SrsCard>,
             reviewLogs: List<StoredReviewLog>,
         ) = Unit

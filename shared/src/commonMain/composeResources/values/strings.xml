@@ -11,8 +11,7 @@
     <string name="profile_remote_notification_subtitle">دریافت اعلان‌های اخبار سرو</string>
     <string name="treasure">گنجینه</string>
     <string name="games">میدان</string>
-    <string name="profile">من</string>
-    <string name="profile_title">نماگر</string>
+    <string name="profile">نماگر</string>
 
     <string name="games_subtitle">با بازی های ادبی شعر را بهتر یاد بگیر و لذت ببر</string>
     <string name="treasure_subtitle">در میان واژه‌ها قدم بزن</string>
@@ -45,6 +44,10 @@
     <string name="memorization_select_title">انتخاب شعر</string>
     <string name="memorization_quick_start">شروع سریع</string>
     <string name="memorization_active_poems">شعرهای در حال حفظ</string>
+    <string name="memorization_completed_poems">شعرهای حفظ شده</string>
+    <string name="memorization_completed_empty">هنوز شعری حفظ نکرده‌اید</string>
+    <string name="memorization_re_review">مرور دوباره</string>
+    <string name="memorization_review_info_format">مرور %1$d · مرور بعدی %2$d روز دیگر</string>
     <string name="memorization_select_hero_title">اولین شعر خود را از بر کن</string>
     <string name="memorization_select_hero_subtitle">مسیر حفظ شما از همین‌جا آغاز می‌شود</string>
     <string name="memorization_quick_start_desc">یک شعر کوتاه و مناسب برای شروع انتخاب کنید</string>
@@ -65,8 +68,10 @@
     <string name="memorization_card_not_error">کارت مرور یافت نشد</string>
     <string name="memorization_practice_title">تمرین حفظ</string>
     <string name="memorization_practice_progress">%1$d از %2$d</string>
-    <string name="memorization_practice_complete">مرور امروز تمام شد</string>
+    <string name="memorization_practice_complete">اتمام مرور امروز این شعر</string>
     <string name="memorization_practice_done">پایان</string>
+    <string name="memorization_practice_next_poem">مرور شعر بعدی</string>
+    <string name="memorization_practice_close">بستن</string>
     <string name="memorization_typing_hint">ادامه شعر را بنویسید...</string>
     <string name="memorization_submit_typing">بررسی پاسخ</string>
     <string name="memorization_next_verse">مصرع بعدی</string>
@@ -77,11 +82,15 @@
     <string name="memorization_practice_stat_mistakes">اشتباه</string>
     <string name="memorization_practice_stat_today">تا امروز</string>
     <string name="memorization_practice_stat_learned">یادگرفته‌ام</string>
+    <string name="memorization_practice_help">راهنما</string>
+    <string name="memorization_practice_help_title">راهنمای تمرین حفظ</string>
+    <string name="memorization_practice_help_body">شما ابتدای مصرع را روی صفحه می‌بینید و باید با انتخاب یکی از دو حالت نمایش یا صفحه کلید آن را کامل کنید. اگر حالت نمایش را انتخاب کنید مصرع به صورت خودکار کامل می‌شود و شما به میزان یادآوری خود یکی از ۴ گزینه آسان، خوب، سخت یا دوباره را انتخاب می‌کنید. انتخاب «دوباره» به معنای خیلی سخت بودن آن مصرع برای شماست. در صورتی که از حالت صفحه کلید استفاده کنید باید بقیه شعر را خودتان بنویسید و بعد از زدن بررسی، پاسخ شما سنجیده می‌شود و تصمیم گرفته می‌شود که شعر با چند روز فاصله تکرار شود. اگر پنج مرور کامل شعر را با امتیاز آسان بگذرانید شعر به لیست حفظ‌شده‌ها منتقل می‌شود.</string>
     <string name="memorization_grade_again">دوباره</string>
     <string name="memorization_grade_hard">سخت</string>
     <string name="memorization_grade_good">خوب</string>
     <string name="memorization_grade_easy">آسان</string>
     <string name="memorization_due_cards_format">%1$d کارت امروز</string>
+    <string name="memorization_cards_progress_format">%1$d/%2$d</string>
     <string name="memorization_remove_confirm_title">حذف از حفظ</string>
     <string name="memorization_remove_confirm_body">این شعر از فهرست حفظ حذف شود؟ پیشرفت حفظ پاک می‌شود.</string>
     <string name="memorization_already_active">در حال حفظ</string>
@@ -137,9 +146,9 @@
     <string name="whois_poet_desc">شاعر کیست؟</string>
     <string name="whois_poet_score">20</string>
 
-    <string name="slider_beyt_of_day_title">بیت امروز</string>
-    <string name="slider_beyt_of_day_text">که عشق آسان نمود اول\nولی افتاد مشکل ها</string>
-    <string name="slider_beyt_of_day_poet">حافظ</string>
+    <string name="slider_distich_of_day_title">بیت امروز</string>
+    <string name="slider_distich_of_day_text">که عشق آسان نمود اول\nولی افتاد مشکل ها</string>
+    <string name="slider_distich_of_day_poet">حافظ</string>
 
     <string name="slider_challenge_title">چالش روز</string>
     <string name="slider_challenge_text">مصرع بعدی این بیت\nرا بلدی؟</string>
@@ -172,8 +181,8 @@
     <string name="poets_works_section">آثار</string>
     <string name="cd_expand_category">باز کردن دسته</string>
 
-    <string name="profile_daily_beyt_title">بیت روزانه</string>
-    <string name="profile_daily_beyt_subtitle">هر روز ساعت ۸ صبح یک بیت تصادفی</string>
+    <string name="profile_daily_distich_title">بیت روزانه</string>
+    <string name="profile_daily_distich_subtitle">هر روز ساعت ۸ صبح یک بیت تصادفی</string>
     <string name="profile_memorization_reminder_title">یادآور مرور حفظ</string>
     <string name="profile_memorization_reminder_subtitle">هر روز ساعت ۱۰ صبح یادآوری مرور شعرها</string>
     <string name="profile_settings_title">تنظیمات</string>
@@ -200,8 +209,6 @@
     <string name="profile_font_size_bigger">بزرگ‌تر</string>
     <string name="profile_memorization_status_title">وضعیت حفظ شما</string>
     <string name="profile_game_status_title">وضعیت بازی شما</string>
-    <string name="profile_mem_streak">روز پیاپی حفظ</string>
-    <string name="profile_mem_completed_poems">غزل کامل حفظ شده</string>
     <string name="profile_game_streak">روز پیاپی بازی</string>
     <string name="profile_game_total_points">کل امتیاز</string>
     <string name="profile_view_all_badges">مشاهده همه</string>
@@ -213,8 +220,8 @@
     <string name="profile_badges_title">نشان‌ها</string>
     <string name="cd_settings">تنظیمات</string>
     <string name="cd_levels">سطوح</string>
-    <string name="daily_beyt_notification_title">بیت امروز</string>
-    <string name="daily_beyt_notification_channel_name">بیت روزانه</string>
+    <string name="daily_distich_notification_title">بیت امروز</string>
+    <string name="daily_distich_notification_channel_name">بیت روزانه</string>
     <string name="poet_bio_read_more">بیشتر</string>
     <string name="poet_bio_read_less">کمتر</string>
     <string name="profile_version">نسخه %1$s</string>

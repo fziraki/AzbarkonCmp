@@ -41,7 +41,7 @@ sealed interface HomeAction {
 
     data object OnChallengeClick : HomeAction
 
-    data object OnBeytOfDayClick : HomeAction
+    data object OnDistichOfDayClick : HomeAction
 }
 
 sealed interface HomeEvent {

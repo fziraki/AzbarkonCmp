@@ -3,9 +3,9 @@ package abkabk.azbarkon.testing
 import abkabk.azbarkon.core.domain.result.DataError
 import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.domain.model.RandomDistich
-import abkabk.azbarkon.domain.repository.DailyBeytRepository
+import abkabk.azbarkon.domain.repository.DailyDistichRepository
 
-class FakeDailyBeytRepository : DailyBeytRepository {
+class FakeDailyDistichRepository : DailyDistichRepository {
     var shouldFail: Boolean = false
     var todayDistich: RandomDistich = RandomDistich(
         poemId = 1,
