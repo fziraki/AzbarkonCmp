@@ -22,12 +22,6 @@ jobs:
       - name: Grant permission
         run: chmod +x gradlew
 
-      - name: Run Detekt
-        run: ./gradlew detektCheckAll
-
-      - name: Run Tests
-        run: ./gradlew test
-
       - name: Decode Keystore
         run: |
           echo -n "${{ secrets.SIGNING_KEYSTORE_BASE64 }}" | base64 --decode > androidApp/azbarkon.jks
@@ -35,6 +29,12 @@ jobs:
       - name: Decode google-services.json
         run: |
           echo -n "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > androidApp/google-services.json
+
+      - name: Run Detekt
+        run: ./gradlew detektCheckAll
+
+      - name: Run Tests
+        run: ./gradlew test
 
       - name: Build Release APK
         env:
