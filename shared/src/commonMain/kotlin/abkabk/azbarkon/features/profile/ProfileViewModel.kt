@@ -146,6 +146,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             when (importUserData(json)) {
                 is ImportUserDataUseCase.ImportResult.Success -> {
+                    memorizationRepository.notifyDataChanged()
                     val prefs = userPreferencesRepository
                     setState {
                         copy(

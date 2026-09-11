@@ -51,4 +51,6 @@ interface MemorizationRepository {
 
     suspend fun getLastReviewLog(poemId: Int): StoredReviewLog
 
+    fun notifyDataChanged()
+
 }
