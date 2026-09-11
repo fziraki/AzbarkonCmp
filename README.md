@@ -1,27 +1,24 @@
-<p align="center">
-  <img src="androidApp/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="192"  alt="sarv logo"/>
-</p>
-
-<h1 align="center">Sarv — سرو</h1>
-
-<p align="center">
+<p>
+  <img src="androidApp/src/main/ic_launcher-playstore.png" width="96" alt="sarv logo" align="left" />
+  <b>Sarv — سرو</b><br>
   A modern Persian poetry app for reading, learning, and playing.
 </p>
+<br clear="all"/>
 
 ---
 
 ## Screenshots
 
-<p align="center">
-  <img src="screenshots/home.jpg" width="240" />&nbsp;&nbsp;
-  <img src="screenshots/poets.jpg" width="240" />&nbsp;&nbsp;
-  <img src="screenshots/games.jpg" width="240" />&nbsp;&nbsp;
-  <img src="screenshots/profile.jpg" width="240" />
+<p float="left">
+  <img src="screenshots/home.png" width="192" />&nbsp;&nbsp;
+  <img src="screenshots/poets.png" width="192" />&nbsp;&nbsp;
+  <img src="screenshots/games.png" width="192" />&nbsp;&nbsp;
+  <img src="screenshots/profile.png" width="192" />
 </p>
 
-<p align="center"><em>Responsive layout — optimized for phones and tablets</em></p>
+<p align="left"><em>Responsive layout — optimized for phones and tablets</em></p>
 
-<p align="center">
+<p float="left">
   <img src="screenshots/tablet.png" width="600" />
 </p>
 
