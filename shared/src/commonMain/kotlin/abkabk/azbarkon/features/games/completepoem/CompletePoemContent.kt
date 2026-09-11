@@ -119,7 +119,10 @@ private fun CompletePoemOptionGrid(
     val firstCorrectIndex = question.options.indexOf(question.correctWords.first)
     val secondCorrectIndex = question.options.indexOf(question.correctWords.second)
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+    ) {
     question.options.chunked(2).forEach { rowWords ->
         Row(
             modifier = Modifier.fillMaxWidth(),

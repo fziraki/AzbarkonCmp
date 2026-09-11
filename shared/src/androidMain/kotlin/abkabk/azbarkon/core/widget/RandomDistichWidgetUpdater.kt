@@ -19,6 +19,10 @@ class RandomDistichWidgetUpdater :
     private val dailyDistichRepository: DailyDistichRepository by inject()
     private val preferences: RandomDistichWidgetPreferences by inject()
 
+    private companion object {
+        const val COPYrequestCode = 10_000
+    }
+
     suspend fun update(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -83,6 +87,10 @@ class RandomDistichWidgetUpdater :
 
             if (distich != null) {
                 setOnClickPendingIntent(
+                    R.id.widget_copy,
+                    copyPendingIntent(context, appWidgetId, distich),
+                )
+                setOnClickPendingIntent(
                     R.id.widget_content,
                     openPoemPendingIntent(context, distich.poemId),
                 )
@@ -92,6 +100,25 @@ class RandomDistichWidgetUpdater :
                 )
             }
         }
+
+    private fun copyPendingIntent(
+        context: Context,
+        appWidgetId: Int,
+        distich: RandomDistich,
+    ): PendingIntent {
+        val intent =
+            Intent(context, RandomDistichWidgetProvider::class.java).apply {
+                action = RandomDistichWidgetConstants.ACTION_COPY
+                putExtra(RandomDistichWidgetConstants.EXTRA_APP_WIDGET_ID, appWidgetId)
+                putExtra(RandomDistichWidgetConstants.EXTRA_COPY_TEXT, "${distich.rightText}\n${distich.leftText}\n${distich.poetName}")
+            }
+        return PendingIntent.getBroadcast(
+            context,
+            appWidgetId + COPYrequestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
 
     private fun refreshPendingIntent(
         context: Context,

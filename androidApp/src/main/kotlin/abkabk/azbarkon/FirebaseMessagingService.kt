@@ -17,10 +17,6 @@ class FirebaseMessagingService : FirebaseMessagingService() {
         showNotification(title, body, message.messageId)
     }
 
-    override fun onNewToken(token: String) {
-        // ponytail: token upload skipped until a server endpoint exists
-    }
-
     @SuppressLint("MissingPermission") // guarded by canPostNotifications()
     private fun showNotification(title: String, body: String, messageId: String?) {
         if (!canPostNotifications()) return

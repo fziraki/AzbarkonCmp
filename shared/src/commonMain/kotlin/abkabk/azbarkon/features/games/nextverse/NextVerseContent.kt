@@ -129,7 +129,10 @@ private fun NextVerseOptionList(
     onOptionSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+    ) {
     question.options.forEachIndexed { index, option ->
         val state = optionStateForIndex(
             index = index,
