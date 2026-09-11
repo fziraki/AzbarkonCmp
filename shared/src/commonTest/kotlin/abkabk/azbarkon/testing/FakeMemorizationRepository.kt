@@ -86,4 +86,6 @@ class FakeMemorizationRepository : MemorizationRepository {
     ): QuickStartTarget = QuickStartTarget()
 
     override suspend fun getLastReviewLog(poemId: Int): StoredReviewLog = lastReviewLog
+
+    override fun notifyDataChanged() {}
 }

@@ -71,7 +71,7 @@ class OfflineFirstMemorizationRepository(
 
     override suspend fun addPoem(poemId: Int): EmptyResult<MemorizationError> {
         if (localDataSource.isPoemActive(poemId)) {
-            notifySummaryChanged()
+            notifyDataChanged()
             return Result.Success(Unit)
         }
 
@@ -97,7 +97,7 @@ class OfflineFirstMemorizationRepository(
                         totalCard = cards.size
                     )
                     localDataSource.insertCards(cards)
-                    notifySummaryChanged()
+                    notifyDataChanged()
                     syncReviewNotifications()
                     Result.Success(Unit)
                 }
@@ -108,7 +108,7 @@ class OfflineFirstMemorizationRepository(
     override suspend fun removePoem(poemId: Int): EmptyResult<MemorizationError> =
         try {
             localDataSource.deletePoem(poemId)
-            notifySummaryChanged()
+            notifyDataChanged()
             syncReviewNotifications()
             Result.Success(Unit)
         } catch (e: IllegalStateException) {
@@ -163,7 +163,7 @@ class OfflineFirstMemorizationRepository(
             sessionLearned = sessionLearned
         )
 
-        notifySummaryChanged()
+        notifyDataChanged()
         syncReviewNotifications()
         return Result.Success(Unit)
     }
@@ -191,7 +191,7 @@ class OfflineFirstMemorizationRepository(
             dueDateMillis = result.dueDateMillis,
             consecutiveCorrect = result.consecutiveEasy
         )
-        notifySummaryChanged()
+        notifyDataChanged()
         syncReviewNotifications()
         return Result.Success(result.interval)
     }
@@ -270,7 +270,7 @@ class OfflineFirstMemorizationRepository(
         )
     }
 
-    private fun notifySummaryChanged() {
+    override fun notifyDataChanged() {
         summaryRefresh.tryEmit(Unit)
     }
 
