@@ -7,7 +7,6 @@ import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.memorization.MemorizationReviewNotificationCoordinator
 import abkabk.azbarkon.domain.model.ThemeMode
 import abkabk.azbarkon.domain.model.memorization.SrsCard
-import abkabk.azbarkon.domain.model.memorization.SrsGrade
 import abkabk.azbarkon.domain.model.memorization.StoredPoem
 import abkabk.azbarkon.domain.model.memorization.StoredReviewLog
 import abkabk.azbarkon.domain.model.profile.ProfileSheet
@@ -149,7 +148,7 @@ class ProfileViewModelTest {
             viewModel.onAction(ProfileAction.OnExportData)
 
             assertThat(shareService.lastSharedFileBytes).isNotNull()
-            assertThat(shareService.lastSharedFileName).isEqualTo("azbarkon-backup.json")
+            assertThat(shareService.lastSharedFileName).isEqualTo("sarv-backup.json")
             assertThat(shareService.lastSharedFileMimeType).isEqualTo("application/json")
         }
 
@@ -303,8 +302,6 @@ class ProfileViewModelTest {
             sessionMistakes: Int,
             sessionLearned: Int,
         ) = Unit
-
-        override suspend fun getReviewDayKeys(): List<Int> = emptyList()
 
         override suspend fun countReviewedVerses(): Int = 0
 

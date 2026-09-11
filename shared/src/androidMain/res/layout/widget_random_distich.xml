@@ -121,4 +121,16 @@
         android:visibility="gone"
         />
 
+    <ImageView
+        android:id="@+id/widget_copy"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/widget_copy_content_description"
+        android:src="@drawable/ic_widget_copy"
+        />
+
 </RelativeLayout>

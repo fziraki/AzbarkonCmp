@@ -65,7 +65,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.arrow_drop_down
@@ -83,7 +82,6 @@ import org.koin.core.parameter.parametersOf
 import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
 import abkabk.azbarkon.core.ui.LocalWindowSizeClass
 import abkabk.azbarkon.core.ui.WindowWidthSizeClass
-import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 
 private const val RING_SPIN_DURATION_MS = 3000
@@ -269,9 +267,10 @@ private fun PoemDetailExpandedLayout(
     state: PoemDetailState,
     onAction: (PoemDetailAction) -> Unit,
     paddingValues: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
             .padding(
                 top = paddingValues.calculateTopPadding(),
                 bottom = paddingValues.calculateBottomPadding(),
@@ -322,10 +321,11 @@ private fun PoemDetailCompactLayout(
     listState: LazyListState,
     state: PoemDetailState,
     paddingValues: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
             .padding(
                 top = paddingValues.calculateTopPadding(),
                 bottom = paddingValues.calculateBottomPadding(),
@@ -357,10 +357,11 @@ private fun PoemDetailBottomBar(
     keyboardController: SoftwareKeyboardController?,
     focusManager: FocusManager,
     onAction: (PoemDetailAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
-            Modifier
+            modifier
                 .keyboardAboveIme()
                 .fillMaxWidth()
                 .padding(horizontal = LocalSarvDimensions.current.dimen16)
@@ -424,10 +425,11 @@ private fun TrackSelector(
     tracks: List<TrackPlaybackUiState>,
     selected: TrackPlaybackUiState,
     onSelectTrack: (PoemAudioTrack) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
-    Box {
+    Box(modifier = modifier) {
         Row(
             modifier =
                 Modifier
@@ -571,12 +573,13 @@ private fun PlayPauseButton(
     isPlaying: Boolean,
     isLoading: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     val iconTint = MaterialTheme.colorScheme.tertiary
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(LocalSarvDimensions.current.dimen48)
             .clip(CircleShape)
             .clickable(enabled = !isLoading, onClick = onClick),

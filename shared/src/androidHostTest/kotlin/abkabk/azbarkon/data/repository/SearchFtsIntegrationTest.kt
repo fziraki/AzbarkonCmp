@@ -4,9 +4,7 @@ import abkabk.azbarkon.core.domain.result.Result
 import abkabk.azbarkon.data.local.SqlDelightSearchLocalDataSource
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import assertk.assertThat
-import assertk.assertions.hasSize
 import assertk.assertions.isGreaterThan
-import assertk.assertions.isSuccess
 import com.sarv.db.SarvDatabase
 import java.io.File
 import kotlinx.coroutines.runBlocking

@@ -3,7 +3,6 @@ package abkabk.azbarkon.features.games.session
 import abkabk.azbarkon.core.uidata.BaseScreen
 import abkabk.azbarkon.core.uidata.UiScreenState
 import abkabk.azbarkon.domain.model.games.GameConstants
-import abkabk.azbarkon.domain.model.games.GameType
 import abkabk.azbarkon.ui.components.SarvButtonDefaults
 import abkabk.azbarkon.ui.components.Header
 import abkabk.azbarkon.ui.theme.SarvTheme
@@ -39,9 +38,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import sarv.shared.generated.resources.Res
-import sarv.shared.generated.resources.complete_poem_title
 import sarv.shared.generated.resources.game_back_to_list
 import sarv.shared.generated.resources.game_replay
 import sarv.shared.generated.resources.game_result_correct
@@ -53,14 +50,10 @@ import sarv.shared.generated.resources.game_result_progress_total_questions_form
 import sarv.shared.generated.resources.game_result_score
 import sarv.shared.generated.resources.game_result_title
 import sarv.shared.generated.resources.game_result_wrong
-import sarv.shared.generated.resources.next_line_title
-import sarv.shared.generated.resources.poetry_arrangement_title
 import sarv.shared.generated.resources.replay
-import sarv.shared.generated.resources.whois_poet_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
-import androidx.compose.foundation.layout.offset
 
 private const val PERCENT_MULTIPLIER = 100
 

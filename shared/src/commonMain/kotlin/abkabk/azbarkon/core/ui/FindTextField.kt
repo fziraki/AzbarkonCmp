@@ -23,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.search
 import org.jetbrains.compose.resources.painterResource

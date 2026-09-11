@@ -80,8 +80,9 @@ private fun NextVersePoemCard(
     question: GameQuestion.NextVerse,
     selectedOptionIndex: Int?,
     answerPhase: QuizAnswerPhase,
+    modifier: Modifier = Modifier,
 ) {
-    GamePoemCard(poetName = question.poetName) {
+    GamePoemCard(poetName = question.poetName, modifier = modifier) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = question.promptLine,
@@ -126,7 +127,12 @@ private fun NextVerseOptionList(
     answerPhase: QuizAnswerPhase,
     enabled: Boolean,
     onOptionSelect: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
+    ) {
     question.options.forEachIndexed { index, option ->
         val state = optionStateForIndex(
             index = index,
@@ -151,5 +157,6 @@ private fun NextVerseOptionList(
             color = contentColor,
             textAlign = TextAlign.Center,
         )
+    }
     }
 }

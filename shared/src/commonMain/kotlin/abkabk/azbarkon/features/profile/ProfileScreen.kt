@@ -15,7 +15,6 @@ import abkabk.azbarkon.ui.theme.SarvTheme
 import abkabk.azbarkon.core.ui.LocalWindowSizeClass
 import abkabk.azbarkon.core.ui.WindowWidthSizeClass
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth

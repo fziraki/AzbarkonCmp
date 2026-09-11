@@ -6,8 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AA000001 /* FirebaseCore */ = {isa = PBXBuildFile; productRef = AA000003 /* FirebaseCore */; };
+		AA000002 /* FirebaseCrashlytics */ = {isa = PBXBuildFile; productRef = AA000004 /* FirebaseCrashlytics */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		18F2784056ADE5F60BE55D28 /* Sarv.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sarv.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000005 /* firebase-ios-sdk */ = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git"; versionRequirement = upToNextMajorVersion = 11.8.0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -41,6 +47,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000001 /* FirebaseCore */,
+				AA000002 /* FirebaseCrashlytics */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +93,8 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				AA000003 /* FirebaseCore */,
+				AA000004 /* FirebaseCrashlytics */,
 			);
 			productName = iosApp;
 			productReference = 18F2784056ADE5F60BE55D28 /* Sarv.app */;
@@ -114,6 +124,9 @@
 			);
 			mainGroup = 59C4E6893D635A870F4F4330;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AA000005 /* firebase-ios-sdk */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A431DEAA8E80890C4E0E2AFB /* Products */;
 			projectDirPath = "";
@@ -368,6 +381,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA000003 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseCore;
+		};
+		AA000004 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseCrashlytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FC11D0AA28484B20D92DB565 /* Project object */;
 }

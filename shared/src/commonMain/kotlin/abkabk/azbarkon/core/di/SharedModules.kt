@@ -16,6 +16,7 @@ val sharedModules: List<Module> =
         userPreferencesDataModule,
         memorizationDataModule,
         gamesDataModule,
+        updateDataModule,
         useCaseModule,
         homePresentationModule,
         profilePresentationModule,

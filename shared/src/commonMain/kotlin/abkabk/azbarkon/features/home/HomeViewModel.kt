@@ -8,6 +8,9 @@ import abkabk.azbarkon.core.uidata.toUiText
 import abkabk.azbarkon.domain.repository.DailyDistichRepository
 import abkabk.azbarkon.domain.repository.MemorizationRepository
 import abkabk.azbarkon.domain.repository.PoetRepository
+import abkabk.azbarkon.domain.platform.AppUpdateRepository
+import abkabk.azbarkon.features.profile.util.platformName
+import abkabk.azbarkon.features.profile.util.versionCode
 import androidx.lifecycle.viewModelScope
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.launchIn
@@ -18,6 +21,7 @@ class HomeViewModel(
     private val poetRepository: PoetRepository,
     private val memorizationRepository: MemorizationRepository,
     private val dailyDistichRepository: DailyDistichRepository,
+    private val appUpdateRepository: AppUpdateRepository,
 ) : BaseViewModel<HomeAction, HomeState, HomeEvent>(
         initialState = HomeState(),
     ) {
@@ -25,6 +29,7 @@ class HomeViewModel(
         onAction(HomeAction.OnLoad)
         observeMemorizationSummary()
         loadTodayDistich()
+        checkForUpdate()
     }
 
     override fun onAction(action: HomeAction) {
@@ -95,6 +100,10 @@ class HomeViewModel(
                     }
                 }
             }
+
+            HomeAction.OnDismissUpdate -> {
+                setState { copy(updateType = UpdateType.NONE) }
+            }
         }
     }
 
@@ -158,6 +167,45 @@ class HomeViewModel(
                         )
                     }
                 }
+        }
+    }
+
+    private fun checkForUpdate() {
+        viewModelScope.launch {
+            try {
+                Napier.d("UpdateCheck: starting...")
+                appUpdateRepository.getUpdateConfig()
+                    .onSuccess { config ->
+                        val currentVersion = versionCode()
+                        val platform = platformName()
+                        val platformConfig = if (platform == "android") {
+                            config.android
+                        } else {
+                            config.ios
+                        }
+
+                        Napier.d(
+                            "UpdateCheck: platform=$platform, " +
+                                "currentVersion=$currentVersion, " +
+                                "stable=${platformConfig.stableVersionCode}, " +
+                                "last=${platformConfig.lastVersionCode}",
+                        )
+
+                        val updateType = when {
+                            currentVersion < platformConfig.stableVersionCode -> UpdateType.MANDATORY
+                            currentVersion < platformConfig.lastVersionCode -> UpdateType.OPTIONAL
+                            else -> UpdateType.NONE
+                        }
+
+                        Napier.d("UpdateCheck: updateType=$updateType")
+                        setState { copy(updateType = updateType) }
+                    }
+                    .onFailure { error ->
+                        Napier.e("UpdateCheck: failed - $error")
+                    }
+            } catch (_: Exception) {
+                Napier.e("UpdateCheck: skipped (platform not available)")
+            }
         }
     }
 }

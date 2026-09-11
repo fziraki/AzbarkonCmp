@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteException
 import com.sarv.db.SarvDatabase
 import io.github.aakira.napier.Napier
 import java.io.File
-import java.io.IOException
 import java.util.zip.ZipInputStream
 
 internal const val DATABASE_NAME = "ganjoor.s3db"

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -26,12 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.clear_cancel
 import sarv.shared.generated.resources.tasvir_pick_color
 import org.jetbrains.compose.resources.stringResource
 import abkabk.azbarkon.core.designsystem.LocalSarvDimensions
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 private const val LABEL_WEIGHT = 0.2f
 private const val SLIDER_WEIGHT = 0.8f
@@ -43,10 +42,12 @@ expect fun TasvirCustomColorPicker(
     onColorSelect: (Color) -> Unit,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HsvColorPickerContent(
     onDismiss: () -> Unit,
     onColorSelect: (Color) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var hue by remember { mutableFloatStateOf(0f) }
     var saturation by remember { mutableFloatStateOf(1f) }
@@ -59,7 +60,7 @@ internal fun HsvColorPickerContent(
     ) {
         Column(
             modifier =
-                Modifier
+                modifier
                     .fillMaxWidth()
                     .padding(horizontal = LocalSarvDimensions.current.dimen16)
                     .padding(bottom = LocalSarvDimensions.current.dimen24),
@@ -110,10 +111,11 @@ private fun ColorSlider(
     label: String,
     value: Float,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    modifier: Modifier = Modifier,
     onValueChange: (Float) -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8),
         verticalAlignment = Alignment.CenterVertically,
     ) {

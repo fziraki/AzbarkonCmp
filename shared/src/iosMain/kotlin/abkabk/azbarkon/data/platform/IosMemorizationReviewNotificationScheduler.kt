@@ -1,7 +1,6 @@
 package abkabk.azbarkon.data.platform
 
 import abkabk.azbarkon.core.notifications.MemorizationReviewNotificationPayload
-import abkabk.azbarkon.core.util.currentTimeMillis
 import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.platform.MemorizationReviewNotificationScheduler
 import kotlinx.coroutines.CoroutineScope
@@ -59,7 +58,7 @@ class IosMemorizationReviewNotificationScheduler(
         )
 
         val poemIds = localDataSource.getPoemIdsByStatus("ACTIVE")
-        val dueCount = poemIds.sumOf { localDataSource.countDueCards(currentTimeMillis(), it) }
+        val dueCount = poemIds.sumOf { localDataSource.countDueCards(it) }
         if (dueCount <= 0) return
 
         val content =

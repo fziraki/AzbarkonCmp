@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import sarv.shared.generated.resources.Res
 import sarv.shared.generated.resources.arrow_back_right
 import sarv.shared.generated.resources.bookmark

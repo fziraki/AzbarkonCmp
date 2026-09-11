@@ -33,12 +33,12 @@ class BadgeCatalogTest {
     }
 
     @Test
-    fun `hundred verses badge earned at 100 reviewed verses`() {
+    fun `hundred verses badge earned at 200 reviewed verses`() {
         assertThat(
             BadgeCatalog.resolveEarned(
                 badgeId = 2,
                 hasCompletedGhazal = false,
-                reviewedVersesCount = 99,
+                reviewedVersesCount = 199,
                 gameVisitStreak = 0,
                 completedPoemCount = 0,
                 perfectGameSessions = 0,
@@ -49,7 +49,7 @@ class BadgeCatalogTest {
             BadgeCatalog.resolveEarned(
                 badgeId = 2,
                 hasCompletedGhazal = false,
-                reviewedVersesCount = 100,
+                reviewedVersesCount = 200,
                 gameVisitStreak = 0,
                 completedPoemCount = 0,
                 perfectGameSessions = 0,
@@ -140,7 +140,7 @@ class BadgeCatalogTest {
             BadgeCatalog.toBadgeUi(
                 badge = badge,
                 hasCompletedGhazal = false,
-                reviewedVersesCount = 100,
+                reviewedVersesCount = 200,
                 gameVisitStreak = 0,
                 completedPoemCount = 0,
                 perfectGameSessions = 0,

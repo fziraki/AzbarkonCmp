@@ -104,8 +104,9 @@ private fun FindPoetPoemCard(
     question: GameQuestion.FindPoet,
     poetName: String,
     poetNameColor: Color?,
+    modifier: Modifier = Modifier,
 ) {
-    GamePoemCard(poetName = poetName, poetNameColor = poetNameColor) {
+    GamePoemCard(poetName = poetName, poetNameColor = poetNameColor, modifier = modifier) {
         Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -133,8 +134,9 @@ private fun FindPoetOptionGrid(
     answerPhase: QuizAnswerPhase,
     enabled: Boolean,
     onPoetSelect: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
         question.options.chunked(2).forEach { rowOptions ->
             Row(
                 modifier = Modifier.fillMaxWidth(),

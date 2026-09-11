@@ -4,7 +4,6 @@ import abkabk.azbarkon.domain.model.games.GameQuestion
 import abkabk.azbarkon.domain.model.games.OrganizeLine
 import abkabk.azbarkon.features.games.components.GameInstructionText
 import abkabk.azbarkon.features.games.components.GameOptionState
-import abkabk.azbarkon.features.games.components.GamePoemCard
 import abkabk.azbarkon.features.games.components.GamePoemCorrectRevealText
 import abkabk.azbarkon.features.games.components.gameOptionColors
 import abkabk.azbarkon.features.games.components.gamePoemUserAnswerTextColor
@@ -121,13 +120,14 @@ private fun OrganizePoemReorderSection(
     reorderEnabled: Boolean,
     answerPhase: QuizAnswerPhase,
     onReorder: (Int, Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     ReorderablePoemLines(
         items = orderedLineIds,
         pinnedItemId = pinnedLineId,
         enabled = reorderEnabled,
         onReorder = onReorder,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) { index, lineId ->
         val line = lineById[lineId] ?: return@ReorderablePoemLines
         val isPinned = lineId == pinnedLineId
@@ -190,8 +190,9 @@ private fun OrganizePoemCardContent(
     orderedLineIds: List<String>,
     initialOrderedLineIds: List<String>,
     answerPhase: QuizAnswerPhase,
+    modifier: Modifier = Modifier,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(LocalSarvDimensions.current.dimen8)) {
         if (answerPhase == QuizAnswerPhase.Answering) {
             if (orderedLineIds == initialOrderedLineIds) {
                 repeat(POEM_LINE_COUNT) {

@@ -16,10 +16,8 @@ import platform.AVFoundation.pause
 import platform.AVFoundation.play
 import platform.AVFoundation.rate
 import platform.AVFoundation.seekToTime
-import platform.CoreMedia.CMTimeCompare
 import platform.CoreMedia.CMTimeGetSeconds
 import platform.CoreMedia.CMTimeMakeWithSeconds
-import platform.CoreMedia.kCMTimeIndefinite
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
 import platform.Foundation.NSURL

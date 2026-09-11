@@ -39,7 +39,8 @@ object SrsScheduler {
     fun calculatePoemInterval(
         minTotalScore: Double,
         userTotalScore: Double,
-        consecutiveEasy: Int
+        consecutiveEasy: Int,
+        clock: Clock = Clock.System,
     ): ReviewResult {
 
         var interval: Int = 0
@@ -64,13 +65,13 @@ object SrsScheduler {
         return ReviewResult(
             interval = interval,
             consecutiveEasy = newConsecutiveEasy,
-            dueDateMillis = nextDeliveryMillis(interval = interval)
+            dueDateMillis = nextDeliveryMillis(interval = interval, clock = clock)
         )
     }
 
-    private fun nextDeliveryMillis(interval: Int): Long {
+    private fun nextDeliveryMillis(interval: Int, clock: Clock): Long {
         val timeZone = TimeZone.currentSystemDefault()
-        val tomorrow = Clock.System.now()
+        val tomorrow = clock.now()
             .toLocalDateTime(timeZone)
             .date
             .plus(DatePeriod(days = interval))

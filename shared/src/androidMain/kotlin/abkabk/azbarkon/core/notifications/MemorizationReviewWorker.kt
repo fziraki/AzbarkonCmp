@@ -2,7 +2,6 @@ package abkabk.azbarkon.core.notifications
 
 import abkabk.azbarkon.domain.datasource.MemorizationLocalDataSource
 import abkabk.azbarkon.domain.platform.MemorizationReviewNotificationScheduler
-import abkabk.azbarkon.core.util.currentTimeMillis
 import abkabk.azbarkon.shared.R
 import android.content.Context
 import androidx.work.CoroutineWorker

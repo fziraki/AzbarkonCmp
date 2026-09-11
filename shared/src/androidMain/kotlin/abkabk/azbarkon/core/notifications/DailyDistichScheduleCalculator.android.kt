@@ -1,7 +1,6 @@
 package abkabk.azbarkon.core.notifications
 
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 internal object DailyDistichScheduleCalculator {
     fun initialDelayMillis(
@@ -22,6 +21,4 @@ internal object DailyDistichScheduleCalculator {
     }
 
     const val PERIODIC_INTERVAL_HOURS: Long = 24
-
-    val repeatIntervalMillis: Long = TimeUnit.HOURS.toMillis(PERIODIC_INTERVAL_HOURS)
 }

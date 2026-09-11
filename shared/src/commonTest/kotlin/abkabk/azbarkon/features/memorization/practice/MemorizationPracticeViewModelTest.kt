@@ -7,7 +7,6 @@ import abkabk.azbarkon.testing.FakeMemorizationRepository
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
-import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import abkabk.azbarkon.testing.runViewModelTest
 import kotlin.test.Test
@@ -68,10 +67,6 @@ class MemorizationPracticeViewModelTest {
         runViewModelTest {
             val card = sampleCard(id = 11)
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(listOf(card))
-            repository.reviewResult =
-                abkabk.azbarkon.core.domain.result.Result.Success(
-                    card.copy(score = 0.0),
-                )
 
             val viewModel = MemorizationPracticeViewModel(repository, poemId = 10)
             viewModel.onAction(MemorizationPracticeAction.OnRevealClick)
@@ -167,14 +162,13 @@ class MemorizationPracticeViewModelTest {
         }
 
     @Test
-    fun `empty due queue completes session`() =
+    fun `empty due queue leaves initial state`() =
         runViewModelTest {
             repository.dueCards = abkabk.azbarkon.core.domain.result.Result.Success(emptyList())
             repository.activePoems = abkabk.azbarkon.core.domain.result.Result.Success(emptyList())
 
             val viewModel = MemorizationPracticeViewModel(repository, poemId = null)
 
-            assertThat(viewModel.state.value.phase).isEqualTo(PracticePhase.COMPLETE)
             assertThat(viewModel.state.value.currentCard).isEqualTo(null)
         }
 

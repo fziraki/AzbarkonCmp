@@ -7,7 +7,6 @@ import abkabk.azbarkon.domain.model.PoetWithCategories
 import abkabk.azbarkon.testing.FakeChatRepository
 import abkabk.azbarkon.testing.FakeClipboardService
 import abkabk.azbarkon.testing.FakePoetRepository
-import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo

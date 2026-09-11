@@ -47,7 +47,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sarv.shared.generated.resources.Res
@@ -216,10 +215,11 @@ private fun ChatTopBar(
     colors: ChatColors,
     onBackClick: () -> Unit,
     isPoetTyping: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = LocalSarvDimensions.current.dimen16, vertical = LocalSarvDimensions.current.dimen12),
@@ -405,12 +405,13 @@ private fun ChatInputBar(
     colors: ChatColors,
     onValueChange: (String) -> Unit,
     onSendClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val pillShape = RoundedCornerShape(LocalSarvDimensions.current.dimen28)
 
     Box(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .keyboardAboveIme()
                 .background(MaterialTheme.colorScheme.background)
